@@ -1,0 +1,59 @@
+body {
+    background-color: darkslategray;
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    color:aqua;
+    background-color: purple;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.header span {
+    display: flex;
+}
+
+.header button{
+    background: none;
+    color:aqua;
+    border: none;
+    margin: 0 5px;
+}
+
+.mainContent table {
+    min-width: 100%;
+    border: solid;
+    text-align: center;
+}
+
+
+.gameGraphics {
+    width: 60%;
+    height: 720px;
+    border: solid;
+}
+
+.keyDescriptions {
+    width: 20%;
+}
+
+.objectives {
+    width: 20%;
+}
+
+.inventory {
+    align-content: center;
+}
+
+.inventory table {
+    width: 100%;
+}
+
+#title {
+    width: fit-content;
+    margin: 0;
+    text-align: center;
+}

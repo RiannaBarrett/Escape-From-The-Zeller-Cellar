@@ -1,0 +1,140 @@
+/* General Styles */
+body {
+  background-image: url(https://media.tenor.com/9vRAkntogEMAAAAd/background.gif);
+  background-size: cover;
+}
+
+button {
+  /* font-family: monospace; */
+  margin: 10px;
+  padding: 30px;
+  border-radius: 30px 10px;
+}
+
+.splash {
+  position: relative;
+}
+
+.splash::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.splash h1, p {
+  color: white;
+  text-align: center;
+  font-size: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+
+.buttons {
+  align-self: center;
+  justify-content: center;
+  display: flex;
+  padding: 60px;
+}
+
+/* Login and Sign up page */
+.background-image {
+  background-image: url(https://media.tenor.com/9vRAkntogEMAAAAd/background.gif);
+  background-size: cover;
+  background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.signup-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #000;
+  width: 400px;
+}
+
+.login-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #000;
+  width: 400px;
+}
+
+h1 {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #000;
+}
+
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #3e8e41;
+}
+
+p {
+  margin-top: 20px;
+}
+
+.signup-options {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.login-options {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.social-media {
+  color: black;
+  margin-top: 10px;
+}
+
+.social-media a {
+  margin-right: 10px;
+}
+/*Main Page*/
