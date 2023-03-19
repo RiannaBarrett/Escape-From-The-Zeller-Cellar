@@ -64,7 +64,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>StartGameServlet</servlet-name>
-    <url-pattern>/start_page</url-pattern>
+    <url-pattern>/start_game</url-pattern>
   </servlet-mapping>
   
   <!--  AJAX servlet mappings.
@@ -76,9 +76,9 @@
     <servlet-name>NextGuessAjaxServlet</servlet-name>
     <url-pattern>/ajax/nextGuess</url-pattern>
   </servlet-mapping>
-
+  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
-  -->
+-->
 </web-app>

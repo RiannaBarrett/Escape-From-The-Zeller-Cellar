@@ -10,21 +10,20 @@ import javax.servlet.http.HttpServletResponse;
 public class StartGameServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		System.out.println("Main Page Servlet: doGet");
+		System.out.println("Start Game Servlet: doGet");
 		
-		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/start_game.jsp").forward(req, resp);
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 		
-		System.out.println("Main Page Servlet: doPost");
+		System.out.println("Start Game Servlet: doPost");
 		
 		
 	}
