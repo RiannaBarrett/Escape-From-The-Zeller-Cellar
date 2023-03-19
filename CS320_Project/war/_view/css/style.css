@@ -4,11 +4,20 @@ body {
   background-size: cover;
 }
 
-button {
-  /* font-family: monospace; */
-  margin: 10px;
-  padding: 30px;
-  border-radius: 30px 10px;
+
+
+.splash {
+  position: relative;
+}
+
+.splash::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .splash {
@@ -33,12 +42,26 @@ button {
   z-index: 1;
 }
 
-
 .buttons {
-  align-self: center;
-  justify-content: center;
   display: flex;
-  padding: 60px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+ .buttons button {
+  font-family: monospace;
+  border: 2px solid white;
+  color: white;
+  background: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  transition: .4s;
+
+}
+
+.buttons button:hover {
+  color: black;
+  background: white;
 }
 
 /* Login and Sign up page */

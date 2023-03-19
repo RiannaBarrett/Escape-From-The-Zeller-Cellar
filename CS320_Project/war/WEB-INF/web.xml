@@ -26,8 +26,12 @@
     <servlet-name>MainpageServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.project.servlet.MainpageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>StartGameServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.project.servlet.StartGameServlet</servlet-class>
+  </servlet>
   
-  <!-- AJAX servlets. -->
+  <!-- AJAX servlets. 
   <servlet>
     <servlet-name>AddNumbersAjaxServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.project.servlet.ajax.AddNumbersAjaxServlet</servlet-class>
@@ -36,7 +40,7 @@
     <servlet-name>NextGuessAjaxServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.project.servlet.ajax.NextGuessAjaxServlet</servlet-class>
   </servlet>
-
+-->
   <!-- Servlet mappings -->
   <servlet-mapping>
     <servlet-name>IndexServlet</servlet-name>
@@ -58,8 +62,12 @@
     <servlet-name>MainpageServlet</servlet-name>
     <url-pattern>/main_page</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>StartGameServlet</servlet-name>
+    <url-pattern>/start_page</url-pattern>
+  </servlet-mapping>
   
-  <!--  AJAX servlet mappings. -->
+  <!--  AJAX servlet mappings.
   <servlet-mapping>
     <servlet-name>AddNumbersAjaxServlet</servlet-name>
     <url-pattern>/ajax/addNumbers</url-pattern>
@@ -72,4 +80,5 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  -->
 </web-app>
