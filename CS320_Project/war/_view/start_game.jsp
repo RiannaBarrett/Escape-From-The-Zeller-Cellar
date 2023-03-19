@@ -43,7 +43,7 @@
             <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
         </div>
         <div class="image">
-        	<img src ="/Images/wizardnobg.png" alt = "Evil Wizard">
+        	<img src ="./Images/wizardnobg.png" alt = "Evil Wizard">
         </div>
       </div>
     </div>
