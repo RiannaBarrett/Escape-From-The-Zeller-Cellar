@@ -23,7 +23,7 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 				User user = new User();
-				user.setUserID(userID);
+				user.setUserID(userID++);
 				user.setUsername(i.next());
 				user.setPassword(i.next());
 				user.setInventory(itemParser(i.next()));
