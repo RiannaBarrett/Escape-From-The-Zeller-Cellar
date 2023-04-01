@@ -15,13 +15,13 @@
     <div class="background-image"></div>
     <div class="login-box">
       <h1>Login </h1>
-      <form action="login.php" method="post">
+      <form action="${pageContext.servletContext.contextPath}/login" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
         <h3><a href="forgot_password">Forgot Password?</a></h3>
-        <button type="submit">Login</button>
+        <input type="submit" name="login" value="Login">
         <br>
         <div class="social-media">
             <a href="https://www.facebook.com" target=""><i class="fab fa-facebook fa-2x"></i></a>
@@ -29,8 +29,9 @@
             <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube fa-2x"></i></a>
             <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
           </div>          
-      </form>
+ 	  <h3>${errorMessage}</h3> 
       <h3>Don't have an account? <a href="signup">Sign up</a></h3>
+      </form>
     </div>
     <script src="https://kit.fontawesome.com/a839866b20.js" crossorigin="anonymous"></script>
   </body>
