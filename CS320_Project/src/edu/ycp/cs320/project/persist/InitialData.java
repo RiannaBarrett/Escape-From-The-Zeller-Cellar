@@ -12,7 +12,7 @@ import edu.ycp.cs320.project.model.*;
 public class InitialData {
 	public static List<User> getUsers() throws IOException {
 		List<User> userList = new ArrayList<User>();
-		ReadCSV readUsers = new ReadCSV("authors.csv");
+		ReadCSV readUsers = new ReadCSV("users.csv");
 		try {
 			// auto-generated primary key for authors table
 			Integer userID = 1;
