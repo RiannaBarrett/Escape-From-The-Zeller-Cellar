@@ -30,9 +30,24 @@ public class UserQuery {
 			System.out.println("ID: \t \t \t" + user.getUserID());
 			System.out.println("Username: \t \t" + user.getUsername());
 			System.out.println("Password: \t \t" + user.getPassword());
-			System.out.println("Items in Inventory: \t" + user.getInventory().size());
+			System.out.println("Inventory: ");
+			for (Item item : user.getInventory()) {
+				System.out.println("\t Item Name: \t \t" + item.getName());
+				System.out.println("\t Can be picked up?: \t" + item.getCanBePickedUp());
+				System.out.println("\t X Position: \t \t" + item.getXPosition());
+				System.out.println("\t Y Position: \t \t" + item.getYPosition());
+				System.out.println("");
+			}
 			System.out.println("Room ID: \t \t" + user.getRoom().getRoomID());
 			System.out.println("User Position: \t \t" + user.getRoom().getUserPosition());
+			System.out.println("Room Inventory: ");
+			for (Item item : user.getRoom().getItems()) {
+				System.out.println("\t Item Name: \t \t" + item.getName());
+				System.out.println("\t Can be picked up?: \t" + item.getCanBePickedUp());
+				System.out.println("\t X Position: \t \t" + item.getXPosition());
+				System.out.println("\t Y Position: \t \t" + item.getYPosition());
+				System.out.println("");
+			}
 		}
 	}
 }

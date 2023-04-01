@@ -14,7 +14,7 @@ public class InitialData {
 		List<User> userList = new ArrayList<User>();
 		ReadCSV readUsers = new ReadCSV("users.csv");
 		try {
-			// auto-generated primary key for authors table
+			// auto-generated primary key users
 			Integer userID = 1;
 			while (true) {
 				List<String> tuple = readUsers.next();
@@ -39,7 +39,7 @@ public class InitialData {
 		List<Room> roomList = new ArrayList<Room>();
 		ReadCSV readRooms = new ReadCSV("rooms.csv");
 		try {
-			// auto-generated primary key for books table
+			// auto-generated primary key for rooms
 			Integer roomId = 1;
 			while (true) {
 				List<String> tuple = readRooms.next();
@@ -65,18 +65,26 @@ public class InitialData {
 	public static List<Item> itemParser(String itemString) {
 		List<Item> itemList = new ArrayList<Item>();
 		if(itemString == " " || itemString == null || itemString == "") {
-			
 			return itemList;
 		}
 		else {
 			StringTokenizer tok = new StringTokenizer(itemString, ";");
+			List<String> tuple = new ArrayList<String>();
 			while (tok.hasMoreTokens()) {
-				StringTokenizer tokInterior = new StringTokenizer(tok.nextToken(), "^");
+				tuple.add(tok.nextToken().trim());
+			}
+			for(int i=0; i < tuple.size(); i++) {
+				StringTokenizer tokInterior = new StringTokenizer(tuple.get(i), "^");
+				List<String> unparsedItemList = new ArrayList<String>();
+				while (tokInterior.hasMoreTokens()) {
+					unparsedItemList.add(tokInterior.nextToken().trim());
+				}
+				Iterator<String> unparsedItemIterator = unparsedItemList.iterator();
 				Item item = new Item();
-				item.setName(tokInterior.nextToken());
-				item.setCanBePickedUp(Boolean.valueOf(tokInterior.nextToken()));
-				item.setXPosition(Integer.parseInt(tokInterior.nextToken()));
-				item.setYPosition(Integer.parseInt(tokInterior.nextToken()));
+				item.setName(unparsedItemIterator.next());
+				item.setCanBePickedUp(Boolean.valueOf(unparsedItemIterator.next()));
+				item.setXPosition(Integer.parseInt(unparsedItemIterator.next()));
+				item.setYPosition(Integer.parseInt(unparsedItemIterator.next()));
 				itemList.add(item);
 			}
 			return itemList;
