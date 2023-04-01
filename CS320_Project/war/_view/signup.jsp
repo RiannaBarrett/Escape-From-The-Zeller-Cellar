@@ -16,12 +16,14 @@
       <h1>Sign Up</h1>
       <form action="signup.php" method="post">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" minlength="8" maxlength="20"  required>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Sign Up</button>
+        <input type="password" id="password" name="password" minlength="8" maxlength="20" required>
+       
+        <button type="submit" value="Sign Up">Sign Up</button> 
+        
         <br>
         <div class="social-media">
             <a href="https://www.facebook.com" target=""><i class="fab fa-facebook fa-2x"></i></a>
