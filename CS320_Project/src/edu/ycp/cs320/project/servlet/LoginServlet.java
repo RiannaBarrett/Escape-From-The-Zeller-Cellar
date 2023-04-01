@@ -42,6 +42,7 @@ public class LoginServlet extends HttpServlet {
 		
 				validLogin = controller.validateLogin(username, password);
 				if(!validLogin) {
+			
 					errorMessage = "Invalid username or Password";
 					req.setAttribute("errorMessage", errorMessage);
 					req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);

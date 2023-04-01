@@ -6,22 +6,29 @@ body {
 .header {
     display: flex;
     width: 100%;
-    color:aqua;
-    background-color: purple;
-    justify-content: space-between;
-    padding: 5px;
+    color:black;
+    background-color: #a3c5ff;
+	text-align: center;
+	align-items: center;
+	font-family: Geneva;
+
 }
+.logoutBtn {
+	
+}
+
+.title {
+	display:flex;
+	margin:auto;
+	justify-content:center;
+	
+}
+
 
 .header span {
     display: flex;
 }
 
-.header button{
-    background: none;
-    color:aqua;
-    border: none;
-    margin: 0 5px;
-}
 
 .mainContent table {
     min-width: 100%;
@@ -55,5 +62,16 @@ body {
 #title {
     width: fit-content;
     margin: 0;
-    text-align: center;
+	text-align:center;
+	justify-content:center;
+}
+
+input[type="submit"] {
+  background-color: #7a7a7a;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  float:right;
 }

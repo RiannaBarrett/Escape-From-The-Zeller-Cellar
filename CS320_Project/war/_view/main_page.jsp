@@ -7,20 +7,17 @@
     <meta charset="UTF-8">
 </head>
 <body>
+<form action="${pageContext.servletContext.contextPath}/main_page" method="post">
     <div class="header">
-        <button id="settings">
-            Settings
-        </button>
-        <h1 id="title">
+        
+        <div class="title">
+        <h1>
             Escape from the Zellar Cellar
         </h1>
-        <span>
-            <button id="login">login</button>
-
-            <button id="signUp">sign up</button>
-
-            <button id="account">account</button>
-        </span>
+         </div>
+        <div class = "loginBtn">
+        <input type="submit" name="logout" value="logout">
+        </div>
     </div>
 
     <div class="mainContent">
@@ -50,5 +47,6 @@
             </tr>
         </table>
     </div>
+    </form>
 </body>
-</html> 
+</html>

@@ -25,6 +25,11 @@ public class MainpageServlet extends HttpServlet {
 		
 		System.out.println("Main Page Servlet: doPost");
 		
+		if(req.getParameter("logout") != null) {
+			System.out.println("Clicked");
+			req.getSession().setAttribute("user", null);
+			resp.sendRedirect(req.getContextPath() + "/login");
+		}
 		
 	}
 }
