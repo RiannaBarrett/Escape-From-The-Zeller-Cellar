@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://kit.fontawesome.com/a839866b20.css" crossorigin="anonymous">
 
     <link href='https://fonts.googleapis.com/css?family=Playfair Display' rel='stylesheet'>
+    <script type="text/javascript">
+    	function restrict(input){
+    	var regex = /[| ^ ;]/g;
+		input.value = input.value.replace (regex,"");
+    	}
+    </script>
 </head>
 
   <body>
@@ -17,9 +23,9 @@
       <h1>Login </h1>
       <form action="${pageContext.servletContext.contextPath}/login" method="post">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" onkeyup="restrict(this)" required>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" onkeyup="restrict(this)" required>
         <h3><a href="forgot_password">Forgot Password?</a></h3>
         <input type="submit" name="login" value="Login">
         <br>

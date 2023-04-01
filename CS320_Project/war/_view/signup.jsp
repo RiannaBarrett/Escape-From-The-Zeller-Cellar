@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="https://kit.fontawesome.com/a839866b20.css" crossorigin="anonymous">
 
     <link href='https://fonts.googleapis.com/css?family=Playfair Display' rel='stylesheet'>
+    
+    <script type="text/javascript">
+    	function restrict(input){
+    	var regex = /[| ^ ;]/g;
+		input.value = input.value.replace (regex,"");
+    	}
+    </script>
   </head>
   <body>
     <div class="background-image"></div>
@@ -16,11 +23,11 @@
       <h1>Sign Up</h1>
       <form action="signup.php" method="post">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" minlength="8" maxlength="20"  required>
+        <input type="text" id="username" name="username" minlength="8" maxlength="20" onkeyup="restrict(this)" required>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" onkeyup="restrict(this)" required>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" minlength="8" maxlength="20" required>
+        <input type="password" id="password" name="password" minlength="8" maxlength="20" onkeyup="restrict(this)" required>
        
         <button type="submit" value="Sign Up">Sign Up</button> 
         
