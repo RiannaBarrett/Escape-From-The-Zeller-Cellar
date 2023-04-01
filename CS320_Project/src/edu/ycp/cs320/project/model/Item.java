@@ -37,12 +37,19 @@ public class Item {
 		return canBePickedUp;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public void setCanBePickedUp(Boolean canBePickedUp) {
 		this.canBePickedUp = canBePickedUp;
 	}
 	
-	public void setPosition(int x, int y) {
+	public void setXPosition(int x) {
 		this.xPositionInRoom = x;
+	}
+	
+	public void setYPosition(int y) {
 		this.yPositionInRoom = y;
 	}
 }
