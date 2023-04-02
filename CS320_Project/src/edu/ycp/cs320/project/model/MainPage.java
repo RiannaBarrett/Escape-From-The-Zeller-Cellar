@@ -1,12 +1,5 @@
 package edu.ycp.cs320.project.model;
 
-// model class for GuessingGame
-// only the controller should be allowed to call the set methods
-// the JSP will call the "get" and "is" methods implicitly
-// when the JSP specifies game.min, that gets converted to
-//    a call to model.getMin()
-// when the JSP specifies if(game.done), that gets converted to
-//    a call to model.isDone()
 public class MainPage {
 	
 	private Room room;
@@ -16,4 +9,24 @@ public class MainPage {
 		
 	}
 	
+	public MainPage(User user, Room room) {
+		this.user = user;
+		this.room = room;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+	
+	public Room getRoom() {
+		return room;
+	}
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public void setRoom(Room room) {
+		this.room = room;
+	}
 }
