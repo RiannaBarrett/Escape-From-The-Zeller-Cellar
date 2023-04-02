@@ -66,30 +66,10 @@ public class FakeDatabase implements IDatabase {
 	}
 	
 	@Override
-	public boolean transferItemFromRoomToUser(User user, String itemName) {
-		// Does the user have inventory space?
-		// MOVE TO CONTROLLER
-		if(user.getInventory().size() >= user.getInventoryLimit()) {
-			return false;
-		}
-		
-		Item itemToBeTransferred = findItemByName(itemName, user.getRoom().getItems());
-		// Does the item exist in the room?
-		// MOVE TO CONTROLLER
-		if(itemToBeTransferred != null) {
-			// Is the user able to interact with the item?
-			// MOVE TO CONTROLLER
-			if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
-				// Can the item be picked up?
-				// MOVE TO CONTROLLER
-				if(itemToBeTransferred.getCanBePickedUp() == true) {
-					user.getInventory().add(itemToBeTransferred);
-					user.getRoom().getItems().remove(itemToBeTransferred);
-					return true;
-				}
-			}
-		}
-		return false;
+	public boolean transferItemFromRoomToUser(User user, Item item) {
+		user.getInventory().add(item);
+		user.getRoom().getItems().remove(item);
+		return true;
 	}
 	
 	@Override
