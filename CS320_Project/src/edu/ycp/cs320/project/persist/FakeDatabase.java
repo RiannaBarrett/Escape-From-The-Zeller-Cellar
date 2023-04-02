@@ -27,8 +27,10 @@ public class FakeDatabase implements IDatabase {
 
 	public void readInitialData() {
 		try {
+			// Gets all users and rooms
 			userList.addAll(InitialData.getUsers());
 			roomList.addAll(InitialData.getRooms());
+			// Links users/rooms together (adds the rooms to the related user)
 			for (User user : userList) {
 				for (Room room : roomList) {
 					if(room.getUserID() == user.getUserID()) {
@@ -43,12 +45,69 @@ public class FakeDatabase implements IDatabase {
 	
 	@Override
 	public User findUserByName(String name) {
+		// Searches userList for a username, returns the user or null
 		for (User user : userList) {
 			if (user.getUsername().equals(name)) {
 				return user;
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public boolean addUser(User user) {
+		// Sets up inventory and room before adding.
+		user.setInventory(new ArrayList<Item>());
+		user.setRoom(new Room());
+	    if (userList.add(user) && roomList.add(new Room())) {
+	        return true;
+	    }
+	    return false;
+	}
+	
+	@Override
+	public boolean transferItemFromRoomToUser(User user, String itemName) {
+		// Does the user have inventory space?
+		// MOVE TO CONTROLLER
+		if(user.getInventory().size() >= user.getInventoryLimit()) {
+			return false;
+		}
+		
+		Item itemToBeTransferred = findItemByName(itemName, user.getRoom().getItems());
+		// Does the item exist in the room?
+		// MOVE TO CONTROLLER
+		if(itemToBeTransferred != null) {
+			// Is the user able to interact with the item?
+			// MOVE TO CONTROLLER
+			if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
+				// Can the item be picked up?
+				// MOVE TO CONTROLLER
+				if(itemToBeTransferred.getCanBePickedUp() == true) {
+					user.getInventory().add(itemToBeTransferred);
+					user.getRoom().getItems().remove(itemToBeTransferred);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean transferItemFromUserToRoom(User user, String itemName) {
+		Item itemToBeTransferred = findItemByName(itemName, user.getInventory());
+		// Does the item exist in the inventory?
+		// MOVE TO CONTROLLER
+		if(itemToBeTransferred != null) {
+			// Can the item be picked up?
+			// MOVE TO CONTROLLER
+			if(itemToBeTransferred.getCanBePickedUp() == true) {
+				itemToBeTransferred.setRoomPosition(user.getRoom().getUserPosition());
+				user.getRoom().getItems().add(itemToBeTransferred);
+				user.getInventory().remove(itemToBeTransferred);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private Room findRoomByUserID(int userID) {
@@ -59,13 +118,13 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
-	@Override
-	public boolean addUser(User user) {
-	    if (userList.add(user)) {
-	        return true;
-	    }
-	    return false;
+	
+	private Item findItemByName(String itemName, List<Item> itemList) {
+		for (Item item : itemList) {
+			if(item.getName() == itemName) {
+				return item;
+			}
+		}
+		return null;
 	}
-
-
 }

@@ -85,6 +85,7 @@ public class InitialData {
 				item.setCanBePickedUp(Boolean.valueOf(unparsedItemIterator.next()));
 				item.setXPosition(Integer.parseInt(unparsedItemIterator.next()));
 				item.setYPosition(Integer.parseInt(unparsedItemIterator.next()));
+				item.setRoomPosition(Integer.parseInt(unparsedItemIterator.next()));
 				itemList.add(item);
 			}
 			return itemList;
