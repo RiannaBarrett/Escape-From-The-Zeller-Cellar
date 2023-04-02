@@ -12,7 +12,7 @@
     
     <script type="text/javascript">
     	function restrict(input){
-    	var regex = /[| ^ ;]/g;
+    	var regex = /[|^;]/g;
 		input.value = input.value.replace (regex,"");
     	}
     </script>
