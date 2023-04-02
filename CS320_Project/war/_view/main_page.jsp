@@ -35,7 +35,7 @@
                 	style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; ">
                 	</div>
                 </c:forEach>
-                <div class="textbox"></div>
+               
             </td>
             <td class="objectives">
                 Objectives
