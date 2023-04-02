@@ -46,7 +46,7 @@ public class MainPageController {
 			if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
 				// Can the item be picked up?
 				if(itemToBeTransferred.getCanBePickedUp() == true) {
-					db.transferItemFromRoomToUser(user, itemToBeTransferred);
+					return db.transferItemFromRoomToUser(user, itemToBeTransferred);
 				}
 			}
 		}

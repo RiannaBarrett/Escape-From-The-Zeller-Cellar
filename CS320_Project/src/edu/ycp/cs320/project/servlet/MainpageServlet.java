@@ -66,13 +66,23 @@ public class MainpageServlet extends HttpServlet {
 		for(int i = 0; i <= model.getRoom().getItems().size() - 1; i++) {
 			String itemName = model.getRoom().getItems().get(i).getName();
 			if(req.getParameter(itemName) != null) {
-				System.out.println("Pressed");
+				System.out.println("Pressed: " + itemName);
 				req.setAttribute("textOutput", "You found " + itemName);
+				req.setAttribute("selected", itemName);
 				req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 				
 			}
 		}
 		
+		//if pickup button was pressed
+		if(req.getParameter("pickUp")!=null) {
+			String selectedItem = req.getParameter("selected");
+			System.out.println(selectedItem + " Selected");
+			if(selectedItem == "" || selectedItem == null) {
+				req.setAttribute("textOutput", "No item selected");
+			}
+			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
+		}
 	
 	}
 }

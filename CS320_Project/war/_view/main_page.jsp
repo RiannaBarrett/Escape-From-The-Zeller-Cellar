@@ -24,7 +24,7 @@
     <div class="mainContent">
         <table>
             <td class="keyDescriptions">
-                Key Descriptions
+                <input type="submit" name="pickUp" value="Pick Up">
             </td>
             <td class="gameGraphics">
                 <img class = "roomImg" src ="./Images/RoomPlaceholder.jpg" alt = "Placeholder Room Image">
@@ -36,6 +36,7 @@
                 	</div>
                 </c:forEach>
                <p name = "textOutput">${textOutput}</p>
+               <input type="text" name ="selected" style="visibility:hidden;" value="${selectedItem}"></p>
             </td>
             <td class="objectives">
                 Objectives
