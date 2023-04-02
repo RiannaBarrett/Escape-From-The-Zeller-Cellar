@@ -50,6 +50,7 @@ body {
     min-width: 100%;
     border: solid;
     text-align: center;
+    border-collapse: collapse;
 }
 
 
@@ -72,7 +73,27 @@ body {
 }
 
 .inventory table {
+	padding:0px;
+	margin:0;
     width: 100%;
+    border-left: solid;
+    border-right: solid;
+    border-bottom: solid;
+    height:150px;
+    border-collapse: collapse;
+    
+}
+.inventory table th{
+	height:20px;
+	border-left: solid;
+    border-right: solid;
+    border-bottom: solid;
+	
+}
+.inventory table td{
+	text-allign:center;
+	border-left: solid;
+    border-right: solid;
 }
 
 #title {

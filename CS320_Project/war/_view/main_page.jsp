@@ -44,16 +44,41 @@
     </div>
 
     <div class="inventory">
-        <table>
-            <tr>
-                item
-            </tr>
-            <tr>
+        <table class="inventorySlot">
+        <tr>
+            <th>
+                item1
+            </th>
+            <th>
+                item2
+            </th>
+            <th>
+                item3
+            </th>
+            <th>
+                item4
+            </th>
+            <th>
+                item5
+            </th>
+        </tr>
+        <tr>
+            <td>
+                item 1
+            </td>
+            <td>
                 item 2
-            </tr>
-            <tr>
+            </td>
+            <td>
                 item 3
-            </tr>
+            </td>
+            <td>
+                item 4
+            </td>
+            <td>
+                item 5
+            </td>
+        </tr>
         </table>
     </div>
     </form>

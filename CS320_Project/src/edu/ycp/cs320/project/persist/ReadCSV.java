@@ -1,4 +1,4 @@
-package edu.ycp.cs320.project.model;
+package edu.ycp.cs320.project.persist;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
