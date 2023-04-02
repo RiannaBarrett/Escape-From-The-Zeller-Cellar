@@ -66,7 +66,11 @@ public class User {
 		this.room = room;
 	}
 	
-	public void select() {
+	public void addItem(Item item) {
+		inventory.add(item);
+	}
+	
+	public void removeItem(Item item) {
 		
 	}
 	
@@ -83,14 +87,6 @@ public class User {
 	}
 	
 	public void navigate() {
-		
-	}
-	
-	public void login() {
-		
-	}
-	
-	public void logout() {
 		
 	}
 }

@@ -50,7 +50,12 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
-
+	
+	@Override
+	public void transferItemFromRoom(Item item) {
+		
+	}
+	
 	private Room findRoomByUserID(int userID) {
 		for (Room room : roomList) {
 			if (room.getUserID() == userID) {
