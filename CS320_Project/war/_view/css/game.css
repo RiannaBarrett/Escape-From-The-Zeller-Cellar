@@ -1,6 +1,7 @@
 body {
     background-color: darkslategray;
     margin: 0;
+    padding:0;
 }
 
 .header {
@@ -18,7 +19,7 @@ body {
     width: 60%;
     height: 720px;
     border: solid;
-	position:relatives;
+	position:relative;
 }
 
 .roomImg {
@@ -32,7 +33,8 @@ p {
 }
 
 .clickable {
-	position: absolute;
+	 position: absolute;
+    z-index: 1;
 }
 
 .clickableHover:hover input {
@@ -66,6 +68,8 @@ p {
 
 .keyDescriptions {
     width: 20%;
+    z-index:1;
+
 }
 
 .objectives {
@@ -114,5 +118,6 @@ input[type="submit"] {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  float:right;
+  float: right;
+  margin-right: 20px;
 }
