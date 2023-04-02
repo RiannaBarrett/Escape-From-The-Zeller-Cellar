@@ -21,6 +21,10 @@ public class MainPageController {
 		this.model = model;
 	}
 	
+	public void setModel(MainPage model) {
+		this.model = model;
+	}
+	
 	public void PopulateModel(String username) {
 		DatabaseProvider.setInstance(new FakeDatabase());
 		db = DatabaseProvider.getInstance();
@@ -118,4 +122,3 @@ public class MainPageController {
 		return null;
 	}
 }
-

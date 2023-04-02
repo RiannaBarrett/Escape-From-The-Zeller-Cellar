@@ -44,7 +44,8 @@ public class MainpageServlet extends HttpServlet {
 		System.out.println("Main Page Servlet: doPost");
 		
 		String user = (String) req.getSession().getAttribute("user");
-		if (user == null) {
+		System.out.println(user);
+		if (user == null || user == "") {
 			System.out.println("   User: <" + user + "> not logged in or session timed out");
 			
 			// user is not logged in, or the session expired
@@ -70,6 +71,7 @@ public class MainpageServlet extends HttpServlet {
 		MainPageController controller = new MainPageController(model);
 		if(model == null) {
 			model = new MainPage();
+			controller.setModel(model);
 			controller.PopulateModel(user);
 		}
 
