@@ -53,6 +53,60 @@ public class MainPageController {
 		return false;
 	}
 	
+	// 3 sides, 1 up. 
+	// 0, 1, 2 for sides
+	// 3 for up
+	public boolean moveUserLeft() {
+		// Can't look left if looking up
+		int currentPos = model.getUser().getRoom().getUserPosition();
+		if(currentPos == 3) {
+			return false;
+		}
+		// Max left at 0, loop back to 2
+		if(currentPos == 0) {
+			return db.moveUser(model.getUser(), 2);
+		}
+		else {
+			return db.moveUser(model.getUser(), currentPos - 1);
+		}
+	}
+	
+	public boolean moveUserRight() {
+		// Can't look left if looking up
+		int currentPos = model.getUser().getRoom().getUserPosition();
+		if(model.getUser().getRoom().getUserPosition() == 3) {
+			return false;
+		}
+		// Max right at 2, loop back to 0
+		if(currentPos == 2) {
+			return db.moveUser(model.getUser(), 0);
+		}
+		else {
+			return db.moveUser(model.getUser(), currentPos + 1);
+		}
+	}
+	
+	public boolean moveUserUp() {
+		// Can't look up twice
+		if(model.getUser().getRoom().getUserPosition() == 3) {
+			return false;
+		}
+		else {
+			return db.moveUser(model.getUser(), 3);
+		}
+	}
+	
+	public boolean moveUserDown() {
+		// Can only look down if looking up
+		if(model.getUser().getRoom().getUserPosition() != 3) {
+			return false;
+		}
+		else {
+			return db.moveUser(model.getUser(), 0);
+		}
+	}
+	
+	
 	
 	// Helper functions
 	private Item findItemByName(String itemName, List<Item> itemList) {

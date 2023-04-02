@@ -89,6 +89,12 @@ public class FakeDatabase implements IDatabase {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean moveUser(User user, int moveTo) {
+		user.getRoom().setUserPosition(moveTo);
+		return true;
+	}
 
 	private Room findRoomByUserID(int userID) {
 		for (Room room : roomList) {

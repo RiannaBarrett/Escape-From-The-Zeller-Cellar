@@ -58,31 +58,33 @@ public class MainpageServlet extends HttpServlet {
 			resp.sendRedirect(req.getContextPath() + "/login");
 		}
 		
-		MainPage model = new MainPage();
-		MainPageController controller = new MainPageController(model);
-		controller.PopulateModel(user);
 		
+		// Attempt to pass the model back and forth for testing?
+		MainPage model = new MainPage();
+		try {
+			model = (MainPage)req.getAttribute("model");
+		}
+		catch(NumberFormatException e) {
+			System.out.println(e);
+		}
+		MainPageController controller = new MainPageController(model);
+		if(model == null) {
+			model = new MainPage();
+			controller.PopulateModel(user);
+		}
+
+		req.setAttribute("model", model);
 		req.setAttribute("items", model.getRoom().getItems());
 		for(int i = 0; i <= model.getRoom().getItems().size() - 1; i++) {
 			String itemName = model.getRoom().getItems().get(i).getName();
 			if(req.getParameter(itemName) != null) {
-				System.out.println("Pressed: " + itemName);
+				System.out.println("Pressed");
 				req.setAttribute("textOutput", "You found " + itemName);
-				req.setAttribute("selected", itemName);
 				req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 				
 			}
 		}
 		
-		//if pickup button was pressed
-		if(req.getParameter("pickUp")!=null) {
-			String selectedItem = req.getParameter("selected");
-			System.out.println(selectedItem + " Selected");
-			if(selectedItem == "" || selectedItem == null) {
-				req.setAttribute("textOutput", "No item selected");
-			}
-			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
-		}
 	
 	}
 }

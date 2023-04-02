@@ -4,11 +4,15 @@ import edu.ycp.cs320.project.model.*;
 import java.util.List;
 
 public interface IDatabase {
+	public void readInitialData();
+	
 	public User findUserByName(String name);
 	
 	public boolean transferItemFromRoomToUser(User user, Item item);
 	
 	public boolean transferItemFromUserToRoom(User user, String itemName);
+	
+	public boolean moveUser(User user, int moveTo);
 
 	public boolean addUser(User user);
 }
