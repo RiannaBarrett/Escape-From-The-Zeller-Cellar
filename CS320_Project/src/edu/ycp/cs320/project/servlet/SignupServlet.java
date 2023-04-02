@@ -35,7 +35,6 @@ public class SignupServlet extends HttpServlet {
 	    SignupController controller = new SignupController();
 
 	    boolean validSignup = controller.validateSignup(username, password);
-	    System.out.println(" abcs" +validSignup);
 	    if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
 	        // display error message
 	        req.setAttribute("error", "Username or password cannot be empty.");
