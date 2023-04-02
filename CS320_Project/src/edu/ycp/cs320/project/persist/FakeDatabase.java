@@ -50,20 +50,7 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
-	
-	@Override
-	public void transferItemFromRoom(Item item) {
-		
-	}
-	
-	@Override
-	public boolean addUser(User user) {
-	    if (userList.add(user)) {
-	        return true;
-	    }
-	    return false;
-	}	
-	
+
 	private Room findRoomByUserID(int userID) {
 		for (Room room : roomList) {
 			if (room.getUserID() == userID) {
@@ -72,5 +59,13 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
+	@Override
+	public boolean addUser(User user) {
+	    if (userList.add(user)) {
+	        return true;
+	    }
+	    return false;
+	}
+
 
 }

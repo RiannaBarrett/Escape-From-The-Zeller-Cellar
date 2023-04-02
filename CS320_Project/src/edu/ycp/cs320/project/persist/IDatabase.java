@@ -5,8 +5,6 @@ import java.util.List;
 
 public interface IDatabase {
 	public User findUserByName(String name);
-	
-	public void transferItemFromRoom(Item item);
 
 	public boolean addUser(User user);
 }
