@@ -13,9 +13,21 @@ body {
 	font-family: Geneva;
 
 }
-.logoutBtn {
+
+.roomImg {
+	position: relative;
 	
 }
+
+.clickable {
+	position: absolute;
+}
+
+.clickableHover:hover input[type="image"] {
+	filter: brightness(120%);
+}
+
+
 
 .title {
 	display:flex;

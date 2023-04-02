@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="en-us">
 <head>
     <title>Escape from the Zeller Cellar</title>
@@ -26,7 +27,14 @@
                 Key Descriptions
             </td>
             <td class="gameGraphics">
-                game goes here
+                <img class = "roomImg" src ="./Images/RoomPlaceholder.jpg" alt = "Placeholder Room Image">
+                <c:forEach items="${items}" var="item">
+              		<div class = "clickableHover">
+                	<input type="image" class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()}" 
+                	style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; "
+                	name="${item.getName()}">
+                	</div>
+                </c:forEach>
             </td>
             <td class="objectives">
                 Objectives

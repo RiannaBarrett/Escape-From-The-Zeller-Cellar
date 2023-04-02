@@ -18,7 +18,7 @@ public class LoginController {
 			DatabaseProvider.setInstance(new FakeDatabase());
 			IDatabase db = DatabaseProvider.getInstance();
 			User dbUser = db.findUserByName(username);
-			if(dbUser!=null) {
+			if(dbUser!=null && password.equals(dbUser.getPassword())) {
 				return true;
 			}else {
 				return false;

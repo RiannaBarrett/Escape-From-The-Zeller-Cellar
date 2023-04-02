@@ -31,6 +31,10 @@ public class MainpageServlet extends HttpServlet {
 		MainPageController controller = new MainPageController(model);
 		controller.PopulateModel(user);
 		
+		req.setAttribute("items", model.getRoom().getItems());
+		System.out.println("" + model.getRoom().getItems().size());
+		System.out.println("" + model.getRoom().getItems().get(0).getName());
+		
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
 	

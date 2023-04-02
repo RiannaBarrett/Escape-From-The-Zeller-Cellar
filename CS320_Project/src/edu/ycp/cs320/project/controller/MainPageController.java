@@ -7,7 +7,7 @@ import edu.ycp.cs320.project.model.*;
 
 public class MainPageController {
 
-	private static MainPage model;
+	private MainPage model;
 	
 	public MainPageController() {
 		model = new MainPage();
