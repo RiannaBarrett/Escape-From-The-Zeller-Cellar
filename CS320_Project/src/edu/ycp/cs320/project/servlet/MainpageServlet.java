@@ -32,8 +32,7 @@ public class MainpageServlet extends HttpServlet {
 		controller.PopulateModel(user);
 		
 		req.setAttribute("items", model.getRoom().getItems());
-		System.out.println("" + model.getRoom().getItems().size());
-		System.out.println("" + model.getRoom().getItems().get(0).getName());
+
 		
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
@@ -62,5 +61,17 @@ public class MainpageServlet extends HttpServlet {
 		MainPage model = new MainPage();
 		MainPageController controller = new MainPageController(model);
 		controller.PopulateModel(user);
+		
+		req.setAttribute("items", model.getRoom().getItems());
+		System.out.println(req.getParameter("Matches") != null);
+		for(int i = 0; i <= model.getRoom().getItems().size() - 1; i++) {
+			String itemName = model.getRoom().getItems().get(i).getName();
+			if(req.getParameter(itemName) != null) {
+				System.out.println("Pressed");
+				resp.sendRedirect(req.getContextPath() + "/main_page");
+			}
+		}
+		
+	
 	}
 }

@@ -30,11 +30,12 @@
                 <img class = "roomImg" src ="./Images/RoomPlaceholder.jpg" alt = "Placeholder Room Image">
                 <c:forEach items="${items}" var="item">
               		<div class = "clickableHover">
-                	<input type="image" class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()}" 
-                	style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; "
-                	name="${item.getName()}">
+              		<input type="hidden" name = "${item.getName()}" style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; ">
+                	<input type="image" name="${item.getName()}"class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()}" 
+                	style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; ">
                 	</div>
                 </c:forEach>
+                <div class="textbox"></div>
             </td>
             <td class="objectives">
                 Objectives
