@@ -8,6 +8,7 @@ public class User {
 	private String password;
 	private List<Item> inventory;
 	private Room room;
+	private int inventoryLimit;
 
 	public User() {
 		this.userID = 0;
@@ -15,7 +16,7 @@ public class User {
 		this.password = "Password";
 		this.inventory = new ArrayList<Item>();
 		this.room = new Room();
-
+		this.inventoryLimit = 5;
 	}
 	
 	public User(int userID, String username, String password, List<Item> inventory, Room room) {
@@ -24,6 +25,7 @@ public class User {
 		this.password = password;
 		this.inventory = inventory;
 		this.room = room;
+		this.inventoryLimit = 5;
 	}
 	
 	public int getUserID() {
@@ -44,6 +46,10 @@ public class User {
 	
 	public Room getRoom() {
 		return room;
+	}
+	
+	public int getInventoryLimit() {
+		return inventoryLimit;
 	}
 	
 	public void setUserID(int id) {
@@ -83,14 +89,6 @@ public class User {
 	}
 	
 	public void navigate() {
-		
-	}
-	
-	public void login() {
-		
-	}
-	
-	public void logout() {
 		
 	}
 }
