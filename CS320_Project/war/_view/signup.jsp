@@ -1,4 +1,4 @@
-5rdejn   ˜∫µç√≈            <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html>
   <head>

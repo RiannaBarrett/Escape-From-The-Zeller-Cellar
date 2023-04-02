@@ -64,19 +64,19 @@
         </tr>
         <tr>
             <td>
-                item 1
+				ITEM          
+			</td>
+            <td>
+            	ITEM
             </td>
             <td>
-                item 2
+                ITEM
             </td>
             <td>
-                item 3
+                ITEM
             </td>
             <td>
-                item 4
-            </td>
-            <td>
-                item 5
+                ITEM
             </td>
         </tr>
         </table>
