@@ -21,11 +21,11 @@
     <div class="background-image"></div>
     <div class="signup-box">
       <h1>Sign Up</h1>
-      <form action="signup.php" method="post">
+      <form action="${pageContext.servletContext.contextPath}/signup" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" minlength="8" maxlength="20" onkeyup="restrict(this)" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" onkeyup="restrict(this)" required>
+        <!-- <label for="email">Email:</label>
+        <input type="email" id="email" name="email" onkeyup="restrict(this)" required> -->
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" minlength="8" maxlength="20" onkeyup="restrict(this)" required>
        
