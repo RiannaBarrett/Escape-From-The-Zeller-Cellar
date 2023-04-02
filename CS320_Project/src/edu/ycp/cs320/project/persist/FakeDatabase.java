@@ -59,4 +59,13 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
+	@Override
+	public boolean addUser(User user) {
+	    if (userList.add(user)) {
+	        return true;
+	    }
+	    return false;
+	}
+
+
 }
