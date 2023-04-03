@@ -36,9 +36,10 @@
               	</div>
                 <c:forEach items="${items}" var="item">
               		<div class = "clickableHover">
-              		<input type="hidden" name = "${item.getName()}" style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; ">
-                	<input type="image" name="${item.getName()}"class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()}" 
-                	style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; ">
+              		<button type="submit" name = "${item.getName()}" style="top:${item.getYPosition()}px; 
+              		left:${item.getXPosition()}px;">
+              		<img "class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()} style="width:20%;">
+              		</button>
                 	</div>
                 </c:forEach>
                <p name = "textOutput">${textOutput}</p>
