@@ -36,6 +36,7 @@ public class MainPageController {
 	}
 	
 	public boolean transferItemFromRoomToUser(String itemName) {
+
 		// Does the user have inventory space?
 		// MOVE TO CONTROLLER
 		User user = model.getUser();
@@ -47,12 +48,13 @@ public class MainPageController {
 		// Does the item exist in the room?
 		if(itemToBeTransferred != null) {
 			// Is the user able to interact with the item?
-			if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
+			//if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
 				// Can the item be picked up?
 				if(itemToBeTransferred.getCanBePickedUp() == true) {
+					
 					return db.transferItemFromRoomToUser(user, itemToBeTransferred);
 				}
-			}
+			//}
 		}
 		return false;
 	}
@@ -115,7 +117,7 @@ public class MainPageController {
 	// Helper functions
 	private Item findItemByName(String itemName, List<Item> itemList) {
 		for (Item item : itemList) {
-			if(item.getName() == itemName) {
+			if(item.getName().equals(itemName)) {
 				return item;
 			}
 		}

@@ -24,7 +24,7 @@
     <div class="mainContent">
         <table>
             <td class="keyDescriptions">
-                <input type="submit" name="pickUp" value="Pick Up">
+                <input class="pickUp"type="submit" name="pickUp" value="Pick Up">
             </td>
             <td class="gameGraphics">
                 <img class = "roomImg" src ="./Images/RoomPlaceholder.jpg" alt = "Placeholder Room Image">
@@ -36,7 +36,7 @@
                 	</div>
                 </c:forEach>
                <p name = "textOutput">${textOutput}</p>
-               <input type="text" name ="selected" style="visibility:hidden;" value="${selectedItem}"></p>
+               <input type="text" name ="selected" style="visibility:hidden;" value="${selected}">
             </td>
             <td class="objectives">
                 Objectives
@@ -48,19 +48,30 @@
         <table class="inventorySlot">
         <tr>
             <th>
-                item1
+                <input type="hidden" name = "${inv1}" style= width:10%; ">
+                	<input type="image" name="${inv1}" class = "clickable" src ="./Images/${inv1}.png" alt = "${item.getName()}" 
+                	style="width:5%; ">
+                
             </th>
             <th>
-                item2
+                <input type="hidden" name = "${inv2}" style= width:10%; ">
+                	<input type="image" name="${inv2}" class = "clickable" src ="./Images/${inv2}.png" alt = "${item.getName()}" 
+                	style="width:5%; ">
             </th>
             <th>
-                item3
+                <input type="hidden" name = "${inv3}" style= width:10%; ">
+                	<input type="image" name="${inv3}" class = "clickable" src ="./Images/${inv3}.png" alt = "${item.getName()}" 
+                	style="width:5%; ">
             </th>
             <th>
-                item4
+                <input type="hidden" name = "${inv4}" style= width:10%; ">
+                	<input type="image" name="${inv4}" class = "clickable" src ="./Images/${inv4}.png" alt = "${item.getName()}" 
+                	style="width:5%; ">
             </th>
             <th>
-                item5
+                <input type="hidden" name = "${inv5}" style= width:10%; ">
+                	<input type="image" name="${inv5}" class = "clickable" src ="./Images/${inv5}.png" alt = "${item.getName()}" 
+                	style="width:10%; ">
             </th>
         </tr>
         <tr>
