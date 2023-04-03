@@ -121,3 +121,33 @@ input[type="submit"] {
   float: right;
   margin-right: 20px;
 }
+.button{
+	height:50px;
+	width:50px;
+	font-size: 20px;
+	border-radius: 50%;
+	position: absolute;
+ 	cursor: pointer;
+  	border-radius: 5px;
+	
+}
+.right{
+	transform: rotate(180deg);
+	top: 50%;
+  	right: 10%;
+	}
+.left{
+	transform: rotate(0deg);
+	top: 50%;
+  	left: 10%;
+}
+.up{
+	transform: rotate(90deg);
+	top: 10%;
+  	left: 50%;
+}
+.down{
+	transform: rotate(270deg);
+	bottom: 20%;
+  	left: 50%;
+}

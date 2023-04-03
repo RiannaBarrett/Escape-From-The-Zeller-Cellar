@@ -27,7 +27,13 @@
                 <input class="pickUp"type="submit" name="pickUp" value="Pick Up">
             </td>
             <td class="gameGraphics">
+            	<div ="imageContainer">
                 <img class = "roomImg" src ="./Images/RoomPlaceholder.jpg" alt = "Placeholder Room Image">
+                <button class="button left"><</button>
+                <button class="button right"><</button>
+                <button class="button up"><</button>
+              	<button class="button down"><</button>
+              	</div>
                 <c:forEach items="${items}" var="item">
               		<div class = "clickableHover">
               		<input type="hidden" name = "${item.getName()}" style="top:${item.getYPosition()}px; left:${item.getXPosition()}px; width:20%; ">
