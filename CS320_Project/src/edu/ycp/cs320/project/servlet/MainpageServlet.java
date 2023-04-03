@@ -153,6 +153,13 @@ public class MainpageServlet extends HttpServlet {
 					for(int i = 0; i < inventory.size(); i++) {
 						req.setAttribute("inv"+(i+1), inventory.get(i).getName());
 					}
+					items = new ArrayList<Item>();
+					for(int i = 0; i<model.getRoom().getItems().size();i++) {
+						if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+							items.add(model.getRoom().getItems().get(i));
+						}
+					}
+					req.setAttribute("items", items);
 				}else {
 					//notify the user that the item cannot be picked up
 					System.out.println("item cannot be added");
@@ -248,7 +255,7 @@ public class MainpageServlet extends HttpServlet {
 			for(int i = 0; i <= model.getRoom().getItems().size() - 1; i++) {
 				String itemName = model.getRoom().getItems().get(i).getName();
 				if(req.getParameter(itemName) != null) {
-					req.setAttribute("textOutput", "You found " + itemName);
+					req.setAttribute("textOutput", "You found a " + itemName);
 					req.setAttribute("selected", itemName);
 					req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 					
