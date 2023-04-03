@@ -19,7 +19,19 @@ public class SignupController {
 	        // add the new user to the FakeDatabase
 	        DatabaseProvider.setInstance(new FakeDatabase());
 	        IDatabase db = DatabaseProvider.getInstance();
-	        boolean success = db.addUser(newUser);
+	        User existingUser = db.findUserByName(username);
+	        boolean success = false;
+	        if(username.contains("|") || username.contains(";") || username.contains("^") || 
+					username.contains("\"") || username.contains("'") || password.contains("|") ||
+					password.contains(";") || password.contains("^") || password.contains("\"") || 
+					password.contains("'")) {
+				return false;
+			}
+	        if(existingUser == null) {
+	        	success = db.addUser(newUser);
+	        }
+	        
+	        
 	        
 	        // return true if the sign-up was successful
 	        return success;

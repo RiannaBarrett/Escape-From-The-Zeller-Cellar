@@ -16,7 +16,7 @@
       <header>
         <div class="logo">
         
-          <img src="/CS320_Project/Images/wizardnobg.png" alt="Evil Wizard">
+          <img src="/CS320_Project/Images/Visionaries.jpg" alt="Evil Wizard">
         </div>
         <nav>
           <ul>
