@@ -37,11 +37,24 @@ p {
     z-index: 1;
 }
 
-.clickableHover:hover input {
+.clickableHover:hover img {
 	filter: brightness(120%);
 }
 
+.clickableHover img{
+    height:200px;
+	width:200px;
+}
 
+.clickableHover button {
+	 position: absolute;
+	 width:200px;
+	 height:200px;
+	 border: none;
+  cursor: pointer;
+  appearance: none;
+  background-color: inherit;
+}
 
 .title {
 	display:flex;
