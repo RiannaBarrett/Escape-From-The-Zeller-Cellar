@@ -24,6 +24,9 @@ public class MainPageController {
 	public void setModel(MainPage model) {
 		this.model = model;
 	}
+	public MainPage getModel() {
+		return model;
+	}
 	
 	public void PopulateModel(String username) {
 		DatabaseProvider.setInstance(new FakeDatabase());
