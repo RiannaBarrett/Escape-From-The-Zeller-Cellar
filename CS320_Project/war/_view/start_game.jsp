@@ -23,8 +23,6 @@
             <li><a href="#">Settings</a></li>
             <li><a href="#">Account</a></li>
             <li><a href="#">Highscore</a></li>
-            <li><a href="login">Login</a></li>
-            <li><a href="signup">Sign Up</a></li>
             <li class="btn"><a href ="main_page">Play</a></li>
           </ul>
         </nav>
