@@ -4,6 +4,7 @@ import edu.ycp.cs320.project.persist.DatabaseProvider;
 import edu.ycp.cs320.project.persist.FakeDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.ycp.cs320.project.model.*;
@@ -125,5 +126,17 @@ public class MainPageController {
 			}
 		}
 		return null;
+	}
+	
+	public ArrayList<Item> getItemsInPosition(MainPage model) {
+		ArrayList<Item> items = new ArrayList<Item>();
+		
+		for(int i = 0; i<model.getRoom().getItems().size();i++) {
+			if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+				
+				items.add(model.getRoom().getItems().get(i));
+			}
+		}
+		return items;
 	}
 }

@@ -36,6 +36,7 @@ public class MainpageServlet extends HttpServlet {
 		MainPage model = new MainPage();
 		MainPageController controller = new MainPageController(model);
 		controller.PopulateModel(user);
+		
 		//check what the current position is and set background image
 		int position = model.getRoom().getUserPosition();
 		if(position == 2 || position == 0 ) {
@@ -45,16 +46,12 @@ public class MainpageServlet extends HttpServlet {
 			position = 2;
 		}
 		
+		//tells the jsp which image to use
 		req.setAttribute("ViewNumber", position);
 		
 		//based on current position, get the items from the room model
-		List<Item> items = new ArrayList<Item>();
-		for(int i = 0; i<model.getRoom().getItems().size();i++) {
-			if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-				
-				items.add(model.getRoom().getItems().get(i));
-			}
-		}
+		ArrayList<Item> items = new ArrayList<Item>();
+		items = controller.getItemsInPosition(model);
 		//add the items to the jsp
 		req.setAttribute("items", items);
 
@@ -66,6 +63,7 @@ public class MainpageServlet extends HttpServlet {
 		}
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
+	
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
@@ -88,9 +86,12 @@ public class MainpageServlet extends HttpServlet {
 		if(req.getParameter("logout") != null) {
 			System.out.println("Clicked");
 			req.getSession().setAttribute("user", null);
-			resp.sendRedirect(req.getContextPath() + "/login");
+			resp.sendRedirect
+			(req.getContextPath() + "/login");
 		}
 		
+		//create list for items in the room
+		ArrayList<Item> items = new ArrayList<Item>();
 		
 		// Attempt to pass the model back and forth for testing?
 		MainPage model = new MainPage();
@@ -100,6 +101,7 @@ public class MainpageServlet extends HttpServlet {
 		catch(NumberFormatException e) {
 			System.out.println(e);
 		}
+		
 		MainPageController controller = new MainPageController(model);
 		if(model == null) {
 			model = new MainPage();
@@ -115,12 +117,7 @@ public class MainpageServlet extends HttpServlet {
 		}
 		
 		//based on current position, get the items from the room model
-				List<Item> items = new ArrayList<Item>();
-				for(int i = 0; i<model.getRoom().getItems().size();i++) {
-					if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-						items.add(model.getRoom().getItems().get(i));
-					}
-				}
+		items = controller.getItemsInPosition(model);
 
 		//determine position and set image in jsp
 		req.setAttribute("model", model);
@@ -153,12 +150,7 @@ public class MainpageServlet extends HttpServlet {
 					for(int i = 0; i < inventory.size(); i++) {
 						req.setAttribute("inv"+(i+1), inventory.get(i).getName());
 					}
-					items = new ArrayList<Item>();
-					for(int i = 0; i<model.getRoom().getItems().size();i++) {
-						if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-							items.add(model.getRoom().getItems().get(i));
-						}
-					}
+					items = controller.getItemsInPosition(model);
 					req.setAttribute("items", items);
 				}else {
 					//notify the user that the item cannot be picked up
@@ -169,32 +161,36 @@ public class MainpageServlet extends HttpServlet {
 				
 			}
 			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
+			
 			//left arrow clicked
-		}else if(req.getParameter("left") != null){
+		}
+		if(req.getParameter("left") != null){
 			System.out.println("Left Pressed");
 			controller.moveUserLeft();
 			position = model.getRoom().getUserPosition();
+			
+			//set picture in jsp using new position
 			if(position == 2 || position == 0 ) {
 				position=1;
 			}
 			if(position == 3) {
 				position = 2;
 			}
+			//pass to jsp
 			req.setAttribute("ViewNumber", position);
-			items = new ArrayList<Item>();
-			for(int i = 0; i<model.getRoom().getItems().size();i++) {
-				if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-					
-					items.add(model.getRoom().getItems().get(i));
-				}
-			}
+			items = controller.getItemsInPosition(model);
 			req.setAttribute("items", items);
 			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 			
-		}else if(req.getParameter("right")!= null) {
+		}
+		
+		//move right
+		if(req.getParameter("right")!= null) {
 			System.out.println("Right Pressed");
 			controller.moveUserRight();
 			position = model.getRoom().getUserPosition();
+			
+			//set picture in jsp using new position
 			if(position == 2 || position == 0 ) {
 				position=1;
 			}
@@ -202,16 +198,14 @@ public class MainpageServlet extends HttpServlet {
 				position = 2;
 			}
 			req.setAttribute("ViewNumber", position);
-			items = new ArrayList<Item>();
-			for(int i = 0; i<model.getRoom().getItems().size();i++) {
-				if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-					
-					items.add(model.getRoom().getItems().get(i));
-				}
-			}
+			
+			items = controller.getItemsInPosition(model);
 			req.setAttribute("items", items);
 			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
-		}else if(req.getParameter("up")!=null){
+		}
+		
+		//move up
+		if(req.getParameter("up")!=null){
 			System.out.println("Up Pressed");
 			controller.moveUserUp();
 			position = model.getRoom().getUserPosition();
@@ -222,16 +216,14 @@ public class MainpageServlet extends HttpServlet {
 				position = 2;
 			}
 			req.setAttribute("ViewNumber", position);
-			items = new ArrayList<Item>();
-			for(int i = 0; i<model.getRoom().getItems().size();i++) {
-				if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-					
-					items.add(model.getRoom().getItems().get(i));
-				}
-			}
+			
+			items = controller.getItemsInPosition(model);
 			req.setAttribute("items", items);
 			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
-		}else if(req.getParameter("down")!=null){
+		}
+		
+		//move down
+		if(req.getParameter("down")!=null){
 			System.out.println("Down Pressed");
 			controller.moveUserDown();
 			position = model.getRoom().getUserPosition();
@@ -241,28 +233,26 @@ public class MainpageServlet extends HttpServlet {
 			if(position == 3) {
 				position = 2;
 			}
+			//pass to jsp
 			req.setAttribute("ViewNumber", position);
-			items = new ArrayList<Item>();
-			for(int i = 0; i<model.getRoom().getItems().size();i++) {
-				if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-					
-					items.add(model.getRoom().getItems().get(i));
-				}
-			}
+			//get new list of items to display
+			items = controller.getItemsInPosition(model);
 			req.setAttribute("items", items);
 			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
-		}else {
-			for(int i = 0; i <= model.getRoom().getItems().size() - 1; i++) {
-				String itemName = model.getRoom().getItems().get(i).getName();
-				if(req.getParameter(itemName) != null) {
-					req.setAttribute("textOutput", "You found a " + itemName);
-					req.setAttribute("selected", itemName);
-					req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
+		}
+		
+		//check if items in room were selected
+		for(int i = 0; i <= model.getRoom().getItems().size() - 1; i++) {
+			String itemName = model.getRoom().getItems().get(i).getName();
+			if(req.getParameter(itemName) != null) {
+				req.setAttribute("textOutput", "You found a " + itemName);
+				req.setAttribute("selected", itemName);
+				req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 					
 				}
 			}
 		}
 		
 	
-	}
+
 }

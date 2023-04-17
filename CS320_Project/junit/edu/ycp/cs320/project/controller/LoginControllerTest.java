@@ -7,8 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-import edu.ycp.cs320.project.controller.LoginController;
-import edu.ycp.cs320.project.model.User;
+
 import edu.ycp.cs320.project.persist.DatabaseProvider;
 import edu.ycp.cs320.project.persist.FakeDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
