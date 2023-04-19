@@ -4,8 +4,7 @@ import edu.ycp.cs320.project.model.*;
 import java.util.List;
 
 public interface IDatabase {
-	public void readInitialData();
-	
+	// Returns either the user in question or Null if no user found.
 	public User findUserByName(String name);
 	
 	public boolean transferItemFromRoomToUser(User user, Item item);

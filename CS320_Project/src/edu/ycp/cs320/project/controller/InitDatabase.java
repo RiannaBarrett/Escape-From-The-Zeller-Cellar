@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import edu.ycp.cs320.project.persist.DatabaseProvider;
 import edu.ycp.cs320.project.persist.FakeDatabase;
-//import edu.ycp.cs320.project.persist.DerbyDatabase;
+import edu.ycp.cs320.project.persist.DerbyDatabase;
 
 public class InitDatabase {
 	public static void init(Scanner keyboard) {
@@ -13,8 +13,8 @@ public class InitDatabase {
 		if (which == 0) {
 			DatabaseProvider.setInstance(new FakeDatabase());
 		} else if (which == 1) {
-			//DatabaseProvider.setInstance(new DerbyDatabase());
-			throw new IllegalArgumentException("Derby not implemented yet");
+			DatabaseProvider.setInstance(new DerbyDatabase());
+			//throw new IllegalArgumentException("Derby not implemented yet");
 		} else {
 			throw new IllegalArgumentException("Invalid choice: " + which);
 		}

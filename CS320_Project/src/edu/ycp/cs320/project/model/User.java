@@ -72,23 +72,7 @@ public class User {
 		this.room = room;
 	}
 	
-	public void select() {
-		
-	}
-	
-	public void indicate() {
-		
-	}
-	
-	public void useItem() {
-		
-	}
-	
-	public void enter() {
-		
-	}
-	
-	public void navigate() {
-		
+	public void setInventoryLimit(int limit) {
+		this.inventoryLimit = limit;
 	}
 }

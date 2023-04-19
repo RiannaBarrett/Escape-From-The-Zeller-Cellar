@@ -15,7 +15,7 @@ public class InitialData {
 		ReadCSV readUsers = new ReadCSV("users.csv");
 		try {
 			// auto-generated primary key users
-			Integer userID = 0;
+			Integer userID = 1;
 			while (true) {
 				List<String> tuple = readUsers.next();
 				if (tuple == null) {
@@ -40,7 +40,7 @@ public class InitialData {
 		ReadCSV readRooms = new ReadCSV("rooms.csv");
 		try {
 			// auto-generated primary key for rooms
-			Integer roomId = 0;
+			Integer roomId = 1;
 			while (true) {
 				List<String> tuple = readRooms.next();
 				if (tuple == null) {

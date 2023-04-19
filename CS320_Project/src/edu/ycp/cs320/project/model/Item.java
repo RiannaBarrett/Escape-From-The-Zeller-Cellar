@@ -2,6 +2,7 @@ package edu.ycp.cs320.project.model;
 
 public class Item {
 	
+	private int item_id;
 	private String name;
 	private Boolean canBePickedUp;
 	private int xPositionInRoom;
@@ -9,6 +10,7 @@ public class Item {
 	private int roomPosition;
 	
 	public Item() {
+		this.item_id = 0;
 		this.name = "Unnamed Item";
 		this.canBePickedUp = true;
 		this.xPositionInRoom = 0;
@@ -22,6 +24,19 @@ public class Item {
 		this.xPositionInRoom = xPositionInRoom;
 		this.yPositionInRoom = yPositionInRoom;
 		this.roomPosition = roomPosition;
+	}
+	
+	public Item(Item other) {
+		this.item_id = other.getItemID();
+		this.name = other.getName();
+		this.canBePickedUp = other.getCanBePickedUp();
+		this.xPositionInRoom = other.getXPosition();
+		this.yPositionInRoom = other.getYPosition();
+		this.roomPosition = other.getRoomPosition();
+	}
+	
+	public int getItemID() {
+		return item_id;
 	}
 	
 	public String getName() {
@@ -42,6 +57,10 @@ public class Item {
 	
 	public int getRoomPosition() {
 		return roomPosition;
+	}
+	
+	public void setItemID(int id) {
+		this.item_id = id;
 	}
 	
 	public void setName(String name) {
