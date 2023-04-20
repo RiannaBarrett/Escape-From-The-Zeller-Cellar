@@ -35,7 +35,6 @@ public class MainPageController {
 		User user = db.findUserByName(username);
 		if(user != null) {
 			model.setUser(user);
-			model.setRoom(user.getRoom());
 		}
 	}
 	

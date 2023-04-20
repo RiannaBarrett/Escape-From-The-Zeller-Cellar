@@ -16,15 +16,15 @@ public class UserQuery {
 		InitDatabase.init(keyboard);
 		
 		System.out.print("Enter a username: ");
-		String title = keyboard.nextLine();
+		String username = keyboard.nextLine();
 		
 		// get the DB instance and execute transaction
 		IDatabase db = DatabaseProvider.getInstance();
-		User user = db.findUserByName(title);
+		User user = db.findUserByName(username);
 		
 		// check if anything was returned and output the list
 		if (user == null) {
-			System.out.println("No users found with name: <" + title + ">");
+			System.out.println("No users found with name: <" + username + ">");
 		}
 		else {
 			System.out.println("User found!");
@@ -45,10 +45,12 @@ public class UserQuery {
 			System.out.println("User Position: \t \t" + user.getRoom().getUserPosition());
 			System.out.println("Room Inventory: ");
 			for (Item item : user.getRoom().getItems()) {
+				System.out.println("\t Item ID: \t \t" + item.getItemID());
 				System.out.println("\t Item Name: \t \t" + item.getName());
 				System.out.println("\t Can be picked up?: \t" + item.getCanBePickedUp());
 				System.out.println("\t X Position: \t \t" + item.getXPosition());
 				System.out.println("\t Y Position: \t \t" + item.getYPosition());
+				System.out.println("\t Room Position: \t \t" + item.getRoomPosition());
 				System.out.println("");
 			}
 		}

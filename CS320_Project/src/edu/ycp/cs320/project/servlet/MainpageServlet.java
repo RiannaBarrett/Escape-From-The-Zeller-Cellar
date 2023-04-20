@@ -42,10 +42,10 @@ public class MainpageServlet extends HttpServlet {
 		//based on current position, get the items from the room model
 		ArrayList<Item> items = new ArrayList<Item>();
 		//get items in room
-		for(int i = 0; i<model.getRoom().getItems().size();i++) {
-			if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+		for(int i = 0; i<model.getUser().getRoom().getItems().size();i++) {
+			if(model.getUser().getRoom().getItems().get(i).getRoomPosition() == model.getUser().getRoom().getUserPosition()) {
 				
-				items.add(model.getRoom().getItems().get(i));
+				items.add(model.getUser().getRoom().getItems().get(i));
 			}
 		}
 		//add the items to the jsp
@@ -57,7 +57,7 @@ public class MainpageServlet extends HttpServlet {
 		
 		//check what the current position is and set background image
 		//TODO: this code will be changed once our backgrounds are final
-		int position = model.getRoom().getUserPosition();
+		int position = model.getUser().getRoom().getUserPosition();
 		if(position == 2 || position == 0 ) {
 			position=1;
 		}
@@ -116,10 +116,10 @@ public class MainpageServlet extends HttpServlet {
 			controller.PopulateModel(user);
 		}
 		//get items in room
-		for(int i = 0; i<model.getRoom().getItems().size();i++) {
-			if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+		for(int i = 0; i<model.getUser().getRoom().getItems().size();i++) {
+			if(model.getUser().getRoom().getItems().get(i).getRoomPosition() == model.getUser().getRoom().getUserPosition()) {
 				
-				items.add(model.getRoom().getItems().get(i));
+				items.add(model.getUser().getRoom().getItems().get(i));
 			}
 		}
 
@@ -164,7 +164,7 @@ public class MainpageServlet extends HttpServlet {
 		if(req.getParameter("left") != null){
 			System.out.println("Left Pressed");
 			controller.moveUserLeft();
-			position = model.getRoom().getUserPosition();
+			position = model.getUser().getRoom().getUserPosition();
 			
 			
 		}
@@ -173,7 +173,7 @@ public class MainpageServlet extends HttpServlet {
 		if(req.getParameter("right")!= null) {
 			System.out.println("Right Pressed");
 			controller.moveUserRight();
-			position = model.getRoom().getUserPosition();
+			position = model.getUser().getRoom().getUserPosition();
 			
 		}
 		
@@ -181,7 +181,7 @@ public class MainpageServlet extends HttpServlet {
 		if(req.getParameter("up")!=null){
 			System.out.println("Up Pressed");
 			controller.moveUserUp();
-			position = model.getRoom().getUserPosition();	
+			position = model.getUser().getRoom().getUserPosition();	
 			
 		}
 		
@@ -189,13 +189,13 @@ public class MainpageServlet extends HttpServlet {
 		if(req.getParameter("down")!=null){
 			System.out.println("Down Pressed");
 			controller.moveUserDown();
-			position = model.getRoom().getUserPosition();
+			position = model.getUser().getRoom().getUserPosition();
 			
 		}
 		
 		//check if items in room were selected
-		for(int i = 0; i <= model.getRoom().getItems().size() - 1; i++) {
-			String itemName = model.getRoom().getItems().get(i).getName();
+		for(int i = 0; i <= model.getUser().getRoom().getItems().size() - 1; i++) {
+			String itemName = model.getUser().getRoom().getItems().get(i).getName();
 			if(req.getParameter(itemName) != null) {
 				req.setAttribute("textOutput", "You found a " + itemName);
 				req.setAttribute("selected", itemName);
@@ -225,7 +225,7 @@ public class MainpageServlet extends HttpServlet {
 		
 		//check what the current position is and set background image
 				//TODO: this code will be changed once our backgrounds are final
-				position = model.getRoom().getUserPosition();
+				position = model.getUser().getRoom().getUserPosition();
 				if(position == 2 || position == 0 ) {
 					position=1;
 				}
@@ -241,10 +241,10 @@ public class MainpageServlet extends HttpServlet {
 				req.setAttribute("inventory", inventory);
 				
 				//get items in room
-				for(int i = 0; i<model.getRoom().getItems().size();i++) {
-					if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+				for(int i = 0; i<model.getUser().getRoom().getItems().size();i++) {
+					if(model.getUser().getRoom().getItems().get(i).getRoomPosition() == model.getUser().getRoom().getUserPosition()) {
 						
-						items.add(model.getRoom().getItems().get(i));
+						items.add(model.getUser().getRoom().getItems().get(i));
 					}
 				}
 		req.setAttribute("items", items);
