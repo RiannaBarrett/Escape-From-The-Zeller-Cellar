@@ -37,7 +37,26 @@ public class MainpageServlet extends HttpServlet {
 		MainPageController controller = new MainPageController(model);
 		controller.PopulateModel(user);
 		
+		
+		
+		//based on current position, get the items from the room model
+		ArrayList<Item> items = new ArrayList<Item>();
+		//get items in room
+		for(int i = 0; i<model.getRoom().getItems().size();i++) {
+			if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+				
+				items.add(model.getRoom().getItems().get(i));
+			}
+		}
+		//add the items to the jsp
+		req.setAttribute("items", items);
+
+		//get the inventory and add the images of the items to the jsp
+		List<Item> inventory = model.getUser().getInventory();
+		req.setAttribute("inventory", inventory);
+		
 		//check what the current position is and set background image
+		//TODO: this code will be changed once our backgrounds are final
 		int position = model.getRoom().getUserPosition();
 		if(position == 2 || position == 0 ) {
 			position=1;
@@ -49,18 +68,6 @@ public class MainpageServlet extends HttpServlet {
 		//tells the jsp which image to use
 		req.setAttribute("ViewNumber", position);
 		
-		//based on current position, get the items from the room model
-		ArrayList<Item> items = new ArrayList<Item>();
-		items = controller.getItemsInPosition(model);
-		//add the items to the jsp
-		req.setAttribute("items", items);
-
-		//get the inventory and add the images of the items to the jsp
-		List<Item> inventory = model.getUser().getInventory();
-		System.out.println(inventory.size());
-		for(int i = 0; i < inventory.size(); i++) {
-			req.setAttribute("inv"+(i+1), inventory.get(i).getName());
-		}
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
 	
@@ -108,6 +115,13 @@ public class MainpageServlet extends HttpServlet {
 			controller.setModel(model);
 			controller.PopulateModel(user);
 		}
+		//get items in room
+		for(int i = 0; i<model.getRoom().getItems().size();i++) {
+			if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+				
+				items.add(model.getRoom().getItems().get(i));
+			}
+		}
 
 		//display inventory on jsp
 		List<Item> inventory = model.getUser().getInventory();
@@ -116,21 +130,12 @@ public class MainpageServlet extends HttpServlet {
 			req.setAttribute("inv"+(i+1), inventory.get(i).getName());
 		}
 		
-		//based on current position, get the items from the room model
-		items = controller.getItemsInPosition(model);
+
 
 		//determine position and set image in jsp
 		req.setAttribute("model", model);
 		req.setAttribute("items", items);
-		int position = model.getRoom().getUserPosition();
-		if(position == 2 || position == 0 ) {
-			position=1;
-		}
-		if(position == 3) {
-			position = 2;
-		}
-		
-		req.setAttribute("ViewNumber", position);
+		int position = 0;
 		
 		
 		//if pickup button was pressed
@@ -145,13 +150,6 @@ public class MainpageServlet extends HttpServlet {
 				if(controller.transferItemFromRoomToUser(selectedItem) == true) {
 					System.out.println("item can be added");
 					req.setAttribute("textOutput", "Item added to inventory");
-					inventory = model.getUser().getInventory();
-					System.out.println(inventory.size());
-					for(int i = 0; i < inventory.size(); i++) {
-						req.setAttribute("inv"+(i+1), inventory.get(i).getName());
-					}
-					items = controller.getItemsInPosition(model);
-					req.setAttribute("items", items);
 				}else {
 					//notify the user that the item cannot be picked up
 					System.out.println("item cannot be added");
@@ -160,7 +158,6 @@ public class MainpageServlet extends HttpServlet {
 				
 				
 			}
-			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 			
 			//left arrow clicked
 		}
@@ -169,18 +166,6 @@ public class MainpageServlet extends HttpServlet {
 			controller.moveUserLeft();
 			position = model.getRoom().getUserPosition();
 			
-			//set picture in jsp using new position
-			if(position == 2 || position == 0 ) {
-				position=1;
-			}
-			if(position == 3) {
-				position = 2;
-			}
-			//pass to jsp
-			req.setAttribute("ViewNumber", position);
-			items = controller.getItemsInPosition(model);
-			req.setAttribute("items", items);
-			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 			
 		}
 		
@@ -190,36 +175,14 @@ public class MainpageServlet extends HttpServlet {
 			controller.moveUserRight();
 			position = model.getRoom().getUserPosition();
 			
-			//set picture in jsp using new position
-			if(position == 2 || position == 0 ) {
-				position=1;
-			}
-			if(position == 3) {
-				position = 2;
-			}
-			req.setAttribute("ViewNumber", position);
-			
-			items = controller.getItemsInPosition(model);
-			req.setAttribute("items", items);
-			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 		}
 		
 		//move up
 		if(req.getParameter("up")!=null){
 			System.out.println("Up Pressed");
 			controller.moveUserUp();
-			position = model.getRoom().getUserPosition();
-			if(position == 2 || position == 0 ) {
-				position=1;
-			}
-			if(position == 3) {
-				position = 2;
-			}
-			req.setAttribute("ViewNumber", position);
+			position = model.getRoom().getUserPosition();	
 			
-			items = controller.getItemsInPosition(model);
-			req.setAttribute("items", items);
-			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 		}
 		
 		//move down
@@ -227,18 +190,7 @@ public class MainpageServlet extends HttpServlet {
 			System.out.println("Down Pressed");
 			controller.moveUserDown();
 			position = model.getRoom().getUserPosition();
-			if(position == 2 || position == 0 ) {
-				position=1;
-			}
-			if(position == 3) {
-				position = 2;
-			}
-			//pass to jsp
-			req.setAttribute("ViewNumber", position);
-			//get new list of items to display
-			items = controller.getItemsInPosition(model);
-			req.setAttribute("items", items);
-			req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
+			
 		}
 		
 		//check if items in room were selected
@@ -247,11 +199,57 @@ public class MainpageServlet extends HttpServlet {
 			if(req.getParameter(itemName) != null) {
 				req.setAttribute("textOutput", "You found a " + itemName);
 				req.setAttribute("selected", itemName);
-				req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 					
-				}
 			}
 		}
+		
+		//check if items are being used
+		for(int i = 0; i < inventory.size(); i++) {
+			String invItem = inventory.get(i).getName();
+			if(req.getParameter(invItem) != null) {
+				System.out.println(invItem + " was pressed");
+				if(req.getParameter("selected") != null && req.getParameter("selected").equals("") == false) {
+					
+					System.out.println(req.getParameter("selected"));
+					Item selected = controller.findItemByName(req.getParameter("selected"), items);
+					System.out.println(selected == null);
+					System.out.println(selected.getName() + " is the selectd item");
+					String message = "";
+					message = controller.useItem(inventory.get(i), selected);
+					req.setAttribute("textOutput", message);
+					
+				}
+				
+			}
+		}
+		
+		//check what the current position is and set background image
+				//TODO: this code will be changed once our backgrounds are final
+				position = model.getRoom().getUserPosition();
+				if(position == 2 || position == 0 ) {
+					position=1;
+				}
+				if(position == 3) {
+					position = 2;
+				}
+				
+				//tells the jsp which image to use
+				req.setAttribute("ViewNumber", position);
+		
+		//get the inventory and add the images of the items to the jsp
+				inventory = model.getUser().getInventory();
+				req.setAttribute("inventory", inventory);
+				
+				//get items in room
+				for(int i = 0; i<model.getRoom().getItems().size();i++) {
+					if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
+						
+						items.add(model.getRoom().getItems().get(i));
+					}
+				}
+		req.setAttribute("items", items);
+		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
+	}
 		
 	
 

@@ -54,49 +54,25 @@
     <div class="inventory">
         <table class="inventorySlot">
         <tr>
-            <th>
-                <input type="hidden" name = "${inv1}" style= width:10%; ">
-                	<input type="image" name="${inv1}" class = "clickable" src ="./Images/${inv1}.png" alt = "${item.getName()}" 
-                	style="width:5%; ">
-                
+        <c:forEach items= "${inventory}" var="inv">
+        <th> 
+            <div>
+            <button class = "invButton" type = "submit" name="${inv.getName()}">
+            <img class = "inv" src ="./Images/${inv.getName()}.png" alt = "${inv.getName()} style="width:10%;">
+            </button>
+            </div>  
             </th>
-            <th>
-                <input type="hidden" name = "${inv2}" style= width:10%; ">
-                	<input type="image" name="${inv2}" class = "clickable" src ="./Images/${inv2}.png" alt = "${item.getName()}" 
-                	style="width:5%; ">
-            </th>
-            <th>
-                <input type="hidden" name = "${inv3}" style= width:10%; ">
-                	<input type="image" name="${inv3}" class = "clickable" src ="./Images/${inv3}.png" alt = "${item.getName()}" 
-                	style="width:5%; ">
-            </th>
-            <th>
-                <input type="hidden" name = "${inv4}" style= width:10%; ">
-                	<input type="image" name="${inv4}" class = "clickable" src ="./Images/${inv4}.png" alt = "${item.getName()}" 
-                	style="width:5%; ">
-            </th>
-            <th>
-                <input type="hidden" name = "${inv5}" style= width:10%; ">
-                	<input type="image" name="${inv5}" class = "clickable" src ="./Images/${inv5}.png" alt = "${item.getName()}" 
-                	style="width:10%; ">
-            </th>
+        </c:forEach>
+            
         </tr>
         <tr>
-            <td>
-				ITEM          
+        <c:forEach items = "${inventory}" var = "inv">
+        <td>
+				${inv.getName()}          
 			</td>
-            <td>
-            	ITEM
-            </td>
-            <td>
-                ITEM
-            </td>
-            <td>
-                ITEM
-            </td>
-            <td>
-                ITEM
-            </td>
+        </c:forEach>
+            
+           
         </tr>
         </table>
     </div>

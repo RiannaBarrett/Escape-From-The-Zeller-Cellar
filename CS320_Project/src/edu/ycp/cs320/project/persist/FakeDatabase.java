@@ -113,4 +113,25 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
+	
+	private void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user) {
+		user.getRoom().getItems().remove(itemToRemove);
+		user.getRoom().getItems().add(itemToAdd);
+	}
+	
+	public void swapItemInInventory(Item itemToRemove, Item itemToAdd, User user) {
+		user.getInventory().remove(itemToRemove);
+		user.getInventory().add(itemToAdd);
+	}
+	
+	public String useEmptyPotion(Item bottle, Item selected, User user) {
+		String message = "Nothing Happened";
+		System.out.println(selected.getName() + "is selected");
+		if(selected.getName().equals("Cauldron with Potion")) {
+			message = "You filled the bottle with a potion";
+			Item fullPotion = new Item("Full Potion Bottle", false, 0,0,0);
+			swapItemInInventory(bottle, fullPotion, user);
+		}
+		return message;
+	}
 }

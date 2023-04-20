@@ -39,6 +39,8 @@ public class MainPageController {
 		}
 	}
 	
+
+	
 	public boolean transferItemFromRoomToUser(String itemName) {
 
 		// Does the user have inventory space?
@@ -119,7 +121,7 @@ public class MainPageController {
 	
 	
 	// Helper functions
-	private Item findItemByName(String itemName, List<Item> itemList) {
+	public Item findItemByName(String itemName, List<Item> itemList) {
 		for (Item item : itemList) {
 			if(item.getName().equals(itemName)) {
 				return item;
@@ -128,15 +130,17 @@ public class MainPageController {
 		return null;
 	}
 	
-	public ArrayList<Item> getItemsInPosition(MainPage model) {
-		ArrayList<Item> items = new ArrayList<Item>();
-		
-		for(int i = 0; i<model.getRoom().getItems().size();i++) {
-			if(model.getRoom().getItems().get(i).getRoomPosition() == model.getRoom().getUserPosition()) {
-				
-				items.add(model.getRoom().getItems().get(i));
-			}
+
+	
+	
+	public String useItem(Item item, Item selected) {
+		String message = "Nothing happened";
+		if(item.getName().equals("Empty Potion Bottle")) {
+			message = db.useEmptyPotion(item, selected, model.getUser());
 		}
-		return items;
+		return message;
 	}
+	
+	
+	
 }

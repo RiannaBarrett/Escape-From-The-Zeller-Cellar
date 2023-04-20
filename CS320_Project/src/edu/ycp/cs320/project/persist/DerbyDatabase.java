@@ -388,4 +388,10 @@ public class DerbyDatabase implements IDatabase {
 		
 		System.out.println("Success!");
 	}
+
+	@Override
+	public String useEmptyPotion(Item bottle, Item selected, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

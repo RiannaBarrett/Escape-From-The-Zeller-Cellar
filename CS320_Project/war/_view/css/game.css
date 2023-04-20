@@ -37,6 +37,11 @@ p {
     z-index: 1;
 }
 
+.inv{
+	height:100px;
+	width:100px;
+}
+
 .clickableHover:hover img {
 	filter: brightness(120%);
 }
@@ -44,6 +49,13 @@ p {
 .clickableHover img{
     height:200px;
 	width:200px;
+}
+
+.invButton {
+	
+	  appearance: none;
+  background-color: inherit;
+  border: none;
 }
 
 .clickableHover button {
