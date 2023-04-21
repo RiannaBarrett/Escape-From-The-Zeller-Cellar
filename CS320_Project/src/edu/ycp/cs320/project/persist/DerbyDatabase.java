@@ -106,17 +106,18 @@ public class DerbyDatabase implements IDatabase {
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
 				ResultSet resultSet = null;
 				try {
 					//inserts user based on username, password and inventory limit of 5
 					stmt = conn.prepareStatement(
 							"insert into users (username, password, inventoryLimit)" +
-									"values (?,?, 5) "
+									"values (?,?,?) "
 							);
 					stmt.setString(1, user.getUsername());
 					stmt.setString(2, user.getPassword());
-
-					
+					stmt.setInt(3, user.getInventoryLimit());
 					stmt.execute();
 					
 					Boolean result = false;
@@ -129,26 +130,48 @@ public class DerbyDatabase implements IDatabase {
 									" where users.username = ? and users.password = ? "
 							);
 					stmt2.setString(1, user.getUsername());
-					stmt2.setString(2, user.getPassword());	
-					
+					stmt2.setString(2, user.getPassword());
 					resultSet = stmt2.executeQuery();
-					
+									
+					//gets userID 
 					while (resultSet.next()) {
 						success = true;
-						// create new User object
-						// retrieve attributes from resultSet starting with index 1
-						User user = new User();
 						loadUser(user, resultSet, 1);
-						// load inventory objects
-						user.setInventory(getUserInventoryByID(user.getUserID()));
-						result = true;
 					}
 					// check if the user was found
 					if (!success) {
+						System.out.println("<" + user.getUsername() + "> was not inserted in the users table");
+						return success;
+					}
+					
+					//adds new room to to user_id
+					stmt3 = conn.prepareStatement(
+							"insert into rooms(user_id, userPosition) " +
+									" values (?,?) "
+							);
+					stmt3.setInt(1, user.getUserID());
+					stmt3.setInt(2, user.getRoom().getUserPosition());
+					stmt3.execute();
+
+					stmt4 = conn.prepareStatement(
+							"select rooms.* " +
+									"  from rooms " +
+									" where rooms.user_id = ? "
+							);
+					stmt4.setInt(1, user.getUserID());
+					resultSet = stmt4.executeQuery();					
+					
+					// check if the user was found
+					while (resultSet.next()) {
+						Room room = new Room();
+						loadRoom(room, resultSet, 1);
+						user.setRoom(room);
+						result = true;
+					}
+					if (!result) {
 						System.out.println("<" + user + "> was not inserted in the users table");
 					}
 					return result;
-					//return result;
 
 				} finally {
 					DBUtil.closeQuietly(resultSet);

@@ -41,6 +41,8 @@ public class UserQuery {
 				System.out.println("\t Room Position: \t \t" + item.getRoomPosition());
 				System.out.println("");
 			}
+			
+			
 			System.out.println("Room ID: \t \t" + user.getRoom().getRoomID());
 			System.out.println("User Position: \t \t" + user.getRoom().getUserPosition());
 			System.out.println("Room Inventory: ");
