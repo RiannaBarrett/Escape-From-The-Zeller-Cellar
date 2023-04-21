@@ -2,6 +2,7 @@ package edu.ycp.cs320.project.controller;
 
 
 import edu.ycp.cs320.project.persist.DatabaseProvider;
+import edu.ycp.cs320.project.persist.DerbyDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
 import edu.ycp.cs320.project.persist.FakeDatabase;
 import edu.ycp.cs320.project.model.User;
@@ -15,6 +16,7 @@ public class LoginController {
 				password.contains("'")) {
 			return false;
 		}else {
+			//DatabaseProvider.setInstance(new DerbyDatabase());
 			DatabaseProvider.setInstance(new FakeDatabase());
 			IDatabase db = DatabaseProvider.getInstance();
 			User dbUser = db.findUserByName(username);
