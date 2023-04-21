@@ -31,7 +31,8 @@ public class MainPageController {
 	}
 	
 	public void PopulateModel(String username) {
-		DatabaseProvider.setInstance(new DerbyDatabase());
+		//DatabaseProvider.setInstance(new DerbyDatabase());
+		DatabaseProvider.setInstance(new FakeDatabase());
 		db = DatabaseProvider.getInstance();
 		User user = db.findUserByName(username);
 		if(user != null) {
@@ -42,6 +43,7 @@ public class MainPageController {
 
 	
 	public boolean transferItemFromRoomToUser(String itemName) {
+		//DatabaseProvider.setInstance(new DerbyDatabase());
 		DatabaseProvider.setInstance(new FakeDatabase());
 		// Does the user have inventory space?
 		// MOVE TO CONTROLLER
@@ -137,6 +139,8 @@ public class MainPageController {
 		String message = "Nothing happened";
 		if(item.getName().equals("Empty Potion Bottle")) {
 			message = db.useEmptyPotion(item, selected, model.getUser());
+		}else if(item.getName().equals("Matches")) {
+			message = db.useMatches(item, selected, model.getUser());
 		}
 		return message;
 	}

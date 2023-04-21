@@ -196,6 +196,7 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	@Override
 	public boolean addItemToRoom(Item item, int roomID) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
@@ -250,7 +251,7 @@ public class DerbyDatabase implements IDatabase {
 						// retrieve attributes from resultSet starting with index 1
 						Item resultItem = new Item();
 						loadItem(resultItem, resultSet, 1);
-						
+						System.out.println(resultItem.getName());
 						result = true;
 					}
 					// check if the item was found
@@ -305,8 +306,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmt.execute();
 					
-					Boolean result = false;
-					Boolean success = true;
+					
 
 					//sees if the item is still in the inventory
 					stmt2 = conn.prepareStatement(
@@ -321,13 +321,11 @@ public class DerbyDatabase implements IDatabase {
 					resultSet = stmt2.executeQuery();
 					
 					while (resultSet.next()) {
-						success = false;
+						System.out.println("<" + item.getName() + "> was not removed from the roomInventories table");
+
 						return false;
 					}
-					// check if the item was deleted
-					if (!success) {
-						System.out.println("<" + item.getName() + "> was not removed from the roomInventories table");
-					}
+				
 					return true;
 					//return result;
 
@@ -339,6 +337,7 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
 	
 	@Override
 	public boolean removeItemFromInventory(Item item, int userID) {
@@ -375,8 +374,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmt.execute();
 					
-					Boolean result = false;
-					Boolean success = false;
+					
 
 					//sees if the item is still in the inventory
 					stmt2 = conn.prepareStatement(
@@ -390,13 +388,14 @@ public class DerbyDatabase implements IDatabase {
 					
 					resultSet = stmt2.executeQuery();
 					
+		
+					
 					while (resultSet.next()) {
+				
+						System.out.println("<" + item.getName() + "> was not removed from the userInventories table");
 						return false;
 					}
-					// check if the item was deleted
-					if (!success) {
-						System.out.println("<" + item.getName() + "> was not removed from the roomInventories table");
-					}
+					
 					return true;
 					//return result;
 
@@ -428,7 +427,7 @@ public class DerbyDatabase implements IDatabase {
 						
 				
 				try {
-					//inserts item into roomInventory
+					//inserts item into userInventory
 					stmt = conn.prepareStatement(
 							"insert into userInventories (user_id, name, canBePickedUp, xPosition, yPosition, roomPosition)" +
 									"values (?,?,?,?,?,?) "
@@ -469,7 +468,7 @@ public class DerbyDatabase implements IDatabase {
 					}
 					// check if the user was found
 					if (!success) {
-						System.out.println("<" + item.getName() + "> was not inserted in the users table");
+						System.out.println("<" + item.getName() + "> was not inserted in the userInventories");
 					}
 					return result;
 					//return result;
@@ -868,7 +867,40 @@ public class DerbyDatabase implements IDatabase {
 
 	@Override
 	public String useEmptyPotion(Item bottle, Item selected, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		String message = "Nothing Happened";
+		System.out.println(selected.getName() + "is selected");
+		if(selected.getName().equals("Cauldron with Potion")) {
+			message = "You filled the bottle with a potion";
+			Item fullPotion = new Item("Full Potion Bottle", false, 0,0,0);
+			swapItemInInventory(bottle, fullPotion, user);
+		}
+		return message;
+	}
+
+	@Override
+	public void swapItemInInventory(Item itemToRemove, Item itemToAdd, User user) {
+		removeItemFromInventory(itemToRemove, user.getUserID());
+		addItemToInventory(itemToAdd, user.getUserID());
+	}
+
+	@Override
+	public void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user) {
+		int roomID = user.getRoom().getRoomID();
+		removeItemFromRoom(itemToRemove, roomID);
+		addItemToRoom(itemToAdd, roomID);
+		
+	}
+
+	@Override
+	public String useMatches(Item matches, Item selected, User user) {
+		String message = "Nothing Happened";
+		System.out.println(selected.getName() + "is selected");
+		if(selected.getName().equals("Unlit Candle")) {
+			message = "You lit the candle";
+			Item litCandle = new Item("Lit Candle", false, 150,205,0);
+			swapItemInRoom(selected, litCandle, user);
+			removeItemFromInventory(matches, user.getUserID());
+		}
+		return message;
 	}
 }
