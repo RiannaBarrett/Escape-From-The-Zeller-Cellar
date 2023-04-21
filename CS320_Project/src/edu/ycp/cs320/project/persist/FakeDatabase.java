@@ -146,4 +146,16 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public boolean removeItemFromRoom(Item item, int roomID) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeItemFromInventory(Item item, int userID) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

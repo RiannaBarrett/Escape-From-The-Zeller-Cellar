@@ -197,7 +197,7 @@ public class DerbyDatabase implements IDatabase {
 					Boolean result = false;
 					Boolean success = false;
 
-					//selects all details of the new user
+					//selects all details of the new item
 					stmt2 = conn.prepareStatement(
 							"select roomInventories.* " +
 									"  from roomInventories " +
@@ -211,18 +211,157 @@ public class DerbyDatabase implements IDatabase {
 					
 					while (resultSet.next()) {
 						success = true;
-						// create new User object
+						// create new item object
 						// retrieve attributes from resultSet starting with index 1
 						Item resultItem = new Item();
 						loadItem(resultItem, resultSet, 1);
 						
 						result = true;
 					}
-					// check if the user was found
+					// check if the item was found
 					if (!success) {
-						System.out.println("<" + item.getName() + "> was not inserted in the users table");
+						System.out.println("<" + item.getName() + "> was not inserted in the roomInventories table");
 					}
 					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+	
+	
+	@Override
+	public boolean removeItemFromRoom(Item item, int roomID) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				List<Item> currentItems = new ArrayList<Item>();
+				currentItems = getRoomInventoryByID(roomID);
+				Boolean itemExistsInRoom = false;
+				for(Item roomItem : currentItems) {
+					if(item.getName().equals(roomItem.getName())) {
+						itemExistsInRoom = true;
+					}
+				}
+				
+				if(!itemExistsInRoom) {
+					return false;
+				}
+						
+				
+				int itemID = item.getItemID();
+				try {
+					//deletes item from userInventories
+					stmt = conn.prepareStatement(
+							"delete from roomInventories " +
+									" where roomInventories.item_id = ?"
+							);
+					stmt.setInt(1, itemID);
+					
+
+					
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//sees if the item is still in the inventory
+					stmt2 = conn.prepareStatement(
+							"select roomInventories.* " +
+									"  from roomInventories " +
+									" where roomInventories.name = ? and roomInventories.room_id = ?"
+							);
+					stmt2.setString(1, item.getName());
+					stmt2.setInt(2, roomID);
+						
+					
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						return false;
+					}
+					// check if the item was deleted
+					if (!success) {
+						System.out.println("<" + item.getName() + "> was not removed from the roomInventories table");
+					}
+					return true;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public boolean removeItemFromInventory(Item item, int userID) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				List<Item> currentItems = new ArrayList<Item>();
+				currentItems = getUserInventoryByID(userID);
+				Boolean itemExistsInRoom = false;
+				for(Item invItem : currentItems) {
+					if(item.getName().equals(invItem.getName())) {
+						itemExistsInRoom = true;
+					}
+				}
+				
+				if(!itemExistsInRoom) {
+					return false;
+				}
+						
+				
+				int itemID = item.getItemID();
+				try {
+					//deletes item from userInventories
+					stmt = conn.prepareStatement(
+							"delete from userInventories " +
+									" where userInventories.item_id = ?"
+							);
+					stmt.setInt(1, itemID);
+					
+
+					
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//sees if the item is still in the inventory
+					stmt2 = conn.prepareStatement(
+							"select userInventories.* " +
+									"  from userInventories " +
+									" where userInventories.name = ? and userInventories.user_id = ?"
+							);
+					stmt2.setString(1, item.getName());
+					stmt2.setInt(2, userID);
+						
+					
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						return false;
+					}
+					// check if the item was deleted
+					if (!success) {
+						System.out.println("<" + item.getName() + "> was not removed from the roomInventories table");
+					}
+					return true;
 					//return result;
 
 				} finally {

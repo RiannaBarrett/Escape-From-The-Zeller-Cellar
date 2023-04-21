@@ -20,4 +20,8 @@ public interface IDatabase {
 	public boolean addItemToRoom(Item item, int roomID);
 
 	public boolean addItemToInventory(Item item, int userID);
+
+	boolean removeItemFromRoom(Item item, int roomID);
+
+	boolean removeItemFromInventory(Item item, int userID);
 }
