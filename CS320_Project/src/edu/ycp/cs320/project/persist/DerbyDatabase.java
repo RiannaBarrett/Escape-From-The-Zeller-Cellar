@@ -64,6 +64,7 @@ public class DerbyDatabase implements IDatabase {
 						User user = new User();
 						loadUser(user, resultSet, 1);
 						// load inventory objects
+						user.setRoom(getRoomByUserID(user.getUserID()));
 						user.setInventory(getUserInventoryByID(user.getUserID()));
 						result = user;
 					}
@@ -157,10 +158,54 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-
-	private Room findRoomByUserID(int userID) {
-		throw new UnsupportedOperationException();
-
+	
+	private Room getRoomByUserID(int userID) {
+		//throw new UnsupportedOperationException();
+		return executeTransaction(new Transaction<Room>() {
+			@Override
+			public Room execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select rooms.* " +
+							"  from rooms " +
+							" where rooms.user_id = ? "
+					);
+					stmt.setInt(1, userID);
+					
+					Room result = null;
+					
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new User object
+						// retrieve attributes from resultSet starting with index 1
+						Room room = new Room();
+						loadRoom(room, resultSet, 1);
+						// load inventory objects
+						room.setItems(getRoomInventoryByID(room.getRoomID()));
+						result = room;
+					}
+					
+					// check if the user was found
+					if (!found) {
+						System.out.println("<" + userID + "> was not found in the rooms table");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	private List<Item> getUserInventoryByID(int userID) {
@@ -209,14 +254,67 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-
+	
+	private List<Item> getRoomInventoryByID(int roomID) {
+		return executeTransaction(new Transaction<List<Item>>() {
+			@Override
+			public List<Item> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select roomInventories.* " +
+							"  from roomInventories " +
+							" where roomInventories.room_id = ? "
+					);
+					stmt.setInt(1, roomID);
+					
+					List<Item> result = new ArrayList<Item>();
+					
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new User object
+						// retrieve attributes from resultSet starting with index 1
+						Item item = new Item();
+						loadItem(item, resultSet, 1);
+						// load inventory objects
+						result.add(new Item(item));
+					}
+					
+					// check if the user was found
+					if (!found) {
+						System.out.println("<No items found for roomID: " + roomID + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	private void loadUser(User user, ResultSet result, int index) throws SQLException {
 		user.setUserID(result.getInt(index++));
 		user.setUsername(result.getString(index++));
 		user.setPassword(result.getString(index++));
 		user.setInventoryLimit(result.getInt(index++));
 	}
-
+	
+	private void loadRoom(Room room, ResultSet result, int index) throws SQLException {
+		room.setRoomID(result.getInt(index++));
+		room.setUserID(result.getInt(index++));
+		room.setUserPosition(result.getInt(index++));
+	}
+	
 	private void loadItem(Item item, ResultSet result, int index) throws SQLException {
 		item.setItemID(result.getInt(index++));
 		// Skip User ID
