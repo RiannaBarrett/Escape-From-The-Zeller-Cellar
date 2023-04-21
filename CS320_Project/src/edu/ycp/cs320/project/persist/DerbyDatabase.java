@@ -31,6 +31,8 @@ public class DerbyDatabase implements IDatabase {
 
 	private static final int MAX_ATTEMPTS = 10;
 
+	
+	
 	// New Methods Go Here
 	@Override
 	public User findUserByName(String name) {
@@ -98,10 +100,212 @@ public class DerbyDatabase implements IDatabase {
 		throw new UnsupportedOperationException();
 		
 	}
-
 	@Override
 	public boolean addUser(User user) {
-		throw new UnsupportedOperationException();
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				try {
+					//inserts user based on username, password and inventory limit of 5
+					stmt = conn.prepareStatement(
+							"insert into users (username, password, inventoryLimit)" +
+									"values (?,?, 5) "
+							);
+					stmt.setString(1, user.getUsername());
+					stmt.setString(2, user.getPassword());
+
+					
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects all details of the new user
+					stmt2 = conn.prepareStatement(
+							"select users.* " +
+									"  from users " +
+									" where users.username = ? and users.password = ? "
+							);
+					stmt2.setString(1, user.getUsername());
+					stmt2.setString(2, user.getPassword());	
+					
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						success = true;
+						// create new User object
+						// retrieve attributes from resultSet starting with index 1
+						User user = new User();
+						loadUser(user, resultSet, 1);
+						// load inventory objects
+						user.setInventory(getUserInventoryByID(user.getUserID()));
+						result = true;
+					}
+					// check if the user was found
+					if (!success) {
+						System.out.println("<" + user + "> was not inserted in the users table");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public boolean addItemToRoom(Item item, int roomID) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				List<Item> currentItems = new ArrayList<Item>();
+				currentItems = getRoomInventoryByID(roomID);
+				for(Item roomItem : currentItems) {
+					if(item.getName().equals(roomItem.getName())) {
+						return false;
+					}
+				}
+				
+						
+				
+				try {
+					//inserts item into roomInventory
+					stmt = conn.prepareStatement(
+							"insert into roomInventories (room_id, name, canBePickedUp, xPosition, yPosition, roomPosition)" +
+									"values (?,?,?,?,?,?) "
+							);
+					stmt.setInt(1, roomID);
+					stmt.setString(2, item.getName());
+					stmt.setString(3,  item.getCanBePickedUp().toString());
+					stmt.setInt(4, item.getXPosition());
+					stmt.setInt(5, item.getYPosition());
+					stmt.setInt(6, item.getRoomPosition());
+
+					
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects all details of the new user
+					stmt2 = conn.prepareStatement(
+							"select roomInventories.* " +
+									"  from roomInventories " +
+									" where roomInventories.name = ? and roomInventories.room_id = ?"
+							);
+					stmt2.setString(1, item.getName());
+					stmt2.setInt(2, roomID);
+						
+					
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						success = true;
+						// create new User object
+						// retrieve attributes from resultSet starting with index 1
+						Item resultItem = new Item();
+						loadItem(resultItem, resultSet, 1);
+						
+						result = true;
+					}
+					// check if the user was found
+					if (!success) {
+						System.out.println("<" + item.getName() + "> was not inserted in the users table");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public boolean addItemToInventory(Item item, int userID) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				List<Item> currentItems = new ArrayList<Item>();
+				currentItems = getUserInventoryByID(userID);
+				for(Item invItem : currentItems) {
+					if(item.getName().equals(invItem.getName())) {
+						return false;
+					}
+				}
+				
+						
+				
+				try {
+					//inserts item into roomInventory
+					stmt = conn.prepareStatement(
+							"insert into userInventories (user_id, name, canBePickedUp, xPosition, yPosition, roomPosition)" +
+									"values (?,?,?,?,?,?) "
+							);
+					stmt.setInt(1, userID);
+					stmt.setString(2, item.getName());
+					stmt.setString(3,  item.getCanBePickedUp().toString());
+					stmt.setInt(4, item.getXPosition());
+					stmt.setInt(5, item.getYPosition());
+					stmt.setInt(6, item.getRoomPosition());
+
+					
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects all details of the new user
+					stmt2 = conn.prepareStatement(
+							"select userInventories.* " +
+									"  from userInventories " +
+									" where userInventories.name = ? and userInventories.user_id = ?"
+							);
+					stmt2.setString(1, item.getName());
+					stmt2.setInt(2, userID);
+						
+					
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						success = true;
+						// create new User object
+						// retrieve attributes from resultSet starting with index 1
+						Item resultItem = new Item();
+						loadItem(resultItem, resultSet, 1);
+						
+						result = true;
+					}
+					// check if the user was found
+					if (!success) {
+						System.out.println("<" + item.getName() + "> was not inserted in the users table");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
 	}
 	
 	private Room getRoomByUserID(int userID) {
