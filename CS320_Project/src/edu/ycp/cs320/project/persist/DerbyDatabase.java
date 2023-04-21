@@ -174,7 +174,7 @@ public class DerbyDatabase implements IDatabase {
 									" where rooms.user_id = ? "
 							);
 					stmt4.setInt(1, user.getUserID());
-					resultSet = stmt4.executeQuery();					
+					resultSet = stmt4.executeQuery();				
 					
 					// check if the user was found
 					while (resultSet.next()) {
@@ -183,6 +183,8 @@ public class DerbyDatabase implements IDatabase {
 						user.setRoom(room);
 						result = true;
 					}
+					boolean addItems = false;
+					
 					if (!result) {
 						System.out.println("<" + user + "> was not inserted in the users table");
 					}
