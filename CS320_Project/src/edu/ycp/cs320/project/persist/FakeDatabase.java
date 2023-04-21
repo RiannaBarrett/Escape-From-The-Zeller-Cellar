@@ -114,16 +114,17 @@ public class FakeDatabase implements IDatabase {
 		return null;
 	}
 	
-	private void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user) {
+	@Override
+	public void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user) {
 		user.getRoom().getItems().remove(itemToRemove);
 		user.getRoom().getItems().add(itemToAdd);
 	}
-	
+	@Override
 	public void swapItemInInventory(Item itemToRemove, Item itemToAdd, User user) {
 		user.getInventory().remove(itemToRemove);
 		user.getInventory().add(itemToAdd);
 	}
-	
+	@Override
 	public String useEmptyPotion(Item bottle, Item selected, User user) {
 		String message = "Nothing Happened";
 		System.out.println(selected.getName() + "is selected");
@@ -131,6 +132,19 @@ public class FakeDatabase implements IDatabase {
 			message = "You filled the bottle with a potion";
 			Item fullPotion = new Item("Full Potion Bottle", false, 0,0,0);
 			swapItemInInventory(bottle, fullPotion, user);
+		}
+		return message;
+	}
+	
+	@Override
+	public String useMatches(Item matches, Item selected, User user) {
+		String message = "Nothing Happened";
+		System.out.println(selected.getName() + "is selected");
+		if(selected.getName().equals("Unlit Candle")) {
+			message = "You lit the candle";
+			Item litCandle = new Item("Lit Candle", false, 150,205,0);
+			swapItemInRoom(selected, litCandle, user);
+			user.getInventory().remove(matches);
 		}
 		return message;
 	}
@@ -143,7 +157,7 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public boolean addItemToInventory(Item item, int userID) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

@@ -235,22 +235,28 @@ public class MainpageServlet extends HttpServlet {
 				
 				//tells the jsp which image to use
 				req.setAttribute("ViewNumber", position);
-		
+				
+		//IF TESTING FAKE DB COMMENT OUT THIS LINE
 				controller.PopulateModel(user);		
 				
 		//get the inventory and add the images of the items to the jsp
 				inventory = model.getUser().getInventory();
 				req.setAttribute("inventory", inventory);
 				
+				List<Item> roomInv = model.getUser().getRoom().getItems();
+				
 				items = new ArrayList<Item>();
 				//get items in room
-				for(int i = 0; i<model.getUser().getRoom().getItems().size();i++) {
-					if(model.getUser().getRoom().getItems().get(i).getRoomPosition() == model.getUser().getRoom().getUserPosition()) {
+				for(int i = 0; i<roomInv.size();i++) {
+					if(roomInv.get(i).getRoomPosition() == model.getUser().getRoom().getUserPosition()) {
 						
 						items.add(model.getUser().getRoom().getItems().get(i));
 					}
 				}
-		req.setAttribute("items", items);
+				for(Item item : items) {
+					System.out.println(item.getName() + " is in the room");
+				}
+		req.setAttribute("items", roomInv);
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
 		

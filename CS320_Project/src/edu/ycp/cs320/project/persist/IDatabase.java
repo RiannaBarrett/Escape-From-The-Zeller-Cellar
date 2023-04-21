@@ -21,7 +21,13 @@ public interface IDatabase {
 
 	public boolean addItemToInventory(Item item, int userID);
 
-	boolean removeItemFromRoom(Item item, int roomID);
+	public boolean removeItemFromRoom(Item item, int roomID);
 
-	boolean removeItemFromInventory(Item item, int userID);
+	public boolean removeItemFromInventory(Item item, int userID);
+
+	public void swapItemInInventory(Item itemToRemove, Item itemToAdd, User user);
+
+	public void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user);
+
+	public String useMatches(Item matches, Item selected, User user);
 }
