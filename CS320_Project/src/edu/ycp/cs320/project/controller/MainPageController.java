@@ -1,6 +1,7 @@
 package edu.ycp.cs320.project.controller;
 
 import edu.ycp.cs320.project.persist.DatabaseProvider;
+import edu.ycp.cs320.project.persist.DerbyDatabase;
 import edu.ycp.cs320.project.persist.FakeDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
 
@@ -30,7 +31,7 @@ public class MainPageController {
 	}
 	
 	public void PopulateModel(String username) {
-		DatabaseProvider.setInstance(new FakeDatabase());
+		DatabaseProvider.setInstance(new DerbyDatabase());
 		db = DatabaseProvider.getInstance();
 		User user = db.findUserByName(username);
 		if(user != null) {
@@ -41,7 +42,7 @@ public class MainPageController {
 
 	
 	public boolean transferItemFromRoomToUser(String itemName) {
-
+		DatabaseProvider.setInstance(new FakeDatabase());
 		// Does the user have inventory space?
 		// MOVE TO CONTROLLER
 		User user = model.getUser();

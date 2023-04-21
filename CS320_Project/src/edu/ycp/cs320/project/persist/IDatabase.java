@@ -16,4 +16,12 @@ public interface IDatabase {
 	public boolean addUser(User user);
 
 	public String useEmptyPotion(Item bottle, Item selected, User user);
+
+	public boolean addItemToRoom(Item item, int roomID);
+
+	public boolean addItemToInventory(Item item, int userID);
+
+	boolean removeItemFromRoom(Item item, int roomID);
+
+	boolean removeItemFromInventory(Item item, int userID);
 }
