@@ -87,7 +87,19 @@ public class DerbyDatabase implements IDatabase {
 	
 	@Override
 	public boolean transferItemFromRoomToUser(User user, Item item) {
-		throw new UnsupportedOperationException();
+		Boolean added = false;
+		Boolean removed = false;
+		added = addItemToInventory(item, user.getUserID());
+		removed = removeItemFromRoom(item, user.getRoom().getRoomID());
+		System.out.println(added);
+		System.out.println("removed: " + removed);
+		if(!added || !removed) {
+			return false;
+		}else {
+			return true;
+		}
+		
+		
 	}
 	
 	@Override
@@ -100,65 +112,7 @@ public class DerbyDatabase implements IDatabase {
 		throw new UnsupportedOperationException();
 		
 	}
-	@Override
-	public boolean addUser(User user) {
-		return executeTransaction(new Transaction<Boolean>() {
-			@Override
-			public Boolean execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				PreparedStatement stmt2 = null;
-				ResultSet resultSet = null;
-				try {
-					//inserts user based on username, password and inventory limit of 5
-					stmt = conn.prepareStatement(
-							"insert into users (username, password, inventoryLimit)" +
-									"values (?,?, 5) "
-							);
-					stmt.setString(1, user.getUsername());
-					stmt.setString(2, user.getPassword());
-
-					
-					stmt.execute();
-					
-					Boolean result = false;
-					Boolean success = false;
-
-					//selects all details of the new user
-					stmt2 = conn.prepareStatement(
-							"select users.* " +
-									"  from users " +
-									" where users.username = ? and users.password = ? "
-							);
-					stmt2.setString(1, user.getUsername());
-					stmt2.setString(2, user.getPassword());	
-					
-					resultSet = stmt2.executeQuery();
-					
-					while (resultSet.next()) {
-						success = true;
-						// create new User object
-						// retrieve attributes from resultSet starting with index 1
-						User user = new User();
-						loadUser(user, resultSet, 1);
-						// load inventory objects
-						user.setInventory(getUserInventoryByID(user.getUserID()));
-						result = true;
-					}
-					// check if the user was found
-					if (!success) {
-						System.out.println("<" + user + "> was not inserted in the users table");
-					}
-					return result;
-					//return result;
-
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-					DBUtil.closeQuietly(stmt2);
-				}
-			}
-		});
-	}
+	
 	
 	@Override
 	public boolean addItemToRoom(Item item, int roomID) {
@@ -271,7 +225,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt.execute();
 					
 					Boolean result = false;
-					Boolean success = false;
+					Boolean success = true;
 
 					//sees if the item is still in the inventory
 					stmt2 = conn.prepareStatement(
@@ -286,6 +240,7 @@ public class DerbyDatabase implements IDatabase {
 					resultSet = stmt2.executeQuery();
 					
 					while (resultSet.next()) {
+						success = false;
 						return false;
 					}
 					// check if the item was deleted
@@ -834,5 +789,11 @@ public class DerbyDatabase implements IDatabase {
 	public String useEmptyPotion(Item bottle, Item selected, User user) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean addUser(User user) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

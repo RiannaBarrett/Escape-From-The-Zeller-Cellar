@@ -236,10 +236,13 @@ public class MainpageServlet extends HttpServlet {
 				//tells the jsp which image to use
 				req.setAttribute("ViewNumber", position);
 		
+				controller.PopulateModel(user);		
+				
 		//get the inventory and add the images of the items to the jsp
 				inventory = model.getUser().getInventory();
 				req.setAttribute("inventory", inventory);
 				
+				items = new ArrayList<Item>();
 				//get items in room
 				for(int i = 0; i<model.getUser().getRoom().getItems().size();i++) {
 					if(model.getUser().getRoom().getItems().get(i).getRoomPosition() == model.getUser().getRoom().getUserPosition()) {
