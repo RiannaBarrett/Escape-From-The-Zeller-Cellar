@@ -109,7 +109,67 @@ public class DerbyDatabase implements IDatabase {
 
 	@Override
 	public boolean moveUser(User user, int moveTo) {
-		throw new UnsupportedOperationException();
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				int roomID = user.getRoom().getRoomID();
+				
+						
+				
+				try {
+					//inserts item into roomInventory
+					stmt = conn.prepareStatement(
+							"update rooms " +
+									"set rooms.userPosition = ? " +
+									"where rooms.room_id = ?"
+							);
+					stmt.setInt(1, moveTo);
+					stmt.setInt(2, roomID);
+					
+					
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects all details of the new item
+					stmt2 = conn.prepareStatement(
+							"select rooms.userPosition " +
+									"  from rooms " +
+									" where rooms.room_id = ?"
+							);
+					stmt2.setInt(1, roomID);
+					
+						
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						success = true;
+						
+						 //retrieve attributes from resultSet starting with index 1
+						int finalPos = resultSet.getInt(1);
+						System.out.println("Position: " + finalPos);
+						if(moveTo == finalPos) {
+							result  = true;
+						}
+					}
+					// check if the item was found
+					if (!success) {
+						System.out.println("<" + user.getUsername() + "> was not moved");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
 
 	}
 	
