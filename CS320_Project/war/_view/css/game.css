@@ -24,7 +24,8 @@ body {
 
 .roomImg {
 	position: relative;
-	
+	width:100%;
+	height:100%;
 }
 
 p {
@@ -51,12 +52,22 @@ p {
 	width:200px;
 }
 
-.invButton {
-	
-	  appearance: none;
-  background-color: inherit;
-  border: none;
-}
+.inventory {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .inventory-header {
+    font-size: 36px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    background-color: #fff;
+    display: inline-block;
+    padding: 0 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
 
 .clickableHover button {
 	 position: absolute;
@@ -101,34 +112,36 @@ p {
     width: 20%;
 }
 
-.inventory {
-    align-content: center;
-}
+  .inventory-table {
+    border-collapse: separate;
+    border-spacing: 10px;
+    margin-top: 20px;
+  }
 
-.inventory table {
-	padding:0px;
-	margin:0;
-    width: 100%;
-    border-left: solid;
-    border-right: solid;
-    border-bottom: solid;
-    height:150px;
-    border-collapse: collapse;
-    
-}
-.inventory table th{
-	height:20px;
-	border-left: solid;
-    border-right: solid;
-    border-bottom: solid;
-	
-}
-.inventory table td{
-	text-allign:center;
-	border-left: solid;
-    border-right: solid;
-}
+  .inventory-slot {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
 
+  .inv-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .inv-img {
+    max-width: 10%;
+    height: auto;
+  }
+
+  .inv-name {
+    margin-top: 5px;
+    font-size: 16px;
+  }
 #title {
     width: fit-content;
     margin: 0;

@@ -13,7 +13,7 @@
         
         <div class="title">
         <h1>
-            Escape from the Zellar Cellar
+            Escape from the Zeller Cellar
         </h1>
          </div>
         <div class = "loginBtn">
@@ -28,7 +28,7 @@
             </td>
             <td class="gameGraphics">
             	<div ="imageContainer">
-                <img class = "roomImg" src ="./Images/RoomPlaceholder${ViewNumber}.jpg" alt = "Placeholder Room Image">
+                <img class = "roomImg" src ="./Images/RoomPlaceholder${ViewNumber}.png" alt = "Placeholder Room Image">
                 <button class="button left" name = "left"><</button>
                 <button class="button right" name = "right"><</button>
                 <button class="button up" name = "up"><</button>
@@ -46,36 +46,28 @@
                <input type="text" name ="selected" style="visibility:hidden;" value="${selected}">
             </td>
             <td class="objectives">
-                Objectives
+                <div class="obj"> 
+                <h1 class="objective-header"> Objectives </h1>
+                 </div>
             </td>
         </table>
     </div>
 
     <div class="inventory">
-        <table class="inventorySlot">
-        <tr>
-        <c:forEach items= "${inventory}" var="inv">
-        <th> 
-            <div>
-            <button class = "invButton" type = "submit" name="${inv.getName()}">
-            <img class = "inv" src ="./Images/${inv.getName()}.png" alt = "${inv.getName()} style="width:10%;">
-            </button>
-            </div>  
-            </th>
-        </c:forEach>
-            
-        </tr>
-        <tr>
-        <c:forEach items = "${inventory}" var = "inv">
-        <td>
-				${inv.getName()}          
-			</td>
-        </c:forEach>
-            
-           
-        </tr>
-        </table>
-    </div>
+        <h2 class="inventory-header">Inventory</h2>
+  <table class="inventory-table">
+    <tr>
+      <c:forEach items="${inventory}" var="inv">
+        <td class="inventory-slot">
+          <button class="inv-button" type="submit" name="${inv.getName()}">
+            <img class="inv-img" src="./Images/${inv.getName()}.png" alt="${inv.getName()}" style="width: 100%;">
+          </button>
+          <div class="inv-name">${inv.getName()}</div>
+        </td>
+      </c:forEach>
+    </tr>
+  		</table>
+			</div>
     </form>
 </body>
 </html>
