@@ -58,12 +58,19 @@ public class MainpageServlet extends HttpServlet {
 		//check what the current position is and set background image
 		//TODO: this code will be changed once our backgrounds are final
 		int position = model.getUser().getRoom().getUserPosition();
-		if(position == 2 || position == 0 ) {
+		if(position == 0 ) {
+			position=0;
+		}
+		if(position==1) {
 			position=1;
 		}
-		if(position == 3) {
-			position = 2;
+		if(position==2) {
+			position=2;
 		}
+		if(position == 3 ) {
+			position=3;
+		}
+		
 		
 		//tells the jsp which image to use
 		req.setAttribute("ViewNumber", position);
@@ -229,11 +236,17 @@ public class MainpageServlet extends HttpServlet {
 		//check what the current position is and set background image
 				//TODO: this code will be changed once our backgrounds are final
 				position = model.getUser().getRoom().getUserPosition();
-				if(position == 2 || position == 0 ) {
+				if(position == 0 ) {
+					position=0;
+				}
+				if(position==1) {
 					position=1;
 				}
-				if(position == 3) {
-					position = 2;
+				if(position==2) {
+					position=2;
+				}
+				if(position == 3 ) {
+					position=3;
 				}
 				
 				//tells the jsp which image to use
