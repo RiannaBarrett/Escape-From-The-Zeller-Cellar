@@ -223,7 +223,7 @@ public class MainpageServlet extends HttpServlet {
 			}
 		}
 		
-		//IF TESTING FAKE DB COMMENT OUT THIS LINE
+		//refreshes the model before adding things to the screen
 		controller.PopulateModel(user);	
 		
 		//check what the current position is and set background image

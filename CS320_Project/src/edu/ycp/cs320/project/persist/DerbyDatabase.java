@@ -120,7 +120,7 @@ public class DerbyDatabase implements IDatabase {
 						
 				
 				try {
-					//inserts item into roomInventory
+					//updates user position
 					stmt = conn.prepareStatement(
 							"update rooms " +
 									"set rooms.userPosition = ? " +
@@ -135,7 +135,7 @@ public class DerbyDatabase implements IDatabase {
 					Boolean result = false;
 					Boolean success = false;
 
-					//selects all details of the new item
+					//selects the new position to check if it was successful
 					stmt2 = conn.prepareStatement(
 							"select rooms.userPosition " +
 									"  from rooms " +
