@@ -1029,7 +1029,79 @@ public class DerbyDatabase implements IDatabase {
 
 	@Override
 	public String usePotionIngredient(Item item, Item selected, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		//message telling the user they successfully added an item
+				String message = "You put the item in the cauldron";
+				List<Item> items = user.getRoom().getItems();
+				List<Item> ingredients = new ArrayList<Item>();
+				
+				//items with position 4 are items that were used on the empty cauldron. get these items
+				for(int i = 0; i<items.size();i++) {
+					if(items.get(i).getRoomPosition() == 4) {
+						ingredients.add(items.get(i));
+						System.out.println("Ingredient added: " + items.get(i).getName());
+					}
+				}
+				
+				
+				user = findUserByName(user.getUsername());
+				Item itemToAdd = item;
+				//set the position to 4 (because it is being added to the cauldron
+				itemToAdd.setRoomPosition(4);
+				System.out.println("Number of ingredients before adding: " + ingredients.size());
+				//2 represents the number of ingredients needed. Change this later when all ingredients are added
+				if(ingredients.size() < 2) {
+					//add it to the room and the current list of ingredients
+					addItemToRoom(itemToAdd, user.getRoom().getRoomID());
+					//refresh user
+					user = findUserByName(user.getUsername());
+					//add to ingredients to keep track of the number of ingredients
+					ingredients.add(itemToAdd);
+					//remove the item that is used
+					removeItemFromInventory(item, user.getUserID());
+				}
+				
+				System.out.println("Number of ingredients after adding: " + ingredients.size());
+				//check if correct number of ingredients were added
+				if(ingredients.size() >= 2) {
+					//check if the ingredients are correct and in the right order
+					if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
+							ingredients.get(1).getName().equals("Jar with Hibiscus")) {
+							//make a full cauldron item by changing the name 
+						Item emptyCauldron = selected;
+						Item fullCauldron = selected;
+						fullCauldron.setName("Cauldron with potion");
+						//if the potion was made swap the empty cauldron with the full cauldron into the room
+						swapItemInRoom(emptyCauldron, fullCauldron, user);
+						//message telling the user they were successful
+						message = "You created a potion";
+						Item firstItem = ingredients.get(0);
+						Item secondItem = ingredients.get(1);
+						//remove the items (they do not need to be used anymore)
+						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
+						user = findUserByName(user.getUsername());
+						secondItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-2);
+						System.out.println("removing: " + secondItem.getName());
+						removeItemFromRoom(secondItem, user.getRoom().getRoomID());
+					}else {
+						//if they are incorrect return the items to inventory and remove them from ingredient list
+						Item firstItem = ingredients.get(0);
+						Item secondItem = ingredients.get(1);
+						
+						//return the incorrect items so the user can try again
+						addItemToInventory(firstItem, user.getUserID());
+						addItemToInventory(secondItem, user.getUserID());
+						
+						//remove items from cauldron
+						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
+						//refresh user
+						user = findUserByName(user.getUsername());
+						secondItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
+						removeItemFromRoom(secondItem, user.getRoom().getRoomID());;
+						//message telling the user they were not successful
+						message = "The ingredients added did not seem to do anything";
+					}
+				}
+				
+		return message;
 	}
 }

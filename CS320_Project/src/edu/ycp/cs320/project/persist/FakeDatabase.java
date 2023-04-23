@@ -189,16 +189,27 @@ public class FakeDatabase implements IDatabase {
 	public String usePotionIngredient(Item item, Item selected, User user) {
 		//message telling the user they successfully added an item
 		String message = "You put the item in the cauldron";
-		List<Item> ingredients = user.getRoom().getIngredients();
+		List<Item> items = user.getRoom().getItems();
+		List<Item> ingredients = new ArrayList<Item>();
+		//position 4 means it is a potion ingredient. Find all of the potion ingredients added
+		for(int i = 0;i<items.size();i++) {
+			if(items.get(i).getRoomPosition() == 4) {
+				ingredients.add(items.get(i));
+			}
+		}
+		
+		Item itemToAdd = item;
 		//2 represents the number of ingredients needed. Change this later when all ingredients are added
 		if(ingredients.size() < 2) {
-			ingredients.add(item);
+			itemToAdd.setRoomPosition(4);
+			items.add(itemToAdd);
+			ingredients.add(itemToAdd);
 		}
 		
 		if(ingredients.size() >= 2) {
 			//check if the ingredients are correct and in the right order
 			if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
-					ingredients.get(1).equals("Jar with Hibiscus")) {
+					ingredients.get(1).getName().equals("Jar with Hibiscus")) {
 					//swap empty cauldron with full cauldron 
 				Item emptyCauldron = selected;
 				Item fullCauldron = selected;
@@ -213,8 +224,8 @@ public class FakeDatabase implements IDatabase {
 				Item secondItem = ingredients.get(1);
 				user.getInventory().add(firstItem);
 				user.getInventory().add(secondItem);
-				ingredients.remove(1);
-				ingredients.remove(0);
+				items.remove(firstItem);
+				items.remove(secondItem);
 				//message telling the user they were not successful
 				message = "The ingredients added did not seem to do anything";
 			}
