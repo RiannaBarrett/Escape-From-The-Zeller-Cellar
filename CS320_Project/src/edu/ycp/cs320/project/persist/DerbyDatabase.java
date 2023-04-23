@@ -428,11 +428,7 @@ public class DerbyDatabase implements IDatabase {
 							);
 					stmt.setInt(1, itemID);
 					
-
-					
 					stmt.execute();
-					
-					
 
 					//sees if the item is still in the inventory
 					stmt2 = conn.prepareStatement(
@@ -443,10 +439,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt2.setString(1, item.getName());
 					stmt2.setInt(2, userID);
 						
-					
 					resultSet = stmt2.executeQuery();
-					
-		
 					
 					while (resultSet.next()) {
 				
@@ -960,5 +953,73 @@ public class DerbyDatabase implements IDatabase {
 			removeItemFromInventory(matches, user.getUserID());
 		}
 		return message;
+	}
+
+	@Override
+	public boolean changeCanBePickedUp(User user, Item item, Boolean canBePickedUp) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				
+				
+					int itemID = item.getItemID();	
+				
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update roomInventories " +
+									"set roomInventories.canBePickedUp = ? " +
+									"where roomInventories.item_id = ?"
+							);
+					stmt.setString(1, canBePickedUp.toString());
+					stmt.setInt(2, itemID);
+				
+
+					
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select roomInventories.canBePickedUp " +
+									"  from roomInventories " +
+									" where roomInventories.item_id = ?"
+							);
+			
+					stmt2.setInt(1, itemID);
+						
+					
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(canBePickedUp.toString())) {
+							success = true;
+						}
+						
+					}
+					if (!success) {
+						System.out.println("<" + item.getName() + "> was not updated");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+
 	}
 }
