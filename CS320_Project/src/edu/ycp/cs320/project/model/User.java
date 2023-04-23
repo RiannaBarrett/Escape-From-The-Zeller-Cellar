@@ -18,6 +18,14 @@ public class User {
 		this.room = new Room();
 		this.inventoryLimit = 5;
 	}
+	public User(String username, String password) {
+		this.userID = 0;
+		this.username = username;
+		this.password = password;
+		this.inventory = new ArrayList<Item>();
+		this.room = new Room();
+		this.inventoryLimit = 5;
+	}
 	
 	public User(int userID, String username, String password, List<Item> inventory, Room room) {
 		this.userID = userID;

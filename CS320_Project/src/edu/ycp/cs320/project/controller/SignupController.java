@@ -15,12 +15,12 @@ public class SignupController {
 	        return false;
 	    } else {
 	        // create a new User object
-	        User newUser = new User(0, username, password, null, null);
-	        
-	        // add the new user to the FakeDatabase
+	        User newUser = new User(username, password);
+	        // add the new user to the Database
 	        DatabaseProvider.setInstance(new DerbyDatabase());
 	        IDatabase db = DatabaseProvider.getInstance();
 	        User existingUser = db.findUserByName(username);
+	        
 	        boolean success = false;
 	        if(username.contains("|") || username.contains(";") || username.contains("^") || 
 					username.contains("\"") || username.contains("'") || password.contains("|") ||
@@ -34,6 +34,7 @@ public class SignupController {
 	        if(success) {
 	        	System.out.println(newUser.getUsername() +" & " + newUser.getPassword());
 	        }
+	        
 	        // return true if the sign-up was successful
 	        return success;
 	    }
