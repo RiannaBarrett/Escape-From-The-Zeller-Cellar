@@ -181,17 +181,19 @@ public class DerbyDatabase implements IDatabase {
 						Room room = new Room();
 						loadRoom(room, resultSet, 1);
 						user.setRoom(room);
-						result = true;
-					}
-					boolean addItems = false;
 					
+						result = true;
+					}					
 					if (!result) {
-						System.out.println("<" + user + "> was not inserted in the users table");
+						System.out.println("<" + user.getPassword() + "> was not inserted in the users table");
 					}
 					return result;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
 				}
 			}
 		});

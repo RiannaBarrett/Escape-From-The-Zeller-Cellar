@@ -16,8 +16,8 @@ public class LoginController {
 				password.contains("'")) {
 			return false;
 		}else {
-			//DatabaseProvider.setInstance(new DerbyDatabase());
-			DatabaseProvider.setInstance(new FakeDatabase());
+			DatabaseProvider.setInstance(new DerbyDatabase());
+			//DatabaseProvider.setInstance(new FakeDatabase());
 			IDatabase db = DatabaseProvider.getInstance();
 			User dbUser = db.findUserByName(username);
 			if(dbUser!=null && password.equals(dbUser.getPassword())) {

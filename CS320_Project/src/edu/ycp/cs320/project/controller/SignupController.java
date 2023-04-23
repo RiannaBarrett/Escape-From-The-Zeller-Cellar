@@ -2,6 +2,7 @@ package edu.ycp.cs320.project.controller;
 
 import edu.ycp.cs320.project.model.User;
 import edu.ycp.cs320.project.persist.DatabaseProvider;
+import edu.ycp.cs320.project.persist.DerbyDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
 import edu.ycp.cs320.project.persist.FakeDatabase;
 
@@ -17,7 +18,7 @@ public class SignupController {
 	        User newUser = new User(0, username, password, null, null);
 	        
 	        // add the new user to the FakeDatabase
-	        
+	        DatabaseProvider.setInstance(new DerbyDatabase());
 	        IDatabase db = DatabaseProvider.getInstance();
 	        User existingUser = db.findUserByName(username);
 	        boolean success = false;

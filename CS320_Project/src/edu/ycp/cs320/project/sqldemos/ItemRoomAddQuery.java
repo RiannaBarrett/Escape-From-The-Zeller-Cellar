@@ -22,8 +22,12 @@ public class ItemRoomAddQuery {
 		IDatabase db = DatabaseProvider.getInstance();
 		User user = db.findUserByName(username);
 		Item item2 = new Item("Empty Cauldron", false, 100, 100, 0);
+		Item item3 = new Item("Potion", false, 100, 100, 2);
+
 		int roomID = user.getRoom().getRoomID();
 		db.addItemToRoom(item2, roomID);
+		db.addItemToRoom(item3, roomID);
+
 		user = db.findUserByName(username);
 		
 		// check if anything was returned and output the list

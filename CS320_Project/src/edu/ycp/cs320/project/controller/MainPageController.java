@@ -31,8 +31,8 @@ public class MainPageController {
 	}
 	
 	public void PopulateModel(String username) {
-		//DatabaseProvider.setInstance(new DerbyDatabase());
-		DatabaseProvider.setInstance(new FakeDatabase());
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		//DatabaseProvider.setInstance(new FakeDatabase());
 		db = DatabaseProvider.getInstance();
 		User user = db.findUserByName(username);
 		if(user != null) {
