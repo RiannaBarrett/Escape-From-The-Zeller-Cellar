@@ -184,4 +184,43 @@ public class FakeDatabase implements IDatabase {
 		}
 		return true;
 	}
+
+	@Override
+	public String usePotionIngredient(Item item, Item selected, User user) {
+		//message telling the user they successfully added an item
+		String message = "You put the item in the cauldron";
+		List<Item> ingredients = user.getRoom().getIngredients();
+		//2 represents the number of ingredients needed. Change this later when all ingredients are added
+		if(ingredients.size() < 2) {
+			ingredients.add(item);
+		}
+		
+		if(ingredients.size() >= 2) {
+			//check if the ingredients are correct and in the right order
+			if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
+					ingredients.get(1).equals("Jar with Hibiscus")) {
+					//swap empty cauldron with full cauldron 
+				Item emptyCauldron = selected;
+				Item fullCauldron = selected;
+				fullCauldron.setName("Cauldron with potion");
+				//if the potion was made swap the empty cauldron with the full cauldron into the room
+				swapItemInRoom(emptyCauldron, fullCauldron, user);
+				//message telling the user they were successful
+				message = "You created a potion";
+			}else {
+				//if they are incorrect return the items to inventory and remove them from ingredient list
+				Item firstItem = ingredients.get(0);
+				Item secondItem = ingredients.get(1);
+				user.getInventory().add(firstItem);
+				user.getInventory().add(secondItem);
+				ingredients.remove(1);
+				ingredients.remove(0);
+				//message telling the user they were not successful
+				message = "The ingredients added did not seem to do anything";
+			}
+		}
+		
+		//return the message to be displayed
+		return message;
+	}
 }

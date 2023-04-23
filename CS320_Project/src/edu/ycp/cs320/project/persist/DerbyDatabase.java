@@ -1026,4 +1026,10 @@ public class DerbyDatabase implements IDatabase {
 		});
 
 	}
+
+	@Override
+	public String usePotionIngredient(Item item, Item selected, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

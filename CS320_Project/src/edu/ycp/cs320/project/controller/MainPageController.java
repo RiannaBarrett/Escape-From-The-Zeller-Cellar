@@ -141,6 +141,8 @@ public class MainPageController {
 			message = db.useEmptyPotion(item, selected, model.getUser());
 		}else if(item.getName().equals("Matches")) {
 			message = db.useMatches(item, selected, model.getUser());
+		}else if(selected.getName().equals("Empty Cauldron")){
+			message = db.usePotionIngredient(item, selected, model.getUser());
 		}
 		return message;
 	}
