@@ -28,6 +28,22 @@ public class ItemRoomAddQuery {
 		db.addItemToRoom(item2, roomID);
 		db.addItemToRoom(item3, roomID);
 
+		
+		//get back the item to get its item id
+		user = db.findUserByName(username);
+		List<Item> roomItems = user.getRoom().getItems();
+		Item addedItem = null;
+		for(Item i : roomItems) {
+			if(i.getName().equals("Empty Cauldron")) {
+				addedItem = i;
+			}
+		}
+		//if the item was added, test changeCanBePicked up
+		if(addedItem!=null) {
+			db.changeCanBePickedUp(user, addedItem, true);
+		}
+		db.changeCanBePickedUp(user, item2, true);
+		
 		user = db.findUserByName(username);
 		
 		// check if anything was returned and output the list

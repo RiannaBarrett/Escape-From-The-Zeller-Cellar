@@ -172,4 +172,16 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public boolean changeCanBePickedUp(User user, Item item, Boolean canBePickedUp) {
+		List<Item> items = user.getRoom().getItems();
+		
+		for(int i = 0; i < items.size(); i++) {
+			if(item.getName() == items.get(i).getName()) {
+				user.getRoom().getItems().get(i).setCanBePickedUp(canBePickedUp);
+			}
+		}
+		return true;
+	}
 }

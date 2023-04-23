@@ -30,4 +30,6 @@ public interface IDatabase {
 	public void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user);
 
 	public String useMatches(Item matches, Item selected, User user);
+
+	public boolean changeCanBePickedUp(User user, Item item, Boolean canBePickedUp);
 }

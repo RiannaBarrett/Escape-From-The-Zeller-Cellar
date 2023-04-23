@@ -43,8 +43,8 @@ public class MainPageController {
 
 	
 	public boolean transferItemFromRoomToUser(String itemName) {
-		//DatabaseProvider.setInstance(new DerbyDatabase());
-		DatabaseProvider.setInstance(new FakeDatabase());
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		//DatabaseProvider.setInstance(new FakeDatabase());
 		// Does the user have inventory space?
 		// MOVE TO CONTROLLER
 		User user = model.getUser();

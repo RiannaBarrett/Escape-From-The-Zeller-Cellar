@@ -58,12 +58,19 @@ public class MainpageServlet extends HttpServlet {
 		//check what the current position is and set background image
 		//TODO: this code will be changed once our backgrounds are final
 		int position = model.getUser().getRoom().getUserPosition();
-		if(position == 2 || position == 0 ) {
+		if(position == 0 ) {
+			position=0;
+		}
+		if(position==1) {
 			position=1;
 		}
-		if(position == 3) {
-			position = 2;
+		if(position==2) {
+			position=2;
 		}
+		if(position == 3 ) {
+			position=3;
+		}
+		
 		
 		//tells the jsp which image to use
 		req.setAttribute("ViewNumber", position);
@@ -91,7 +98,7 @@ public class MainpageServlet extends HttpServlet {
 		
 		//see if logout button was pressed
 		if(req.getParameter("logout") != null) {
-			System.out.println("Clicked");
+			System.out.println("Clicked logout");
 			req.getSession().setAttribute("user", null);
 			resp.sendRedirect
 			(req.getContextPath() + "/login");
@@ -125,7 +132,7 @@ public class MainpageServlet extends HttpServlet {
 
 		//display inventory on jsp
 		List<Item> inventory = model.getUser().getInventory();
-		System.out.println(inventory.size());
+		System.out.println("inventory size " + inventory.size());
 		for(int i = 0; i < inventory.size(); i++) {
 			req.setAttribute("inv"+(i+1), inventory.get(i).getName());
 		}
@@ -223,21 +230,29 @@ public class MainpageServlet extends HttpServlet {
 			}
 		}
 		
+		//refreshes the model before adding things to the screen
+		controller.PopulateModel(user);	
+		
 		//check what the current position is and set background image
 				//TODO: this code will be changed once our backgrounds are final
 				position = model.getUser().getRoom().getUserPosition();
-				if(position == 2 || position == 0 ) {
+				if(position == 0 ) {
+					position=0;
+				}
+				if(position==1) {
 					position=1;
 				}
-				if(position == 3) {
-					position = 2;
+				if(position==2) {
+					position=2;
+				}
+				if(position == 3 ) {
+					position=3;
 				}
 				
 				//tells the jsp which image to use
 				req.setAttribute("ViewNumber", position);
 				
-		//IF TESTING FAKE DB COMMENT OUT THIS LINE
-				controller.PopulateModel(user);		
+			System.out.println("Current position " + model.getUser().getRoom().getUserPosition());
 				
 		//get the inventory and add the images of the items to the jsp
 				inventory = model.getUser().getInventory();
@@ -256,7 +271,7 @@ public class MainpageServlet extends HttpServlet {
 				for(Item item : items) {
 					System.out.println(item.getName() + " is in the room");
 				}
-		req.setAttribute("items", roomInv);
+		req.setAttribute("items", items);
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
 		
