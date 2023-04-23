@@ -2,5 +2,5 @@ tester1|1234|Matches^true^23^245^0;Empty Potion Bottle^false^59^94^0
 lorgo|fitz_32|Matches^true^23^544^0;Lit Candle^true^238^23^2
 York College|ycp123|Unlit Candle^true^585^234^3
 Sampleusername|sameplepassword| 
-Screamer|letsGoYCP!|Full Potion Bottle^false^10^0^2
+Screamer|letsGoYCP!|Empty Potion Bottle^false^10^0^2;Matches^true^23^245^0;
 YCP _Sucks|Nah_23|Empty Potion Bottle^true^245^223^20

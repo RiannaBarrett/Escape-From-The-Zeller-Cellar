@@ -36,8 +36,8 @@
               	</div>
                 <c:forEach items="${items}" var="item">
               		<div class = "clickableHover">
-              		<button type="submit" name = "${item.getName()}" style="top:${item.getYPosition()}px; 
-              		left:${item.getXPosition()}px;">
+              		<button type="submit" name = "${item.getName()}" style = "transform: scale(0.15); top:${item.getYPosition()}px; 
+              		left:${item.getXPosition()}px; ">
               		<img "class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()} style="width:20%;">
               		</button>
                 	</div>

@@ -48,8 +48,8 @@ p {
 }
 
 .clickableHover img{
-    height:200px;
-	width:200px;
+    
+	
 }
 
 .inventory {
@@ -70,13 +70,14 @@ p {
   }
 
 .clickableHover button {
+	
 	 position: absolute;
-	 width:200px;
-	 height:200px;
+	 width:auto;
 	 border: none;
   cursor: pointer;
   appearance: none;
   background-color: inherit;
+  
 }
 
 .title {
@@ -134,8 +135,9 @@ p {
   }
 
   .inv-img {
-    max-width: 10%;
-    height: auto;
+    
+    height: 100px;
+	width: 300px;
   }
 
   .inv-name {
@@ -160,8 +162,7 @@ input[type="submit"] {
   margin-right: 20px;
 }
 .button{
-	height:50px;
-	width:50px;
+	
 	font-size: 20px;
 	border-radius: 50%;
 	position: absolute;

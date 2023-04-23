@@ -952,7 +952,7 @@ public class DerbyDatabase implements IDatabase {
 		System.out.println(selected.getName() + "is selected");
 		if(selected.getName().equals("Unlit Candle")) {
 			message = "You lit the candle";
-			Item litCandle = new Item("Lit Candle", false, 150,205,0);
+			Item litCandle = new Item("Lit Candle", false, -200,-305,1);
 			swapItemInRoom(selected, litCandle, user);
 			removeItemFromInventory(matches, user.getUserID());
 		}
