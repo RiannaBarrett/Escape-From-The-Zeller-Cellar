@@ -173,6 +173,50 @@ public class DerbyDatabase implements IDatabase {
 
 	}
 	
+	@Override
+	public int findUserIDByName(String name) {
+		//throw new UnsupportedOperationException();
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					stmt = conn.prepareStatement(
+							"select users.user_id " +
+									"  from users " +
+									" where users.username = ? "
+							);
+					stmt.setString(1, name);
+
+					int result = -1;
+
+					resultSet = stmt.executeQuery();
+
+					// for testing that a result was returned
+					Boolean found = false;
+
+					while (resultSet.next()) {
+						found = true;
+						//get the integer for user id
+						result = resultSet.getInt(1);
+					}
+
+					// check if the user was found
+					if (!found) {
+						System.out.println("<" + name + "> was not found in the users table");
+					}
+
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	
 	@Override
 	public boolean addUser(User user) {
@@ -676,6 +720,157 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
 				}
+			}
+		});
+	}
+	@Override
+	public List<Item> findItemsInPositionByID(int roomID, int position){
+		return executeTransaction(new Transaction<List<Item>>() {
+			@Override
+			public List<Item> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select roomInventories.* " +
+							"  from roomInventories " +
+							" where roomInventories.room_id = ? " +
+							"and roomInventories.roomPosition = ? "
+					);
+					stmt.setInt(1, roomID);
+					stmt.setInt(2, position);
+					
+					List<Item> result = new ArrayList<Item>();
+					
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Item object
+						// retrieve attributes from resultSet starting with index 1
+						Item item = new Item();
+						loadItem(item, resultSet, 1);
+						// load inventory objects
+						result.add(new Item(item));
+					}
+					
+					// check if the user was found
+					if (!found) {
+						System.out.println("<No items found for roomID: " + roomID + " in position: " + position + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
+	}
+	
+	@Override
+	public Item findItemByNameAndIDInRoom(String name, int roomID) {
+		return executeTransaction(new Transaction<Item>() {
+			@Override
+			public Item execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select roomInventories.* " +
+							"  from roomInventories " +
+							" where roomInventories.room_id = ? " +
+							"and roomInventories.name = ? "
+					);
+					stmt.setInt(1, roomID);
+					stmt.setString(2, name);
+					
+					Item result = new Item();
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						// create new Item object
+						// retrieve attributes from resultSet starting with index 1
+						Item item = new Item();
+						loadItem(item, resultSet, 1);
+						// load inventory objects
+						result = item;
+					}
+					
+					// check if the item was found
+					if (!found) {
+						System.out.println("<No items found for roomID: " + roomID + " by the name: " + name + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
+	}
+	
+	@Override
+	public Item findItemByNameAndIDInInv(String name, int userID) {
+		return executeTransaction(new Transaction<Item>() {
+			@Override
+			public Item execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select userInventories.* " +
+							"  from userInventories " +
+							" where userInventories.user_id = ? " +
+							"and userInventories.name = ? "
+					);
+					stmt.setInt(1, userID);
+					stmt.setString(2, name);
+					
+					Item result = new Item();
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						// create new Item object
+						// retrieve attributes from resultSet starting with index 1
+						Item item = new Item();
+						loadItem(item, resultSet, 1);
+						// load inventory objects
+						result = item;
+					}
+					
+					// check if the item was found
+					if (!found) {
+						System.out.println("<No items found for roomID: " + userID + " by the name: " + name + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
 			}
 		});
 	}

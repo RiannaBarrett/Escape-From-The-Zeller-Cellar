@@ -22,6 +22,8 @@ public class UserQuery {
 		IDatabase db = DatabaseProvider.getInstance();
 		User user = db.findUserByName(username);
 		
+		int id = user.getUserID();
+		System.out.println(id);
 		// check if anything was returned and output the list
 		if (user == null) {
 			System.out.println("No users found with name: <" + username + ">");
@@ -55,6 +57,20 @@ public class UserQuery {
 				System.out.println("\t Room Position: \t \t" + item.getRoomPosition());
 				System.out.println("");
 			}
+		}
+		
+		int roomID = user.getRoom().getRoomID();
+		System.out.println("Get items in position 0 test");
+		List<Item> items = db.findItemsInPositionByID(roomID, 0);
+		
+		for (Item item : items) {
+			System.out.println("\t Item ID: \t \t" + item.getItemID());
+			System.out.println("\t Item Name: \t \t" + item.getName());
+			System.out.println("\t Can be picked up?: \t" + item.getCanBePickedUp());
+			System.out.println("\t X Position: \t \t" + item.getXPosition());
+			System.out.println("\t Y Position: \t \t" + item.getYPosition());
+			System.out.println("\t Room Position: \t \t" + item.getRoomPosition());
+			System.out.println("");
 		}
 	}
 }

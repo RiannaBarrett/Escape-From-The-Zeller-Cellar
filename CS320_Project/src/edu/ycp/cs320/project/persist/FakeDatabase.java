@@ -234,4 +234,73 @@ public class FakeDatabase implements IDatabase {
 		//return the message to be displayed
 		return message;
 	}
+
+	@Override
+	public int findUserIDByName(String name) {
+		//search the user list by name to find userID
+		for(User user : userList) {
+			if(user.getUsername().equals(name)) {
+				return user.getUserID();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public List<Item> findItemsInPositionByID(int roomID, int position) {
+		////find the correct room based on id
+		List<Item> roomItems = new ArrayList<Item>();
+		Room desiredRoom = new Room();
+		for(Room room : roomList) {
+			if(room.getRoomID() == roomID) {
+				desiredRoom = room;
+			}
+		}
+		
+		//find all of the items in the desired room with the desired position
+		for(Item item : desiredRoom.getItems()) {
+			if(item.getRoomPosition() == position) {
+				roomItems.add(item);
+			}
+		}
+		return roomItems;
+	}
+
+	@Override
+	public Item findItemByNameAndIDInRoom(String name, int roomID) {
+		//get the room by room id
+		Room desiredRoom = new Room();
+		for(Room room : roomList) {
+			if(room.getRoomID() == roomID) {
+				desiredRoom = room;
+			}
+		}
+		
+		//get the item from the room inventory
+		Item desiredItem = new Item();
+		for(Item item : desiredRoom.getItems()) {
+			if(item.getName().equals(name))
+				return desiredItem;
+		}
+		return desiredItem;
+	}
+
+	@Override
+	//get the user by the user id
+	public Item findItemByNameAndIDInInv(String name, int userID) {
+		User desiredUser = new User();
+		for(User user : userList) {
+			if(user.getUserID() == userID) {
+				desiredUser = user;
+			}
+		}
+		
+		//get the item from the user's inventory
+		Item desiredItem = new Item();
+		for(Item item : desiredUser.getInventory()) {
+			if(item.getName().equals(name))
+				return desiredItem;
+		}
+		return desiredItem;
+	}
 }
