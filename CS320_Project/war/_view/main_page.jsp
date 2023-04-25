@@ -36,13 +36,13 @@
               	</div>
                 <c:forEach items="${items}" var="item">
               		<div class = "clickableHover">
-              		<button type="submit" name = "${item.getName()}" style = "transform: scale(0.15); top:${item.getYPosition()}px; 
-              		left:${item.getXPosition()}px; ">
+              		<button type="submit" name = "${item.getName()}" style = "transform: scale(0.10); top:${item.getXPosition()}px; 
+              		left:${item.getYPosition()}px; ">
               		<img "class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()} style="width:20%;">
               		</button>
                 	</div>
                 </c:forEach>
-               <p name = "textOutput">${textOutput}</p>
+               
                <input type="text" name ="selected" style="visibility:hidden;" value="${selected}">
             </td>
             <td class="objectives">
@@ -52,7 +52,7 @@
             </td>
         </table>
     </div>
-
+<p name = "textOutput">${textOutput}</p>
     <div class="inventory">
         <h2 class="inventory-header">Inventory</h2>
   <table class="inventory-table">

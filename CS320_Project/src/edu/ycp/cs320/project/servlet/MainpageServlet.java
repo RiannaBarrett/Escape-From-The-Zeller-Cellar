@@ -204,8 +204,16 @@ public class MainpageServlet extends HttpServlet {
 		for(int i = 0; i <= model.getUser().getRoom().getItems().size() - 1; i++) {
 			String itemName = model.getUser().getRoom().getItems().get(i).getName();
 			if(req.getParameter(itemName) != null) {
+				
+				System.out.println(itemName + " was selected");
 				req.setAttribute("textOutput", "You found a " + itemName);
 				req.setAttribute("selected", itemName);
+				if(itemName.equals("Untitled Book")) {
+					System.out.println("untitled book text");
+					req.setAttribute("textOutput", "You found a book of spells. Most of the pages are blank or damaged. " +
+					"Page 1: Potion of S_ _ ed: fea_he_, l_me j_ _c_, c _ _ _ _ r, c_ove_, b_u_ fl_ _ e_     " +
+							"Page 2: Potio_  o_  T_l_ _n_:  H_ir o_ th_ an_ _ _l, l_ck_ c_ov_ _, w_shb_ _ _, li_ _ ju_ _ _ ");
+				}
 					
 			}
 		}
@@ -217,9 +225,8 @@ public class MainpageServlet extends HttpServlet {
 				System.out.println(invItem + " was pressed");
 				if(req.getParameter("selected") != null && req.getParameter("selected").equals("") == false) {
 					
-					System.out.println(req.getParameter("selected"));
 					Item selected = controller.findItemByName(req.getParameter("selected"), items);
-					System.out.println(selected == null);
+	
 					System.out.println(selected.getName() + " is the selectd item");
 					String message = "";
 					message = controller.useItem(inventory.get(i), selected);
@@ -268,9 +275,7 @@ public class MainpageServlet extends HttpServlet {
 						items.add(model.getUser().getRoom().getItems().get(i));
 					}
 				}
-				for(Item item : items) {
-					System.out.println(item.getName() + " is in the room");
-				}
+				
 		req.setAttribute("items", items);
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}

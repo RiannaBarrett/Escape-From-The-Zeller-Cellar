@@ -1045,7 +1045,7 @@ public class DerbyDatabase implements IDatabase {
 				
 				user = findUserByName(user.getUsername());
 				Item itemToAdd = item;
-				//set the position to 4 (because it is being added to the cauldron
+				//set the position to 4 (because it is being added to the cauldron)
 				itemToAdd.setRoomPosition(4);
 				System.out.println("Number of ingredients before adding: " + ingredients.size());
 				//2 represents the number of ingredients needed. Change this later when all ingredients are added
@@ -1054,10 +1054,20 @@ public class DerbyDatabase implements IDatabase {
 					addItemToRoom(itemToAdd, user.getRoom().getRoomID());
 					//refresh user
 					user = findUserByName(user.getUsername());
-					//add to ingredients to keep track of the number of ingredients
-					ingredients.add(itemToAdd);
 					//remove the item that is used
 					removeItemFromInventory(item, user.getUserID());
+					ingredients = new ArrayList<Item>();
+					items = user.getRoom().getItems();
+					//items with position 4 are items that were used on the empty cauldron. get these items
+					for(int i = 0; i<items.size();i++) {
+						if(items.get(i).getRoomPosition() == 4) {
+							ingredients.add(items.get(i));
+							System.out.println("Ingredient added: " + items.get(i).getName());
+							if(user.getRoom().getItems().get(i).getName().equals("Empty Cauldron")) {
+								selected = user.getRoom().getItems().get(i);
+							}
+						}
+					}
 				}
 				
 				System.out.println("Number of ingredients after adding: " + ingredients.size());
@@ -1069,7 +1079,7 @@ public class DerbyDatabase implements IDatabase {
 							//make a full cauldron item by changing the name 
 						Item emptyCauldron = selected;
 						Item fullCauldron = selected;
-						fullCauldron.setName("Cauldron with potion");
+						fullCauldron.setName("Cauldron with Potion");
 						//if the potion was made swap the empty cauldron with the full cauldron into the room
 						swapItemInRoom(emptyCauldron, fullCauldron, user);
 						//message telling the user they were successful
@@ -1077,11 +1087,11 @@ public class DerbyDatabase implements IDatabase {
 						Item firstItem = ingredients.get(0);
 						Item secondItem = ingredients.get(1);
 						//remove the items (they do not need to be used anymore)
-						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
-						user = findUserByName(user.getUsername());
-						secondItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-2);
-						System.out.println("removing: " + secondItem.getName());
 						removeItemFromRoom(secondItem, user.getRoom().getRoomID());
+						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
+						
+						
+						
 					}else {
 						//if they are incorrect return the items to inventory and remove them from ingredient list
 						Item firstItem = ingredients.get(0);

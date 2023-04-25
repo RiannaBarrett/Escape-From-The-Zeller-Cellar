@@ -2,5 +2,5 @@
 2|3| 
 3|2|Matches^false^200^200^0
 4|0| 
-5|1|Unlit Candle^true^-250^-305^1;Cauldron with Potion^false^-1050^-1050^1;Empty Potion Bottle^false^-200^-205^1;Matches^false^500^500^1
+5|1|Unlit Candle^false^-250^-305^0;Empty Cauldron^false^-950^-1050^1;Empty Potion Bottle^true^-200^-205^0;Shelf^false^-875^-820^0;Jar of Cat Hairs^true^108^230^0;Jar with Hibiscus^true^108^190^0;Matches^true^117^145^0;Untitled Book^false^75^385^0;Fire Spinning Book^false^65^405^0
 6|4| 

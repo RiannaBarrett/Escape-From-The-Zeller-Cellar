@@ -33,6 +33,11 @@ public class PotionQuery {
 		//refresh user
 		user = db.findUserByName(username);
 		//get the items back from the refreshed users
+		for(int i = 0; i<user.getRoom().getItems().size();i++) {
+			if(user.getRoom().getItems().get(i).getName().equals("Empty Cauldron"));
+			cauldron = user.getRoom().getItems().get(i);
+		}
+		
 		cauldron = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
 		catHairs = user.getInventory().get(user.getInventory().size() - 2);
 		hibiscus = user.getInventory().get(user.getInventory().size() - 1);
