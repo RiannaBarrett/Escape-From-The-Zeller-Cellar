@@ -21,13 +21,17 @@ public class PotionQuery {
 		User user = db.findUserByName(username);
 		Item cauldron = new Item("Empty Cauldron", false, 100, 100, 0);
 		Item catHairs = new Item("Jar of Cat Hairs", false, 100, 100, 0);
-		Item hibiscus = new Item("Jar with Hibiscus", false, 100, 100, 0);
+		Item clover = new Item("Clover", false, 100, 100, 0);
+		Item wishbone = new Item("Wishbone", false, 100, 100, 0);
+		Item limeJuice = new Item("Carton of Lime Juice", false, 100, 100, 0);
 		
 		int userID = user.getUserID();
 		int roomID = user.getRoom().getRoomID();
 		//add the items to use to inventory
 		db.addItemToInventory(catHairs, userID);
-		db.addItemToInventory(hibiscus, userID);
+		db.addItemToInventory(clover, userID);
+		db.addItemToInventory(wishbone, userID);
+		db.addItemToInventory(limeJuice, userID);
 		//add the empty cauldron to the room
 		db.addItemToRoom(cauldron, roomID);
 		//refresh user
@@ -39,15 +43,22 @@ public class PotionQuery {
 		}
 		
 		cauldron = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
-		catHairs = user.getInventory().get(user.getInventory().size() - 2);
-		hibiscus = user.getInventory().get(user.getInventory().size() - 1);
+		catHairs = user.getInventory().get(user.getInventory().size() - 4);
+		clover = user.getInventory().get(user.getInventory().size() - 3);
+		wishbone = user.getInventory().get(user.getInventory().size() - 2);
+		limeJuice = user.getInventory().get(user.getInventory().size() - 1);
 		//print the result message
 		String message = db.usePotionIngredient(catHairs, cauldron, user);
 		System.out.println(message);
 		//refresh the userS
 		user = db.findUserByName(username);
-		message = db.usePotionIngredient(hibiscus, cauldron, user);
+		message = db.usePotionIngredient(clover, cauldron, user);
 		//print result message
+		user = db.findUserByName(username);
+		message = db.usePotionIngredient(wishbone, cauldron, user);
+		
+		user = db.findUserByName(username);
+		message = db.usePotionIngredient(limeJuice, cauldron, user);
 		System.out.println(message);
 		user = db.findUserByName(username);
 		

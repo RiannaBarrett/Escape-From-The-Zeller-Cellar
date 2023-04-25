@@ -952,9 +952,24 @@ public class DerbyDatabase implements IDatabase {
 		System.out.println(selected.getName() + "is selected");
 		if(selected.getName().equals("Unlit Candle")) {
 			message = "You lit the candle";
-			Item litCandle = new Item("Lit Candle", false, -200,-305,1);
+			Item litCandle = new Item("Lit Candle", true, 113,195,0);
 			swapItemInRoom(selected, litCandle, user);
 			removeItemFromInventory(matches, user.getUserID());
+			
+			//change which items in the room can be picked up
+			Item itemToChange = new Item();
+			List<Item> roomInv = user.getRoom().getItems();
+			for(Item item : roomInv) {
+				if(item.getName().equals("Jar of Cat Hairs") ||
+						item.getName().equals("Clover") ||
+						item.getName().equals("Jar with Hibiscus") ||
+						item.getName().equals("Carton of Lime Juice") ||
+						item.getName().equals("Wishbone")) {
+					itemToChange = item;
+					changeCanBePickedUp(user, itemToChange, true);
+					System.out.println(changeCanBePickedUp(user, itemToChange, true));
+				}
+			}
 		}
 		return message;
 	}
@@ -1049,7 +1064,7 @@ public class DerbyDatabase implements IDatabase {
 				itemToAdd.setRoomPosition(4);
 				System.out.println("Number of ingredients before adding: " + ingredients.size());
 				//2 represents the number of ingredients needed. Change this later when all ingredients are added
-				if(ingredients.size() < 2) {
+				if(ingredients.size() < 4) {
 					//add it to the room and the current list of ingredients
 					addItemToRoom(itemToAdd, user.getRoom().getRoomID());
 					//refresh user
@@ -1072,10 +1087,12 @@ public class DerbyDatabase implements IDatabase {
 				
 				System.out.println("Number of ingredients after adding: " + ingredients.size());
 				//check if correct number of ingredients were added
-				if(ingredients.size() >= 2) {
+				if(ingredients.size() >= 4) {
 					//check if the ingredients are correct and in the right order
 					if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
-							ingredients.get(1).getName().equals("Jar with Hibiscus")) {
+							ingredients.get(1).getName().equals("Clover") &&
+							ingredients.get(2).getName().equals("Wishbone") &&
+							ingredients.get(3).getName().equals("Carton of Lime Juice")) {
 							//make a full cauldron item by changing the name 
 						Item emptyCauldron = selected;
 						Item fullCauldron = selected;
@@ -1086,20 +1103,39 @@ public class DerbyDatabase implements IDatabase {
 						message = "You created a potion";
 						Item firstItem = ingredients.get(0);
 						Item secondItem = ingredients.get(1);
+						Item thirdItem = ingredients.get(2);
+						Item fourthItem = ingredients.get(3);
 						//remove the items (they do not need to be used anymore)
+						//NOTE: if we are switching back to the empty cauldron keep
+						//the items here so that the user cannot attempt to make another and lose their items
+						removeItemFromRoom(fourthItem, user.getRoom().getRoomID());
+						removeItemFromRoom(thirdItem, user.getRoom().getRoomID());
 						removeItemFromRoom(secondItem, user.getRoom().getRoomID());
 						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
 						
+						Item bottle = new Item();
+						items = user.getRoom().getItems();
+						for(Item current : items) {
+							if(current.getName().equals("Empty Potion Bottle")) {
+								bottle = current;
+							}
+						}
+						
+						changeCanBePickedUp(user, bottle, true);
 						
 						
 					}else {
 						//if they are incorrect return the items to inventory and remove them from ingredient list
 						Item firstItem = ingredients.get(0);
 						Item secondItem = ingredients.get(1);
+						Item thirdItem = ingredients.get(2);
+						Item fourthItem = ingredients.get(3);
 						
 						//return the incorrect items so the user can try again
 						addItemToInventory(firstItem, user.getUserID());
 						addItemToInventory(secondItem, user.getUserID());
+						addItemToInventory(thirdItem, user.getUserID());
+						addItemToInventory(fourthItem, user.getUserID());
 						
 						//remove items from cauldron
 						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
@@ -1107,6 +1143,14 @@ public class DerbyDatabase implements IDatabase {
 						user = findUserByName(user.getUsername());
 						secondItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
 						removeItemFromRoom(secondItem, user.getRoom().getRoomID());;
+						
+						user = findUserByName(user.getUsername());
+						thirdItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
+						removeItemFromRoom(thirdItem, user.getRoom().getRoomID());;
+						
+						user = findUserByName(user.getUsername());
+						fourthItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
+						removeItemFromRoom(fourthItem, user.getRoom().getRoomID());;
 						//message telling the user they were not successful
 						message = "The ingredients added did not seem to do anything";
 					}

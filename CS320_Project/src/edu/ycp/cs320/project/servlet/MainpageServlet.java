@@ -211,7 +211,7 @@ public class MainpageServlet extends HttpServlet {
 				if(itemName.equals("Untitled Book")) {
 					System.out.println("untitled book text");
 					req.setAttribute("textOutput", "You found a book of spells. Most of the pages are blank or damaged. " +
-					"Page 1: Potion of S_ _ ed: fea_he_, l_me j_ _c_, c _ _ _ _ r, c_ove_, b_u_ fl_ _ e_     " +
+					"Page 1: A l_ _ ht sp_l_ pro_ec_ _ the i_g_ed_ _ nt_ Page 2: Potion of S_ _ ed: fea_he_, l_me j_ _c_, c _ _ _ _ r, c_ove_, b_u_ fl_ _ e_     " +
 							"Page 2: Potio_  o_  T_l_ _n_:  H_ir o_ th_ an_ _ _l, l_ck_ c_ov_ _, w_shb_ _ _, li_ _ ju_ _ _ ");
 				}
 					
