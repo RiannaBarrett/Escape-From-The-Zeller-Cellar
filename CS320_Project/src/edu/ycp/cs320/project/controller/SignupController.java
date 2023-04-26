@@ -44,8 +44,7 @@ public class SignupController {
 	        	int roomID = user.getRoom().getRoomID();
 	        	Item matches = new Item("Matches", true,23,544,0);
 	        	db.addItemToInventory(matches, userID);
-	        	Item cauldron = new Item("Empty Cauldron",false,-950,-1050,1);
-	        	db.addItemToRoom(cauldron, roomID);
+	        	
 	        	Item shelf = new Item("Shelf",false,-875,-820,0);
 	        	db.addItemToRoom(shelf, roomID);
 	        	Item hairs = new Item("Jar of Cat Hairs",false,108,230,0);
@@ -66,6 +65,8 @@ public class SignupController {
 	        	db.addItemToRoom(bone, roomID);
 	        	Item juice = new Item("Carton of Lime Juice",false,166,225,0);
 	        	db.addItemToRoom(juice, roomID);
+	        	Item cauldron = new Item("Empty Cauldron",false,-450,-635,0);
+	        	db.addItemToRoom(cauldron, roomID);
 	        	
 	        	System.out.println(newUser.getUsername() +" & " + newUser.getPassword());
 	        }
