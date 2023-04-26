@@ -41,17 +41,25 @@ public class MainPageController {
 		// Does the user have inventory space?
 		// MOVE TO CONTROLLER
 		User user = model.getUser();
+		System.out.println("Inventory size:" + user.getInventory().size());
 		if(user.getInventory().size() >= user.getInventoryLimit()) {
 			return false;
 		}
 		
 		Item itemToBeTransferred = findItemByName(itemName, user.getRoom().getItems());
+	
 		// Does the item exist in the room?
 		if(itemToBeTransferred != null) {
+			System.out.println(itemName + " canBePickedUp: " + itemToBeTransferred.getCanBePickedUp());
 			// Is the user able to interact with the item?
+			System.out.println("Current user position: " + user.getRoom().getUserPosition());
+			System.out.println("Current item position: " + itemToBeTransferred.getRoomPosition());
 			if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
 				// Can the item be picked up?
+				Boolean canBePickedUp = itemToBeTransferred.getCanBePickedUp();
+				System.out.println("Position is correct");
 				if(itemToBeTransferred.getCanBePickedUp() == true) {
+					System.out.println("Item can be picked up");
 					return db.transferItemFromRoomToUser(user, itemToBeTransferred);
 				}
 			}

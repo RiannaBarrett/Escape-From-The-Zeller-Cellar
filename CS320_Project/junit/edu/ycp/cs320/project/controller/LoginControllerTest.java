@@ -20,6 +20,7 @@ public class LoginControllerTest {
 		controller = new LoginController();
 		DatabaseProvider.setInstance(new FakeDatabase());
 		IDatabase db = DatabaseProvider.getInstance();
+		
 	}
 	
 	@Test

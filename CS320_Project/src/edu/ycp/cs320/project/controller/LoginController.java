@@ -8,7 +8,13 @@ import edu.ycp.cs320.project.persist.FakeDatabase;
 import edu.ycp.cs320.project.model.User;
 
 public class LoginController {
-
+	private IDatabase db = null;
+	
+	public LoginController() {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		this.db = DatabaseProvider.getInstance();
+	}
+	
 	public Boolean validateLogin(String username, String password) {
 		if(username.contains("|") || username.contains(";") || username.contains("^") || 
 				username.contains("\"") || username.contains("'") || password.contains("|") ||

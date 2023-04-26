@@ -45,6 +45,7 @@ public class FakeDatabase implements IDatabase {
 	
 	@Override
 	public User findUserByName(String name) {
+		System.out.println("Current db: fake");
 		// Searches userList for a username, returns the user or null
 		for (User user : userList) {
 			if (user.getUsername().equals(name)) {
@@ -83,6 +84,7 @@ public class FakeDatabase implements IDatabase {
 		Item itemToBeTransferred = findItemByName(itemName, user.getInventory());
 		// Does the item exist in the inventory?
 		// MOVE TO CONTROLLER
+		System.out.println("db: itemToBeTransferred exist: " + itemToBeTransferred!=null);
 		if(itemToBeTransferred != null) {
 			itemToBeTransferred.setRoomPosition(user.getRoom().getUserPosition());
 			user.getRoom().getItems().add(itemToBeTransferred);

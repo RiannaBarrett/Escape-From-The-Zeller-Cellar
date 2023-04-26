@@ -46,18 +46,21 @@ public class MainPageControllerTest {
 		// Should be false, since the item cannot be picked up.
 		assertFalse(controller.transferItemFromRoomToUser("Unlit Candle"));
 		
+		username = "York College";
+		controller.PopulateModel(username);
+		
 		// Should be true now that user is in the correct room position, and an item that can be picked up is chosen.
-		assertTrue(controller.transferItemFromRoomToUser("Jar with Hibiscus"));
+		assertTrue(controller.transferItemFromRoomToUser("Matches"));
 		// Test for item removal and add.
 		boolean iAdded = false;
 		boolean iRemoved = true;
 		for(Item i : controller.getModel().getUser().getRoom().getItems()) {
-			if(i.getName().equals("Jar with Hibiscus")) {
+			if(i.getName().equals("Matches")) {
 				iRemoved = false;
 			}
 		}
 		for(Item i : controller.getModel().getUser().getInventory()) {
-			if(i.getName().equals("Jar with Hibiscus")) {
+			if(i.getName().equals("Matches")) {
 				iAdded = true;
 			}
 		}

@@ -36,6 +36,7 @@ public class DerbyDatabase implements IDatabase {
 	// New Methods Go Here
 	@Override
 	public User findUserByName(String name) {
+		System.out.println("Current db: Derby");
 		//throw new UnsupportedOperationException();
 		return executeTransaction(new Transaction<User>() {
 			@Override
