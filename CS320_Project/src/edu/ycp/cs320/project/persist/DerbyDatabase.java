@@ -1022,6 +1022,7 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	@Override
 	public void loadInitialData() {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override

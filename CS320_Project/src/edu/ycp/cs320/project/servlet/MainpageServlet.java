@@ -279,7 +279,5 @@ public class MainpageServlet extends HttpServlet {
 		req.setAttribute("items", items);
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
-		
-	
 
 }

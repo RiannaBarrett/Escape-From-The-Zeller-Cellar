@@ -1,8 +1,6 @@
 package edu.ycp.cs320.project.controller;
 
 import edu.ycp.cs320.project.persist.DatabaseProvider;
-import edu.ycp.cs320.project.persist.DerbyDatabase;
-import edu.ycp.cs320.project.persist.FakeDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
 
 import java.util.ArrayList;
@@ -26,13 +24,12 @@ public class MainPageController {
 	public void setModel(MainPage model) {
 		this.model = model;
 	}
+	
 	public MainPage getModel() {
 		return model;
 	}
 	
 	public void PopulateModel(String username) {
-		DatabaseProvider.setInstance(new DerbyDatabase());
-		//DatabaseProvider.setInstance(new FakeDatabase());
 		db = DatabaseProvider.getInstance();
 		User user = db.findUserByName(username);
 		if(user != null) {
@@ -40,11 +37,7 @@ public class MainPageController {
 		}
 	}
 	
-
-	
 	public boolean transferItemFromRoomToUser(String itemName) {
-		DatabaseProvider.setInstance(new DerbyDatabase());
-		//DatabaseProvider.setInstance(new FakeDatabase());
 		// Does the user have inventory space?
 		// MOVE TO CONTROLLER
 		User user = model.getUser();
@@ -56,13 +49,12 @@ public class MainPageController {
 		// Does the item exist in the room?
 		if(itemToBeTransferred != null) {
 			// Is the user able to interact with the item?
-			//if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
+			if(itemToBeTransferred.getRoomPosition() == user.getRoom().getUserPosition()) {
 				// Can the item be picked up?
 				if(itemToBeTransferred.getCanBePickedUp() == true) {
-					
 					return db.transferItemFromRoomToUser(user, itemToBeTransferred);
 				}
-			//}
+			}
 		}
 		return false;
 	}
