@@ -19,7 +19,6 @@ public class MainPageControllerTest {
 	
 	@Before
 	public void setUp() {
-		
 		controller = new MainPageController();
 		DatabaseProvider.setInstance(new FakeDatabase());
 		IDatabase db = DatabaseProvider.getInstance();

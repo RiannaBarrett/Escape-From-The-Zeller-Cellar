@@ -56,19 +56,25 @@ public class FakeDatabase implements IDatabase {
 	
 	@Override
 	public boolean addUser(User user) {
-		// Sets up inventory and room before adding.
-		user.setInventory(new ArrayList<Item>());
-		user.setRoom(new Room());
-	    if (userList.add(user) && roomList.add(new Room())) {
+		user.setUserID(userList.size() + 1);
+		user.getRoom().setRoomID(roomList.size() + 1);
+	    if (userList.add(user) && roomList.add(user.getRoom())) {
 	        return true;
 	    }
+	    System.out.println("Failed to create new user: " + user.getUsername());
 	    return false;
 	}
 	
 	@Override
 	public boolean transferItemFromRoomToUser(User user, Item item) {
+		List<Item> inv = user.getRoom().getItems();
+		for(int i = 0; i < inv.size(); i++) {
+			if(item.getName().equals(inv.get(i).getName())) {
+				inv.remove(i);
+			}
+		}
+		user.getRoom().setItems(inv);
 		user.getInventory().add(item);
-		user.getRoom().getItems().remove(item);
 		return true;
 	}
 	
@@ -78,14 +84,16 @@ public class FakeDatabase implements IDatabase {
 		// Does the item exist in the inventory?
 		// MOVE TO CONTROLLER
 		if(itemToBeTransferred != null) {
-			// Can the item be picked up?
-			// MOVE TO CONTROLLER
-			if(itemToBeTransferred.getCanBePickedUp() == true) {
-				itemToBeTransferred.setRoomPosition(user.getRoom().getUserPosition());
-				user.getRoom().getItems().add(itemToBeTransferred);
-				user.getInventory().remove(itemToBeTransferred);
-				return true;
+			itemToBeTransferred.setRoomPosition(user.getRoom().getUserPosition());
+			user.getRoom().getItems().add(itemToBeTransferred);
+			List<Item> inv = user.getInventory();
+			for(int i = 0; i < inv.size(); i++) {
+				if(itemName.equals(inv.get(i).getName())) {
+					inv.remove(i);
+				}
 			}
+			user.setInventory(inv);
+			return true;
 		}
 		return false;
 	}

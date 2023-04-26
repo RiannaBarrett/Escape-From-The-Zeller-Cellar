@@ -16,10 +16,7 @@ public class SignupController {
 	    } else {
 	        // create a new User object
 	        User newUser = new User(username, password);
-	        // add the new user to the Database
-	        DatabaseProvider.setInstance(new DerbyDatabase());
 	        IDatabase db = DatabaseProvider.getInstance();
-	        User existingUser = db.findUserByName(username);
 	        
 	        boolean success = false;
 	        if(username.contains("|") || username.contains(";") || username.contains("^") || 
@@ -28,6 +25,8 @@ public class SignupController {
 					password.contains("'")) {
 				return false;
 			}
+	        User existingUser = db.findUserByName(username);
+
 	        if(existingUser == null) {
 	        	success = db.addUser(newUser);
 	        }

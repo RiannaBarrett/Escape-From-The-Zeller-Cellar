@@ -40,7 +40,7 @@ public class SignupControllerTest {
 		assertTrue(controller.validateSignup(username, password)== false);
 		username = "user";
 		password = "1234";
-		assertTrue(controller.validateSignup(username, password)== true);
+		assertTrue(controller.validateSignup(username, password));
 		}
 	
 }

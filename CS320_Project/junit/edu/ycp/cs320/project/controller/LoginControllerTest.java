@@ -17,7 +17,6 @@ public class LoginControllerTest {
 	
 	@Before
 	public void setUp() {
-		
 		controller = new LoginController();
 		DatabaseProvider.setInstance(new FakeDatabase());
 		IDatabase db = DatabaseProvider.getInstance();
