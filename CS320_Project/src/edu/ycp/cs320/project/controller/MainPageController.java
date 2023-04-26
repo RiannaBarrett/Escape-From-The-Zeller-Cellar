@@ -124,11 +124,8 @@ public class MainPageController {
 		return null;
 	}
 	
-
-	
-	
 	public String useItem(Item item, Item selected) {
-		String message = "Nothing happened";
+		String message = "Nothing Happened";
 		if(item.getName().equals("Empty Potion Bottle")) {
 			message = db.useEmptyPotion(item, selected, model.getUser());
 		}else if(item.getName().equals("Matches")) {

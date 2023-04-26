@@ -121,21 +121,35 @@ public class FakeDatabase implements IDatabase {
 	
 	@Override
 	public void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user) {
-		user.getRoom().getItems().remove(itemToRemove);
-		user.getRoom().getItems().add(itemToAdd);
+		List<Item> inv = user.getRoom().getItems();
+		for(int i = 0; i < inv.size(); i++) {
+			if(itemToRemove.getName().equals(inv.get(i).getName())) {
+				inv.remove(i);
+			}
+		}
+		inv.add(itemToAdd);
+		user.getRoom().setItems(inv);
 	}
+	
 	@Override
 	public void swapItemInInventory(Item itemToRemove, Item itemToAdd, User user) {
-		user.getInventory().remove(itemToRemove);
-		user.getInventory().add(itemToAdd);
+		List<Item> inv = user.getInventory();
+		for(int i = 0; i < inv.size(); i++) {
+			if(itemToRemove.getName().equals(inv.get(i).getName())) {
+				inv.remove(i);
+			}
+		}
+		inv.add(itemToAdd);
+		user.setInventory(inv);
 	}
+	
 	@Override
 	public String useEmptyPotion(Item bottle, Item selected, User user) {
 		String message = "Nothing Happened";
-		System.out.println(selected.getName() + "is selected");
+		System.out.println(selected.getName() + " is selected");
 		if(selected.getName().equals("Cauldron with Potion")) {
 			message = "You filled the bottle with a potion";
-			Item fullPotion = new Item("Full Potion Bottle", false, 0,0,0);
+			Item fullPotion = new Item("Full Potion Bottle", false, 0, 0, user.getRoom().getUserPosition());
 			swapItemInInventory(bottle, fullPotion, user);
 		}
 		return message;
@@ -144,12 +158,12 @@ public class FakeDatabase implements IDatabase {
 	@Override
 	public String useMatches(Item matches, Item selected, User user) {
 		String message = "Nothing Happened";
-		System.out.println(selected.getName() + "is selected");
+		System.out.println(selected.getName() + " is selected");
 		if(selected.getName().equals("Unlit Candle")) {
 			message = "You lit the candle";
-			Item litCandle = new Item("Lit Candle", false, 150,205,0);
+			Item litCandle = new Item("Lit Candle", false, 150, 205, user.getRoom().getUserPosition());
 			swapItemInRoom(selected, litCandle, user);
-			user.getInventory().remove(matches);
+			removeItemFromInventory(matches, user.getUserID());
 		}
 		return message;
 	}
@@ -194,13 +208,14 @@ public class FakeDatabase implements IDatabase {
 	@Override
 	public boolean removeItemFromInventory(Item item, int userID) {
 		List<Item> invList = userList.get(userID-1).getInventory();
-		if(invList.remove(item)) {
-			userList.get(userID-1).setInventory(invList);
-			return true;
+		for(int i=0; i < invList.size(); i++) {
+			if(invList.get(i).getName().equals(item.getName())) {
+				invList.remove(i);
+				userList.get(userID-1).setInventory(invList);
+				return true;
+			}
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	@Override
