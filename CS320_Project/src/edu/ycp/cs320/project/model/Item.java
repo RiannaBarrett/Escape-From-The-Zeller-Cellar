@@ -17,6 +17,14 @@ public class Item {
 		this.yPositionInRoom = 0;
 		this.roomPosition = 0;
 	}
+	public Item(String name) {
+		this.item_id = 0;
+		this.name = name;
+		this.canBePickedUp = true;
+		this.xPositionInRoom = 0;
+		this.yPositionInRoom = 0;
+		this.roomPosition = 0;
+	}
 	
 	public Item(String name, Boolean canBePickedUp, int xPositionInRoom, int yPositionInRoom, int roomPosition) {
 		this.name = name;

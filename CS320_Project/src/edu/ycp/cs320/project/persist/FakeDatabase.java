@@ -10,17 +10,17 @@ import edu.ycp.cs320.project.persist.IDatabase;
 
 
 public class FakeDatabase implements IDatabase {
-	
+
 	private List<User> userList;
 	private List<Room> roomList;
-	
+
 	public FakeDatabase() {
 		userList = new ArrayList<User>();
 		roomList = new ArrayList<Room>();
-		
+
 		// Add initial data
 		loadInitialData();
-		
+
 		System.out.println(userList.size() + " Users");
 		System.out.println(roomList.size() + " Rooms");
 	}
@@ -42,7 +42,7 @@ public class FakeDatabase implements IDatabase {
 			throw new IllegalStateException("Couldn't read initial data", e);
 		}
 	}
-	
+
 	@Override
 	public User findUserByName(String name) {
 		System.out.println("Current db: fake");
@@ -54,18 +54,19 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean addUser(User user) {
 		user.setUserID(userList.size() + 1);
 		user.getRoom().setRoomID(roomList.size() + 1);
-	    if (userList.add(user) && roomList.add(user.getRoom())) {
-	        return true;
-	    }
-	    System.out.println("Failed to create new user: " + user.getUsername());
-	    return false;
+		System.out.println(user.getRoom().getRoomID());
+		if (userList.add(user) && roomList.add(user.getRoom())) {
+			return true;
+		}
+		System.out.println("Failed to create new user: " + user.getUsername());
+		return false;
 	}
-	
+
 	@Override
 	public boolean transferItemFromRoomToUser(User user, Item item) {
 		List<Item> inv = user.getRoom().getItems();
@@ -78,7 +79,7 @@ public class FakeDatabase implements IDatabase {
 		user.getInventory().add(item);
 		return true;
 	}
-	
+
 	@Override
 	public boolean transferItemFromUserToRoom(User user, String itemName) {
 		Item itemToBeTransferred = findItemByName(itemName, user.getInventory());
@@ -99,7 +100,7 @@ public class FakeDatabase implements IDatabase {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean moveUser(User user, int moveTo) {
 		user.getRoom().setUserPosition(moveTo);
@@ -110,7 +111,7 @@ public class FakeDatabase implements IDatabase {
 	public int findUserIDByName(String username) {
 		return 0;
 	}
-	
+
 	private Room findRoomByUserID(int userID) {
 		for (Room room : roomList) {
 			if (room.getUserID() == userID) {
@@ -119,7 +120,7 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
-	
+
 	private Item findItemByName(String itemName, List<Item> itemList) {
 		for (Item item : itemList) {
 			if(item.getName() == itemName) {
@@ -128,7 +129,7 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void swapItemInRoom(Item itemToRemove, Item itemToAdd, User user) {
 		List<Item> inv = user.getRoom().getItems();
@@ -140,7 +141,7 @@ public class FakeDatabase implements IDatabase {
 		inv.add(itemToAdd);
 		user.getRoom().setItems(inv);
 	}
-	
+
 	@Override
 	public void swapItemInInventory(Item itemToRemove, Item itemToAdd, User user) {
 		List<Item> inv = user.getInventory();
@@ -152,7 +153,7 @@ public class FakeDatabase implements IDatabase {
 		inv.add(itemToAdd);
 		user.setInventory(inv);
 	}
-	
+
 	@Override
 	public String useEmptyPotion(Item bottle, Item selected, User user) {
 		String message = "Nothing Happened";
@@ -164,7 +165,7 @@ public class FakeDatabase implements IDatabase {
 		}
 		return message;
 	}
-	
+
 	@Override
 	public String useMatches(Item matches, Item selected, User user) {
 		String message = "Nothing Happened";
@@ -227,11 +228,11 @@ public class FakeDatabase implements IDatabase {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean changeCanBePickedUp(User user, Item item, Boolean canBePickedUp) {
 		List<Item> items = user.getRoom().getItems();
-		
+
 		for(int i = 0; i < items.size(); i++) {
 			if(item.getName() == items.get(i).getName()) {
 				user.getRoom().getItems().get(i).setCanBePickedUp(canBePickedUp);
@@ -252,7 +253,7 @@ public class FakeDatabase implements IDatabase {
 				ingredients.add(items.get(i));
 			}
 		}
-		
+
 		Item itemToAdd = item;
 		//2 represents the number of ingredients needed. Change this later when all ingredients are added
 		if(ingredients.size() < 2) {
@@ -260,12 +261,12 @@ public class FakeDatabase implements IDatabase {
 			items.add(itemToAdd);
 			ingredients.add(itemToAdd);
 		}
-		
+
 		if(ingredients.size() >= 2) {
 			//check if the ingredients are correct and in the right order
 			if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
 					ingredients.get(1).getName().equals("Jar with Hibiscus")) {
-					//swap empty cauldron with full cauldron 
+				//swap empty cauldron with full cauldron 
 				Item emptyCauldron = selected;
 				Item fullCauldron = selected;
 				fullCauldron.setName("Cauldron with potion");
@@ -285,7 +286,7 @@ public class FakeDatabase implements IDatabase {
 				message = "The ingredients added did not seem to do anything";
 			}
 		}
-		
+
 		//return the message to be displayed
 		return message;
 	}
