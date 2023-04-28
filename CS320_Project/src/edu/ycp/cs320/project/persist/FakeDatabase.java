@@ -230,82 +230,113 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public boolean changeCanBePickedUp(User user, Item item, Boolean canBePickedUp) {
-		List<Item> items = user.getRoom().getItems();
-
-		for(int i = 0; i < items.size(); i++) {
-			if(item.getName() == items.get(i).getName()) {
-				user.getRoom().getItems().get(i).setCanBePickedUp(canBePickedUp);
+	public boolean changeCanBePickedUp(int roomID, String itemName, Boolean canBePickedUp) {
+		for(Room room : roomList) {
+			if(room.getRoomID() == roomID) {
+				List<Item> items = room.getItems();
+				for(int i = 0; i< items.size(); i++) {
+					if(items.get(i).getName().equals(itemName)) {
+						room.getItems().get(i).setCanBePickedUp(canBePickedUp);
+						System.out.println("New value set to: " + room.getItems().get(i).getCanBePickedUp());
+					}
+				}
 			}
 		}
-		return true;
+		if(findItemByNameAndIDInRoom(itemName, roomID).getCanBePickedUp() == canBePickedUp) {
+			return true;
+		}else {
+			return false;
+		}
+		
 	}
 
-	@Override
-	public String usePotionIngredient(Item item, Item selected, User user) {
-		//message telling the user they successfully added an item
-		String message = "You put the item in the cauldron";
-		List<Item> items = user.getRoom().getItems();
-		List<Item> ingredients = new ArrayList<Item>();
-		//position 4 means it is a potion ingredient. Find all of the potion ingredients added
-		for(int i = 0;i<items.size();i++) {
-			if(items.get(i).getRoomPosition() == 4) {
-				ingredients.add(items.get(i));
-			}
-		}
 
-		Item itemToAdd = item;
-		//2 represents the number of ingredients needed. Change this later when all ingredients are added
-		if(ingredients.size() < 2) {
-			itemToAdd.setRoomPosition(4);
-			items.add(itemToAdd);
-			ingredients.add(itemToAdd);
-		}
-
-		if(ingredients.size() >= 2) {
-			//check if the ingredients are correct and in the right order
-			if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
-					ingredients.get(1).getName().equals("Jar with Hibiscus")) {
-				//swap empty cauldron with full cauldron 
-				Item emptyCauldron = selected;
-				Item fullCauldron = selected;
-				fullCauldron.setName("Cauldron with potion");
-				//if the potion was made swap the empty cauldron with the full cauldron into the room
-				swapItemInRoom(emptyCauldron, fullCauldron, user);
-				//message telling the user they were successful
-				message = "You created a potion";
-			}else {
-				//if they are incorrect return the items to inventory and remove them from ingredient list
-				Item firstItem = ingredients.get(0);
-				Item secondItem = ingredients.get(1);
-				user.getInventory().add(firstItem);
-				user.getInventory().add(secondItem);
-				items.remove(firstItem);
-				items.remove(secondItem);
-				//message telling the user they were not successful
-				message = "The ingredients added did not seem to do anything";
-			}
-		}
-
-		//return the message to be displayed
-		return message;
-	}
 
 	@Override
 	public List<Item> findItemsInPositionByID(int roomID, int position) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Item findItemByNameAndIDInRoom(String name, int roomID) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Item> result = new ArrayList<Item>();
+		List<Item> items = new ArrayList<Item>();
+		for(Room room : roomList) {
+			if(room.getRoomID()==roomID) {
+				items = room.getItems();
+			}
+		}
+		
+		for(Item item : items) {
+			if(item.getRoomPosition()==position) {
+				result.add(item);
+			}
+		}
+		return result;
 	}
 
 	@Override
 	public Item findItemByNameAndIDInInv(String name, int userID) {
-		// TODO Auto-generated method stub
+		for(User user : userList) {
+			if(user.getUserID() == userID) {
+				List<Item> items = user.getInventory();
+				for(Item item : items) {
+					System.out.println(name);
+					if(item.getName().equals(name)) {
+						return item;
+					}
+				}
+			}
+		}
 		return null;
+	}
+	
+	@Override
+	public Item findItemByNameAndIDInRoom(String name, int roomID) {
+		for(Room room : roomList) {
+			if(room.getRoomID() == roomID) {
+				List<Item> items = room.getItems();
+				for(Item item : items) {
+					System.out.println(name);
+					if(item.getName().equals(name)) {
+						return item;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public int findRoomIDByUsername(String username) {
+		int userID = findUserIDByName(username);
+		int roomID = -1;
+		System.out.println("user id: " + userID);
+		for(Room room : roomList) {
+			System.out.println("Current id: " + room.getUserID());
+			if(room.getUserID() == userID) {
+				roomID = room.getRoomID();
+			}
+		}
+		System.out.println("room id: "  + roomID);
+		return roomID;
+	}
+
+	@Override
+	public int findRoomIDByUserID(int userID) {
+		int roomID = -1;
+		for(Room room : roomList) {
+			if(room.getUserID() == userID) {
+				return room.getRoomID();
+			}
+		}
+		return roomID;
+	}
+	
+	@Override
+	public List<Item> findItemsInInventory(int userID) {
+		List<Item> result = new ArrayList<Item>();
+		for(User user : userList) {
+			if(user.getUserID() == userID) {
+				result = user.getInventory();
+				return result;
+			}
+		}
+		return result;
 	}
 }

@@ -134,9 +134,9 @@ public class MainPageControllerTest {
 		Item emptyPotionItem = new Item("Empty Potion Bottle", true, 40, 20, 4);
 		
 		// Using unlit candle ON matches, should do nothing.
-		assertTrue(controller.useItem(unlitCandleItem, matchesItem).equals("Nothing Happened"));
+		assertTrue(controller.useItem(unlitCandleItem, matchesItem, 5).equals("Nothing Happened"));
 		// Using matches on unlit candle, should return text and replace unlit with a lit candle.
-		assertTrue(controller.useItem(matchesItem, unlitCandleItem).equals("You lit the candle"));
+		assertTrue(controller.useItem(matchesItem, unlitCandleItem, 5).equals("You lit the candle"));
 		boolean iAdded = false;
 		boolean iRemoved = true;
 		for(Item i : controller.getModel().getUser().getRoom().getItems()) {
@@ -155,9 +155,9 @@ public class MainPageControllerTest {
 		assertTrue(iAdded && iRemoved);
 		
 		// Using Empty Potion Bottle ON matches, should do nothing.
-		assertTrue(controller.useItem(emptyPotionItem, matchesItem).equals("Nothing Happened"));
+		assertTrue(controller.useItem(emptyPotionItem, matchesItem, 5).equals("Nothing Happened"));
 		// Using Empty Potion Bottle ON a Full Cauldron, should replace the empty bottle with a full one.
-		assertTrue(controller.useItem(emptyPotionItem, fullCauldron).equals("You filled the bottle with a potion"));
+		assertTrue(controller.useItem(emptyPotionItem, fullCauldron, 5).equals("You filled the bottle with a potion"));
 		iAdded = false;
 		iRemoved = true;
 		for(Item i : controller.getModel().getUser().getInventory()) {
@@ -186,5 +186,71 @@ public class MainPageControllerTest {
 		assertTrue(controller.findItemByName(itemA.getName(), iList).equals(itemA));
 		assertTrue(controller.findItemByName(itemC.getName(), iList).equals(itemC));
 		assertFalse(controller.findItemByName(itemB.getName(), iList).equals(itemC));
+	}
+	
+	@Test
+	public void testFindItemsInPosition() {
+		String username = "Screamer";
+		controller.PopulateModel(username);
+		
+		List<Item> items = controller.findItemsInPosition(0, username);
+		for(Item item : items) {
+			assertTrue(item.getRoomPosition() == 0);
+		}
+	}
+	
+	@Test
+	public void testFindInventoryByName() {
+		String username = "tester1";
+		controller.PopulateModel(username);
+		
+		List<Item> items = controller.findInventoryByName(username);
+		for(Item item : items) {
+			assertTrue(item.getRoomPosition() == 0);
+		}
+	}
+	
+	@Test
+	public void testUsePotionIngredient() {
+		String username = "potionTester";
+		controller.PopulateModel(username);
+		
+		assertTrue(controller.usePotionIngredient("Wishbone", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
+		assertTrue(controller.usePotionIngredient("Jar of Cat Hairs", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
+		assertTrue(controller.usePotionIngredient("Clover", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
+		//should tell the user it didnt work since the ingredients were not in the right order
+		assertTrue(controller.usePotionIngredient("Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("The ingredients added did not seem to do anything"));
+		
+		assertTrue(controller.usePotionIngredient("Jar of Cat Hairs", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
+		assertTrue(controller.usePotionIngredient("Clover", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
+		assertTrue(controller.usePotionIngredient("Wishbone", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
+		//successful
+		assertTrue(controller.usePotionIngredient("Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("You created a potion"));
+		
+		/*
+			Boolean use1 = false;
+			Boolean use2 = false; 
+			Item selectedItem = null;
+			Item useItem1 = new Item("Jar of Cat Hairs");
+			Item useItem2 = new Item("Jar with Hibiscus");
+			user.getInventory().add(useItem1);
+			user.getInventory().add(useItem2);
+			for(int i = 0; i < user.getRoom().getItems().size(); i++) {
+				if(user.getRoom().getItems().get(i).getName().equals("Empty Cauldron")){
+					selectedItem = user.getRoom().getItems().get(i);
+					System.out.println(selectedItem.getName());
+				}
+			}
+			String text = db.usePotionIngredient(useItem1, selectedItem, user);
+			if(text == "You put the item in the cauldron") {
+				use1 = true;
+			}
+			String text1 = db.usePotionIngredient(useItem2, selectedItem, user);
+			if(text1 == "You created a potion") {
+				use2 = true;
+			}
+			assertTrue(use1);
+			assertTrue(use2);
+			*/
 	}
 }

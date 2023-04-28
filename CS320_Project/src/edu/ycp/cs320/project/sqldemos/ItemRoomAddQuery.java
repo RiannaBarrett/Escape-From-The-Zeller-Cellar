@@ -39,10 +39,8 @@ public class ItemRoomAddQuery {
 			}
 		}
 		//if the item was added, test changeCanBePicked up
-		if(addedItem!=null) {
-			db.changeCanBePickedUp(user, addedItem, true);
-		}
-		db.changeCanBePickedUp(user, item2, true);
+		
+		db.changeCanBePickedUp(user.getUserID(), item2.getName(), true);
 		
 		user = db.findUserByName(username);
 		

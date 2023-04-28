@@ -1163,8 +1163,8 @@ public class DerbyDatabase implements IDatabase {
 						item.getName().equals("Carton of Lime Juice") ||
 						item.getName().equals("Wishbone")) {
 					itemToChange = item;
-					changeCanBePickedUp(user, itemToChange, true);
-					System.out.println(changeCanBePickedUp(user, itemToChange, true));
+					changeCanBePickedUp(user.getUserID(), itemToChange.getName(), true);
+					System.out.println(changeCanBePickedUp(user.getUserID(), itemToChange.getName(), true));
 				}
 			}
 		}
@@ -1172,26 +1172,25 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public boolean changeCanBePickedUp(User user, Item item, Boolean canBePickedUp) {
+	public boolean changeCanBePickedUp(int userID, String itemName, Boolean canBePickedUp) {
 		return executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				PreparedStatement stmt2 = null;
-				ResultSet resultSet = null;
-				
-				
-					int itemID = item.getItemID();	
+				ResultSet resultSet = null;	
 				
 				try {
 					//changes canBePickedUp for the requested item
 					stmt = conn.prepareStatement(
 							"update roomInventories " +
 									"set roomInventories.canBePickedUp = ? " +
-									"where roomInventories.item_id = ?"
+									"where roomInventories.room_id = ? " +
+									"and roomInventories.name = ?"
 							);
 					stmt.setString(1, canBePickedUp.toString());
-					stmt.setInt(2, itemID);
+					stmt.setInt(2, userID);
+					stmt.setString(3, itemName);
 				
 
 					
@@ -1204,10 +1203,12 @@ public class DerbyDatabase implements IDatabase {
 					stmt2 = conn.prepareStatement(
 							"select roomInventories.canBePickedUp " +
 									"  from roomInventories " +
-									" where roomInventories.item_id = ?"
+									"where roomInventories.room_id = ? " +
+									"and roomInventories.name = ?"
 							);
 			
-					stmt2.setInt(1, itemID);
+					stmt2.setInt(1, userID);
+					stmt2.setString(2, itemName);
 						
 					
 					resultSet = stmt2.executeQuery();
@@ -1224,7 +1225,7 @@ public class DerbyDatabase implements IDatabase {
 						
 					}
 					if (!success) {
-						System.out.println("<" + item.getName() + "> was not updated");
+						System.out.println("<" + itemName + "> was not updated");
 					}
 					return result;
 					//return result;
@@ -1239,120 +1240,161 @@ public class DerbyDatabase implements IDatabase {
 
 	}
 
+	
 	@Override
-	public String usePotionIngredient(Item item, Item selected, User user) {
-		//message telling the user they successfully added an item
-				String message = "You put the item in the cauldron";
-				List<Item> items = user.getRoom().getItems();
-				List<Item> ingredients = new ArrayList<Item>();
-				
-				//items with position 4 are items that were used on the empty cauldron. get these items
-				for(int i = 0; i<items.size();i++) {
-					if(items.get(i).getRoomPosition() == 4) {
-						ingredients.add(items.get(i));
-						System.out.println("Ingredient added: " + items.get(i).getName());
+	public int findRoomIDByUsername(String username) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+					int userID = -1;
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"select users.user_id " +
+									"  from users " +
+									" where users.username = ? "
+							);
+					stmt.setString(1, username);
+					stmt.execute();
+					resultSet = stmt.executeQuery();
+
+					// for testing that a result was returned
+					Boolean found = false;
+
+					while (resultSet.next()) {
+						found = true;
+						//get the integer for user id
+						userID = resultSet.getInt(1);
 					}
-				}
-				
-				
-				user = findUserByName(user.getUsername());
-				Item itemToAdd = item;
-				//set the position to 4 (because it is being added to the cauldron)
-				itemToAdd.setRoomPosition(4);
-				System.out.println("Number of ingredients before adding: " + ingredients.size());
-				//2 represents the number of ingredients needed. Change this later when all ingredients are added
-				if(ingredients.size() < 4) {
-					//add it to the room and the current list of ingredients
-					addItemToRoom(itemToAdd, user.getRoom().getRoomID());
-					//refresh user
-					user = findUserByName(user.getUsername());
-					//remove the item that is used
-					removeItemFromInventory(item, user.getUserID());
-					ingredients = new ArrayList<Item>();
-					items = user.getRoom().getItems();
-					//items with position 4 are items that were used on the empty cauldron. get these items
-					for(int i = 0; i<items.size();i++) {
-						if(items.get(i).getRoomPosition() == 4) {
-							ingredients.add(items.get(i));
-							System.out.println("Ingredient added: " + items.get(i).getName());
-							if(user.getRoom().getItems().get(i).getName().equals("Empty Cauldron")) {
-								selected = user.getRoom().getItems().get(i);
-							}
-						}
+					
+					if(found == false) {
+						System.out.println("user id for <" + username + "> was not found");
 					}
-				}
-				
-				System.out.println("Number of ingredients after adding: " + ingredients.size());
-				//check if correct number of ingredients were added
-				if(ingredients.size() >= 4) {
-					//check if the ingredients are correct and in the right order
-					if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
-							ingredients.get(1).getName().equals("Clover") &&
-							ingredients.get(2).getName().equals("Wishbone") &&
-							ingredients.get(3).getName().equals("Carton of Lime Juice")) {
-							//make a full cauldron item by changing the name 
-						Item emptyCauldron = selected;
-						Item fullCauldron = selected;
-						fullCauldron.setName("Cauldron with Potion");
-						//if the potion was made swap the empty cauldron with the full cauldron into the room
-						swapItemInRoom(emptyCauldron, fullCauldron, user);
-						//message telling the user they were successful
-						message = "You created a potion";
-						Item firstItem = ingredients.get(0);
-						Item secondItem = ingredients.get(1);
-						Item thirdItem = ingredients.get(2);
-						Item fourthItem = ingredients.get(3);
-						//remove the items (they do not need to be used anymore)
-						//NOTE: if we are switching back to the empty cauldron keep
-						//the items here so that the user cannot attempt to make another and lose their items
-						removeItemFromRoom(fourthItem, user.getRoom().getRoomID());
-						removeItemFromRoom(thirdItem, user.getRoom().getRoomID());
-						removeItemFromRoom(secondItem, user.getRoom().getRoomID());
-						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
+
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select rooms.room_id " +
+									"  from rooms " +
+									" where rooms.user_id = ?"
+							);
+			
+					stmt2.setInt(1, userID);
 						
-						Item bottle = new Item();
-						items = user.getRoom().getItems();
-						for(Item current : items) {
-							if(current.getName().equals("Empty Potion Bottle")) {
-								bottle = current;
-							}
-						}
-						
-						changeCanBePickedUp(user, bottle, true);
-						
-						
-					}else {
-						//if they are incorrect return the items to inventory and remove them from ingredient list
-						Item firstItem = ingredients.get(0);
-						Item secondItem = ingredients.get(1);
-						Item thirdItem = ingredients.get(2);
-						Item fourthItem = ingredients.get(3);
-						
-						//return the incorrect items so the user can try again
-						addItemToInventory(firstItem, user.getUserID());
-						addItemToInventory(secondItem, user.getUserID());
-						addItemToInventory(thirdItem, user.getUserID());
-						addItemToInventory(fourthItem, user.getUserID());
-						
-						//remove items from cauldron
-						removeItemFromRoom(firstItem, user.getRoom().getRoomID());
-						//refresh user
-						user = findUserByName(user.getUsername());
-						secondItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
-						removeItemFromRoom(secondItem, user.getRoom().getRoomID());;
-						
-						user = findUserByName(user.getUsername());
-						thirdItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
-						removeItemFromRoom(thirdItem, user.getRoom().getRoomID());;
-						
-						user = findUserByName(user.getUsername());
-						fourthItem = user.getRoom().getItems().get(user.getRoom().getItems().size()-1);
-						removeItemFromRoom(fourthItem, user.getRoom().getRoomID());;
-						//message telling the user they were not successful
-						message = "The ingredients added did not seem to do anything";
+					resultSet = stmt2.executeQuery();
+					int result = -1;
+					while (resultSet.next()) {
+						result = resultSet.getInt(1);
 					}
+					
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
 				}
-				
-		return message;
+			}
+		});
 	}
+	
+	@Override
+	public int findRoomIDByUserID(int userID) {
+		return executeTransaction(new Transaction<Integer>() {
+		@Override
+		public Integer execute(Connection conn) throws SQLException {
+			PreparedStatement stmt = null;
+			PreparedStatement stmt2 = null;
+			ResultSet resultSet = null;
+				int roomID = -1;
+			try {
+				//changes canBePickedUp for the requested item
+				stmt = conn.prepareStatement(
+						"select rooms.room_id " +
+								"  from rooms " +
+								" where rooms.user_id = ? "
+						);
+				stmt.setInt(1, userID);
+				stmt.execute();
+				resultSet = stmt.executeQuery();
+
+				// for testing that a result was returned
+				Boolean found = false;
+
+				while (resultSet.next()) {
+					found = true;
+					//get the integer for user id
+					roomID = resultSet.getInt(1);
+				}
+				
+				if(found == false) {
+					System.out.println("room id for <" + userID + "> was not found");
+				}
+				//return result
+				return roomID;
+			} finally {
+				DBUtil.closeQuietly(resultSet);
+				DBUtil.closeQuietly(stmt);
+				DBUtil.closeQuietly(stmt2);
+			}
+		}
+	});
+	}
+	
+	
+	@Override
+	public List<Item> findItemsInInventory(int userID){
+		return executeTransaction(new Transaction<List<Item>>() {
+			@Override
+			public List<Item> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select userInventories.* " +
+							"  from userInventories " +
+							" where userInventories.user_id = ? " 
+					);
+					stmt.setInt(1, userID);
+
+					
+					List<Item> result = new ArrayList<Item>();
+					
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Item object
+						// retrieve attributes from resultSet starting with index 1
+						Item item = new Item();
+						loadItem(item, resultSet, 1);
+						// load inventory objects
+						result.add(new Item(item));
+					}
+					
+					// check if the user was found
+					if (!found) {
+						System.out.println("<No items found for userID: " + userID + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
+	}
+	
+	
 }

@@ -210,48 +210,56 @@ public class FakeDatabaseTest {
 
 	@Test
 	public void testChangeCanBePickedUp() {
-		throw new UnsupportedOperationException();
+		assertTrue(db.changeCanBePickedUp(5, "Jar of Cat Hairs", true) == true);
 	}
 
-	@Test
-	public void testUsePotionIngredient() {
-		Boolean use1 = false;
-		Boolean use2 = false; 
-		Item selectedItem = null;
-		Item useItem1 = new Item("Jar of Cat Hairs");
-		Item useItem2 = new Item("Jar with Hibiscus");
-		user.getInventory().add(useItem1);
-		user.getInventory().add(useItem2);
-		for(int i = 0; i < user.getRoom().getItems().size(); i++) {
-			if(user.getRoom().getItems().get(i).getName().equals("Empty Cauldron")){
-				selectedItem = user.getRoom().getItems().get(i);
-				System.out.println(selectedItem.getName());
-			}
-		}
-		String text = db.usePotionIngredient(useItem1, selectedItem, user);
-		if(text == "You put the item in the cauldron") {
-			use1 = true;
-		}
-		String text1 = db.usePotionIngredient(useItem2, selectedItem, user);
-		if(text1 == "You created a potion") {
-			use2 = true;
-		}
-		assertTrue(use1);
-		assertTrue(use2);
-	}
+	
+	
+	
+	
+	
 
 	@Test
 	public void testFindItemsInPositionByID() {
-		throw new UnsupportedOperationException();
+		List<Item> items = new ArrayList<Item>();
+		items = db.findItemsInPositionByID(1, 0);
+		for(Item item : items) {
+			assertTrue(item.getRoomPosition() == 0);
+		}
+		
+		items = db.findItemsInPositionByID(5, 0);
+		for(Item item : items) {
+			assertTrue(item.getRoomPosition() == 0);
+		}
 	}
 
 	@Test
 	public void testFindItemByNameAndIDInRoom() {
-		throw new UnsupportedOperationException();
+		Item item = db.findItemByNameAndIDInRoom("Shelf", 5);
+		assertTrue(item.getName().equals("Shelf"));
 	}
 
 	@Test
 	public void testFindItemByNameAndIDInInv() {
-		throw new UnsupportedOperationException();
+		Item item = db.findItemByNameAndIDInInv("Matches", 5);
+		assertTrue(item.getName().equals("Matches"));
+	}
+	
+	
+	@Test
+	public void testFindRoomIDByName() {
+
+		assertTrue(db.findRoomIDByUsername("Screamer") ==  5);
+	}
+	@Test
+	public void testFindRoomIDByUserID() {
+		assertTrue(db.findRoomIDByUserID(5) == 5);
+	}
+	
+	@Test
+	public void findItemsInInventory() {
+		List<Item> items = db.findItemsInInventory(2);
+		assertTrue(items.get(0).getName().equals("Matches"));
+		assertTrue(items.get(1).getName().equals("Lit Candle"));
 	}
 }

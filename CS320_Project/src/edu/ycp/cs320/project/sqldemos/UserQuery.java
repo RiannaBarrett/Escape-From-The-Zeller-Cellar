@@ -23,6 +23,7 @@ public class UserQuery {
 		User user = db.findUserByName(username);
 		
 		int id = user.getUserID();
+		System.out.println("Room ID by username: " + db.findRoomIDByUsername(username));
 		System.out.println(id);
 		// check if anything was returned and output the list
 		if (user == null) {

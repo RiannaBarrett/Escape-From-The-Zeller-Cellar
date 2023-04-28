@@ -33,9 +33,6 @@ public interface IDatabase {
 
 	public String useMatches(Item matches, Item selected, User user);
 
-	public boolean changeCanBePickedUp(User user, Item item, Boolean canBePickedUp);
-
-	public String usePotionIngredient(Item item, Item selected, User user);
 
 	public int findUserIDByName(String name);
 
@@ -44,6 +41,16 @@ public interface IDatabase {
 	public Item findItemByNameAndIDInRoom(String name, int roomID);
 
 	public Item findItemByNameAndIDInInv(String name, int userID);
+
+	public int findRoomIDByUsername(String username);
+
+	public int findRoomIDByUserID(int userID);
+
+	public List<Item> findItemsInInventory(int userID);
+
+	public boolean changeCanBePickedUp(int userID, String itemName, Boolean canBePickedUp);
+
+
 	
 
 }
