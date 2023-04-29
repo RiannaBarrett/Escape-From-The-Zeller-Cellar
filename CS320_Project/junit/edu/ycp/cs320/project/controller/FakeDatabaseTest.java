@@ -256,9 +256,14 @@ public class FakeDatabaseTest {
 	}
 	
 	@Test
-	public void findItemsInInventory() {
+	public void testFindItemsInInventory() {
 		List<Item> items = db.findItemsInInventory(2);
 		assertTrue(items.get(0).getName().equals("Matches"));
 		assertTrue(items.get(1).getName().equals("Lit Candle"));
+	}
+	
+	@Test
+	public void testGetCanBePickedUp() {
+		assertTrue(db.getCanBePickedUp(5, "Jar of Cat Hairs") == false);
 	}
 }

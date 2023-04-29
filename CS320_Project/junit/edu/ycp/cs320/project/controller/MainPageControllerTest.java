@@ -253,4 +253,18 @@ public class MainPageControllerTest {
 			assertTrue(use2);
 			*/
 	}
+	
+	
+	
+	@Test
+	public void testGetSelectedMessage() {
+		String username = "potionTester2";
+		controller.PopulateModel(username);
+		assertTrue(controller.getSelectedMessage("Jar with Hibiscus", controller.getModel().getUser().getUserID()).equals("You found a Jar with Hibiscus. It seems to be stuck to the shelf"));
+		assertTrue(controller.getSelectedMessage("Jar of Cat Hairs",  controller.getModel().getUser().getUserID()).equals("You found a Jar of Cat Hairs"));
+	}
+	
+	
+	//TODO: add tests for useFullPotionBottle and useMeowMix
+	
 }

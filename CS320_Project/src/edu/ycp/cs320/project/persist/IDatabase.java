@@ -50,6 +50,8 @@ public interface IDatabase {
 
 	public boolean changeCanBePickedUp(int userID, String itemName, Boolean canBePickedUp);
 
+	public boolean getCanBePickedUp(int userID, String itemName);
+
 
 	
 

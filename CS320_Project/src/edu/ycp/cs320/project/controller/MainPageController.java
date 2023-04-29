@@ -138,14 +138,23 @@ public class MainPageController {
 		return null;
 	}
 	
+	//TODO: make it so the functions only need item name and not the entire item!!!
 	public String useItem(Item item, Item selected,int userID) {
 		String message = "Nothing Happened";
 		if(item.getName().equals("Empty Potion Bottle")) {
 			message = db.useEmptyPotion(item, selected, model.getUser());
 		}else if(item.getName().equals("Matches")) {
 			message = db.useMatches(item, selected, model.getUser());
+		}else if(item.getName().equals("Meow Mix")) {
+			message = useMeowMix(selected.getName(), userID);
+		}else if(item.getName().equals("Full Potion Bottle")) {
+			message = useFullPotionBottle(selected.getName(), userID);
 		}else if(selected.getName().equals("Empty Cauldron")){
 			message = usePotionIngredient(item.getName(), selected.getName(), userID);
+		}else if(selected.getName().equals("Puzzle board")) {
+			//TODO: call function to check if it is correct
+		}else if(item.getName().equals("Hammer")) {
+			//TODO: call function to use hammer. If used on fire alarm drop a key
 		}
 		return message;
 	}
@@ -168,6 +177,24 @@ public class MainPageController {
 		
 	}
 	
+	public String useFullPotionBottle(String selectedName, int userID) {
+		String message = "Nothing happened";
+		if(selectedName.equals("Messy")) {
+			message = "You gave Messy the potion. Messy can now talk <br> Messy: [says something]";
+			//TODO: indicate that messy can now talk in the database
+			db.removeItemFromInventory(db.findItemByNameAndIDInInv("Full Potion Bottle", userID), userID);
+		}
+		return message;
+	}
+	
+	public String useMeowMix(String selectedName, int userID) {
+		String message = "Nothing happened";
+		if(selectedName.equals("Messy")) {
+			message = "You gave Messy the Meow Mix. He seems to enjoy it!";
+			//TODO: indicate that messy has been fed in database
+		}
+		return message;
+	}
 	
 	
 	public String usePotionIngredient(String itemName, String selectedName, int userID) {
@@ -255,6 +282,39 @@ public class MainPageController {
 					}
 				}
 				
+		return message;
+	}
+
+	public String getSelectedMessage(String itemName, int userID) {
+		String message = "You found a " + itemName;
+		if(itemName.equals("Untitled Book")) {
+			System.out.println("untitled book text");
+			message = "You found a book of spells. Most of the pages are blank or damaged. <br> " +
+			"Page 1: A l_ _ ht sp_l_ pro_ec_ _ the i_g_ed_ _ nt_ <br> Page 2: Potion of S_ _ ed: fea_he_, l_me j_ _c_, c _ _ _ _ r, c_ove_, b_u_ fl_ _ e_     " +
+					" <br> Page 3: Potio_  o_  T_l_ _n_:  H_ir o_ th_ an_ _ _l, l_ck_ c_ov_ _, w_shb_ _ _, li_ _ ju_ _ _ ";
+			
+		}else if(itemName.equals("Jar of Cat Hairs") || itemName.equals("Jar with Hibiscus") || 
+				itemName.equals("Clover") || itemName.equals("Wishbone")|| itemName.equals("Lime Juice")
+				|| itemName.equals("Unlit Candle") || itemName.equals("Lit Candle")||
+				itemName.equals("Empty Potion Bottle") || itemName.equals("Fire Spinning Book")){
+			Boolean canBePickedUp = db.getCanBePickedUp(userID, itemName);
+			if(canBePickedUp == false) {
+				message = "You found a " + itemName + ". It seems to be stuck to the shelf";
+			}
+		}else if(itemName.equals("Messy")) {
+			//TODO:insert if statements to check if messy can talk and has been fed
+			//if messy cannot talk yet and he has not been fed, this is the output
+			message = "You found Zeller's cat, Messy. Messy stares at you";
+			//if messy cannot talk and has been fed, this is the output
+			message = "YOu found Zeller's cat, Messy. Messy nudges your hand";
+			//if messy can talk but has not been fed he will give bad advice
+			message = "Messy: [insert bad advice]";
+			//if messy can talk and has been fed he will give the player a hint
+			message = "Messy: [insert hint]";
+			
+		}else if(itemName.equals("Comic Stand")) {
+			message = "You found a Comic Stand that displays Zeller's favorite comics";
+		}
 		return message;
 	}
 }

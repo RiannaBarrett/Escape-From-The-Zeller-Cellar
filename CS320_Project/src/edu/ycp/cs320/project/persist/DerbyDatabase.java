@@ -86,6 +86,7 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	//TODO: maybe move to controller
 	@Override
 	public boolean transferItemFromRoomToUser(User user, Item item) {
 		Boolean added = false;
@@ -103,6 +104,7 @@ public class DerbyDatabase implements IDatabase {
 		
 	}
 
+	//TODO: implement and maybe move to controller
 	@Override
 	public boolean transferItemFromUserToRoom(User user, String itemName) {
 		throw new UnsupportedOperationException();
@@ -1149,7 +1151,7 @@ public class DerbyDatabase implements IDatabase {
 		System.out.println(selected.getName() + "is selected");
 		if(selected.getName().equals("Unlit Candle")) {
 			message = "You lit the candle";
-			Item litCandle = new Item("Lit Candle", true, 113,195,0);
+			Item litCandle = new Item("Lit Candle", false, 113,195,0);
 			swapItemInRoom(selected, litCandle, user);
 			removeItemFromInventory(matches, user.getUserID());
 			
@@ -1395,6 +1397,55 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	
+	@Override
+	public boolean getCanBePickedUp(int userID, String itemName) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"select roomInventories.canBePickedUp " +
+									"from roomInventories " +
+									"where roomInventories.room_id = ? " +
+									"and roomInventories.name = ?"
+							);
+					stmt.setInt(1, userID);
+					stmt.setString(2, itemName);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+					
+					resultSet = stmt.executeQuery();
+					
+					while (resultSet.next()) {
+						success = true;
+						result = resultSet.getBoolean(1);
+						
+					}
+					if (!success) {
+						System.out.println("<" + itemName + "> canBePickedUp was found");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+
+	}
+
+	
 	
 	
 }

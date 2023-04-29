@@ -39,6 +39,7 @@ public class MainpageServlet extends HttpServlet {
 		
 		int userID = controller.getUserIDByName(user);
 		
+		//TODO: make a more specific db function to get position if time allows
 		//based on current position, get the items from the room model
 		List<Item> items = controller.findItemsInPosition(model.getUser().getRoom().getUserPosition(), user);
 		//get items in room
@@ -174,12 +175,7 @@ public class MainpageServlet extends HttpServlet {
 				System.out.println(itemName + " was selected");
 				req.setAttribute("textOutput", "You found a " + itemName);
 				req.setAttribute("selected", itemName);
-				if(itemName.equals("Untitled Book")) {
-					System.out.println("untitled book text");
-					req.setAttribute("textOutput", "You found a book of spells. Most of the pages are blank or damaged. " +
-					"Page 1: A l_ _ ht sp_l_ pro_ec_ _ the i_g_ed_ _ nt_ Page 2: Potion of S_ _ ed: fea_he_, l_me j_ _c_, c _ _ _ _ r, c_ove_, b_u_ fl_ _ e_     " +
-							"Page 2: Potio_  o_  T_l_ _n_:  H_ir o_ th_ an_ _ _l, l_ck_ c_ov_ _, w_shb_ _ _, li_ _ ju_ _ _ ");
-				}
+				req.setAttribute("textOutput", controller.getSelectedMessage(itemName, userID));
 					
 			}
 		}
@@ -207,7 +203,6 @@ public class MainpageServlet extends HttpServlet {
 		controller.PopulateModel(user);	
 		
 		//check what the current position is and set background image
-				//TODO: this code will be changed once our backgrounds are final
 				position = model.getUser().getRoom().getUserPosition();
 				
 				

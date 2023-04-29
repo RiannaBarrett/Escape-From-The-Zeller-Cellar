@@ -160,7 +160,7 @@ public class FakeDatabase implements IDatabase {
 		inv.add(itemToAdd);
 		user.setInventory(inv);
 	}
-
+	//TODO: move to controller and change parameter to select item names instead of items
 	@Override
 	public String useEmptyPotion(Item bottle, Item selected, User user) {
 		String message = "Nothing Happened";
@@ -173,6 +173,7 @@ public class FakeDatabase implements IDatabase {
 		return message;
 	}
 
+	//TODO: move to controller and change parameter to select item names instead of items
 	@Override
 	public String useMatches(Item matches, Item selected, User user) {
 		String message = "Nothing Happened";
@@ -345,5 +346,22 @@ public class FakeDatabase implements IDatabase {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public boolean getCanBePickedUp(int userID, String itemName) {
+		Boolean result = false;
+		for(User user : userList) {
+			if(user.getUserID()==userID) {
+				List<Item> items = user.getRoom().getItems();
+				for(Item item : items) {
+					if(item.getName().equals(itemName)) {
+						result = item.getCanBePickedUp();
+						return result;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }
