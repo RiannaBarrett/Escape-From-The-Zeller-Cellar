@@ -30,14 +30,13 @@ public class FakeDatabaseTest {
 		assertTrue(user.getUsername().equals("Screamer"));
 		assertTrue(user.getPassword().equals("letsGoYCP!"));
 		assertTrue(user.getInventory().size() == 1);
+		System.out.println("fdsafdsa"+user.getInventory().size());
 	}
 
 	@Test
 	public void testAddUser() {
-		db.findUserByName("Devon");
-		User user = new User();
-		user.setUsername("Devon");
-		user.setPassword("Barrack");
+		user = db.findUserByName("Devon");
+		user = new User("Devon", "Barrack");
 		assertTrue(db.addUser(user));
 		assertTrue(user.getUsername().equals("Devon"));
 		assertTrue(user.getPassword().equals("Barrack"));
@@ -46,6 +45,7 @@ public class FakeDatabaseTest {
 		assertTrue(user.getRoom().getRoomID() == 7);
 	}
 
+	
 	@Test
 	public void testTransferItemFromRoomToUser() {
 		Item item = user.getRoom().getItems().get(3);
@@ -123,7 +123,15 @@ public class FakeDatabaseTest {
 
 	@Test
 	public void testUseEmptyPotion() {
-		throw new UnsupportedOperationException();
+		Item item = new Item("Empty Potion Bottle");
+		user.getInventory().add(item);
+		Item seletedItem = new Item("Cauldron with Potion");
+		String message = db.useEmptyPotion(item, seletedItem, user);
+		Boolean isTrue = false;
+		if(message == "You filled the bottle with a potion") {
+			isTrue = true;
+		}
+		assertTrue(isTrue);
 	}
 
 	@Test
@@ -145,17 +153,8 @@ public class FakeDatabaseTest {
 		int userID = user.getUserID();
 		Boolean didRemove = false;
 		Item item = user.getInventory().get(0);
-		System.out.println(item.getName() +" fdsafds");
-		db.removeItemFromInventory(item, userID);
-		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(user.getInventory().get(i).equals(item)){
-				didRemove = true;
-			}
-			else {
-				didRemove = false;
-			}
-		}
-		assertTrue(didRemove);
+		System.out.println(item.getName());
+		assertTrue(db.removeItemFromInventory(item, userID) == true);
 	}
 
 
@@ -164,15 +163,17 @@ public class FakeDatabaseTest {
 		Boolean itemAddSuccess = false;
 		Boolean itemRemoveSuccess = false;
 		Item itemToRemove = user.getInventory().get(0);
+		System.out.println(itemToRemove.getName());
 		Item itemToAdd = new Item("box");
-		db.swapItemInRoom(itemToRemove, itemToAdd, user);
+		db.swapItemInInventory(itemToRemove, itemToAdd, user);
 		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(user.getRoom().getItems().get(i).getName().equals(itemToAdd.getName())) {
+			if(user.getInventory().get(i).getName().equals(itemToAdd.getName())) {
+			
 				itemAddSuccess = true;
 			}
 		}
 		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(!user.getRoom().getItems().get(i).getName().equals(itemToRemove)) {
+			if(!user.getInventory().get(i).getName().equals(itemToRemove.getName())) {
 				itemRemoveSuccess = true;
 			}
 		}
@@ -205,19 +206,17 @@ public class FakeDatabaseTest {
 
 	@Test
 	public void testUseMatches() {
-		throw new UnsupportedOperationException();
+		Item matches = new Item("Matches");
+		Item selected = new Item("Unlit Candle");
+		Boolean isTrue = false;
+		assertTrue(db.useMatches(matches, selected, user) == "You lit the candle");
+		
 	}
 
 	@Test
 	public void testChangeCanBePickedUp() {
 		assertTrue(db.changeCanBePickedUp(5, "Jar of Cat Hairs", true) == true);
 	}
-
-	
-	
-	
-	
-	
 
 	@Test
 	public void testFindItemsInPositionByID() {
@@ -248,8 +247,8 @@ public class FakeDatabaseTest {
 	
 	@Test
 	public void testFindRoomIDByName() {
-
 		assertTrue(db.findRoomIDByUsername("Screamer") ==  5);
+		System.out.println("ID = " + db.findRoomIDByUsername("Screamer"));
 	}
 	@Test
 	public void testFindRoomIDByUserID() {

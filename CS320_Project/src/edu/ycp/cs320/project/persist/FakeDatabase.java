@@ -59,6 +59,7 @@ public class FakeDatabase implements IDatabase {
 	public boolean addUser(User user) {
 		user.setUserID(userList.size() + 1);
 		user.getRoom().setRoomID(roomList.size() + 1);
+		System.out.println("\n\n\n" + user.getRoom().getRoomID());
 		System.out.println(user.getRoom().getRoomID());
 		if (userList.add(user) && roomList.add(user.getRoom())) {
 			return true;
@@ -109,10 +110,16 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public int findUserIDByName(String username) {
-		return 0;
+		int find = -1;
+		for(int i = 0; i < userList.size(); i++) {
+			if(userList.get(i).getUsername().equals(username)) {
+				find = userList.get(i).getUserID();
+			}
+		}
+		return find;
 	}
 
-	private Room findRoomByUserID(int userID) {
+	public Room findRoomByUserID(int userID) {
 		for (Room room : roomList) {
 			if (room.getUserID() == userID) {
 				return room;
@@ -121,7 +128,7 @@ public class FakeDatabase implements IDatabase {
 		return null;
 	}
 
-	private Item findItemByName(String itemName, List<Item> itemList) {
+	public Item findItemByName(String itemName, List<Item> itemList) {
 		for (Item item : itemList) {
 			if(item.getName() == itemName) {
 				return item;
@@ -247,7 +254,7 @@ public class FakeDatabase implements IDatabase {
 		}else {
 			return false;
 		}
-		
+
 	}
 
 
@@ -261,7 +268,7 @@ public class FakeDatabase implements IDatabase {
 				items = room.getItems();
 			}
 		}
-		
+
 		for(Item item : items) {
 			if(item.getRoomPosition()==position) {
 				result.add(item);
@@ -285,7 +292,7 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Item findItemByNameAndIDInRoom(String name, int roomID) {
 		for(Room room : roomList) {
@@ -327,7 +334,7 @@ public class FakeDatabase implements IDatabase {
 		}
 		return roomID;
 	}
-	
+
 	@Override
 	public List<Item> findItemsInInventory(int userID) {
 		List<Item> result = new ArrayList<Item>();
