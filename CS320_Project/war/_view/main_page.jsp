@@ -12,20 +12,18 @@
     <div class="header">
         
         <div class="title">
-        <h1>
+        <h3>
             Escape from the Zeller Cellar
-        </h1>
+        </h3>
          </div>
         <div class = "loginBtn">
         <input type="submit" name="logout" value="logout">
+         <input class="pickUp"type="submit" name="pickUp" value="Pick Up">
         </div>
     </div>
 
     <div class="mainContent">
         <table>
-            <td class="keyDescriptions">
-                <input class="pickUp"type="submit" name="pickUp" value="Pick Up">
-            </td>
             <td class="gameGraphics">
             	<div ="imageContainer">
                 <img class = "roomImg" src ="./Images/RoomPlaceholder${ViewNumber}.png" alt = "Placeholder Room Image">
@@ -33,26 +31,21 @@
                 <button class="button right" name = "right"><</button>
                 <button class="button up" name = "up"><</button>
               	<button class="button down" name = "down"><</button>
+              	<p name = "textOutput">${textOutput}</p>
               	</div>
                 <c:forEach items="${items}" var="item">
               		<div class = "clickableHover">
-              		<button type="submit" name = "${item.getName()}" style = "transform: scale(0.10); top:${item.getXPosition()}px; 
+              		<button type="submit" name = "${item.getName()}" style = "transform: scale(0.1); top:${item.getXPosition()}px; 
               		left:${item.getYPosition()}px; ">
               		<img "class = "clickable" src ="./Images/${item.getName()}.png" alt = "${item.getName()} style="width:20%;">
               		</button>
                 	</div>
                 </c:forEach>
-               
                <input type="text" name ="selected" style="visibility:hidden;" value="${selected}">
-            </td>
-            <td class="objectives">
-                <div class="obj"> 
-                <h1 class="objective-header"> Objectives </h1>
-                 </div>
             </td>
         </table>
     </div>
-<p name = "textOutput">${textOutput}</p>
+
     <div class="inventory">
         <h2 class="inventory-header">Inventory</h2>
   <table class="inventory-table">
