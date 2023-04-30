@@ -22,7 +22,6 @@
           <ul>
             <li><a href="#">Settings</a></li>
             <li><a href="#">Account</a></li>
-            <li><a href="#">Highscore</a></li>
             <li class="btn"><a href ="main_page">Play</a></li>
           </ul>
         </nav>
