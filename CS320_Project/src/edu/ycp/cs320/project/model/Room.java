@@ -79,17 +79,19 @@ public class Room {
 	
 	private List<Item> createInitialItems() {
 		List<Item> iList = new ArrayList<Item>();
-		iList.add(new Item("Shelf",false,-875,-820,0));
-		iList.add(new Item("Jar of Cat Hairs",false,108,230,0));
-		iList.add(new Item("Jar with Hibiscus",false,108,190,0));
-		iList.add(new Item("Empty Potion Bottle",false,111,145,0));
-		iList.add(new Item("Fire Spinning Book",false,65,405,0));
-		iList.add(new Item("Unlit Candle",false,113,195,0));
-		iList.add(new Item("Clover",false,113,225,0));
-		iList.add(new Item("Wishbone",false,166,145,0));
-		iList.add(new Item("Carton of Lime Juice",false,166,225,0));
-		iList.add(new Item("Empty Cauldron",false,-450,-635,0));
-		
+		iList.add(new Item("Shelf",false,-978,-450,0));
+		iList.add(new Item("Jar of Cat Hairs",false,3,613,0));
+		iList.add(new Item("Jar with Hibiscus",false,3,573,0));
+		iList.add(new Item("Empty Potion Bottle",false,8,516,0));
+		iList.add(new Item("Untitled Book",false,-29,773,0));
+		iList.add(new Item("Fire Spinning Book",false,-39,763,0));
+		iList.add(new Item("Unlit Candle",false,8,556,0));
+		iList.add(new Item("Clover",false,61,588,0));
+		iList.add(new Item("Wishbone",false,7,598,0));
+		iList.add(new Item("Carton of Lime Juice",false,60,525,0));
+		iList.add(new Item("Empty Cauldron",false,-1191,-1000,2));
+		iList.add(new Item("Lit Candle",true,8,556,0));
+
 		return iList;
 	}
 	
