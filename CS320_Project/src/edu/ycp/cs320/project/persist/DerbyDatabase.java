@@ -25,7 +25,7 @@ public class DerbyDatabase implements IDatabase {
 		}
 	}
 
-	private interface Transaction<ResultType> {
+	public interface Transaction<ResultType> {
 		public ResultType execute(Connection conn) throws SQLException;
 	}
 
@@ -223,7 +223,8 @@ public class DerbyDatabase implements IDatabase {
 	
 	@Override
 	public boolean addUser(User user) {
-		return executeTransaction(new Transaction<Boolean>() {
+		Boolean result = false;
+		result = executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
@@ -267,10 +268,6 @@ public class DerbyDatabase implements IDatabase {
 						return success;
 					}
 					
-					for(Item item : user.getInventory()) {
-						addItemToInventory(item, user.getUserID());
-					}
-					
 					//adds new room to to user_id
 					stmt3 = conn.prepareStatement(
 							"insert into rooms(user_id, userPosition) " +
@@ -288,11 +285,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt4.setInt(1, user.getUserID());
 					resultSet = stmt4.executeQuery();				
 					
-					for(Item item : user.getRoom().getItems()) {
-						addItemToRoom(item, user.getRoom().getRoomID());
-					}
-					
-					// check if the user was found
+					// check if the room was found
 					while (resultSet.next()) {
 						Room room = new Room();
 						loadRoom(room, resultSet, 1);
@@ -303,6 +296,7 @@ public class DerbyDatabase implements IDatabase {
 					if (!result) {
 						System.out.println("<" + user.getPassword() + "> was not inserted in the users table");
 					}
+					
 					return result;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
@@ -313,6 +307,23 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
+		System.out.println("Adding items to user...");
+		for(Item item : user.getInventory()) {
+			System.out.println("Item: " + item.getName());
+			addItemToInventory(item, user.getUserID());
+		}
+		System.out.println("Adding items to room...");
+		for(Item item : user.getRoom().getItems()) {
+			System.out.println("Item: " + item.getName());
+			addItemToRoom(item, user.getRoom().getRoomID());
+		}
+		
+		System.out.println("Adding objectives to room...");
+		for(Objective objective : user.getRoom().getObjectives()) {
+			System.out.println("Objective ");
+			addObjectiveToRoom(objective, user.getRoom().getRoomID());
+		}
+		return result;
 	}
 	
 	@Override
@@ -325,7 +336,7 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;		
 				
 				try {
-					//inserts item into roomInventory
+					System.out.println("Adding objective...");
 					stmt = conn.prepareStatement(
 							"insert into objectives (room_id, isStarted, isComplete)" +
 									"values (?,?,?) "
@@ -387,14 +398,14 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;		
 				
 				try {
-					//inserts item into roomInventory
+					System.out.println("Adding tasks...");
 					String idList = "";
 					for(int itemID : task.getCorrectItems()) {
 						idList += Integer.toString(itemID);
 					}
 					stmt = conn.prepareStatement(
 							"insert into tasks (objective_id, item_ids, isStarted, isComplete)" +
-									"values (?,?,?) "
+									"values (?,?,?,?) "
 							);
 					stmt.setInt(1, objID);
 					stmt.setString(2, idList);
@@ -458,10 +469,10 @@ public class DerbyDatabase implements IDatabase {
 				}
 				
 				try {
-					//inserts item into roomInventory
+					System.out.println("Pre-statement");
 					stmt = conn.prepareStatement(
 							"insert into roomInventories (room_id, name, canBePickedUp, xPosition, yPosition, roomPosition)" +
-									"values (?,?,?,?,?,?) "
+									" values (?,?,?,?,?,?) "
 							);
 					stmt.setInt(1, roomID);
 					stmt.setString(2, item.getName());
@@ -469,14 +480,13 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(4, item.getXPosition());
 					stmt.setInt(5, item.getYPosition());
 					stmt.setInt(6, item.getRoomPosition());
-
-					
+					System.out.println("Pre-execute");
 					stmt.execute();
-					
+					System.out.println("Post-execute");
 					Boolean result = false;
 					Boolean success = false;
 
-					//selects all details of the new item
+					//selects all details of the new user
 					stmt2 = conn.prepareStatement(
 							"select roomInventories.* " +
 									"  from roomInventories " +
@@ -665,8 +675,7 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					//inserts item into userInventory
 					stmt = conn.prepareStatement(
-							"insert into userInventories (user_id, name, canBePickedUp, xPosition, yPosition, roomPosition)" +
-									"values (?,?,?,?,?,?) "
+							"insert into userInventories (user_id, name, canBePickedUp, xPosition, yPosition, roomPosition) values (?, ?, ?, ?, ?, ?)"
 							);
 					stmt.setInt(1, userID);
 					stmt.setString(2, item.getName());
@@ -828,7 +837,6 @@ public class DerbyDatabase implements IDatabase {
 							" where roomInventories.room_id = ? "
 					);
 					stmt.setInt(1, roomID);
-					
 					List<Item> result = new ArrayList<Item>();
 					
 					resultSet = stmt.executeQuery();
@@ -860,6 +868,7 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
 	@Override
 	public List<Item> findItemsInPositionByID(int roomID, int position){
 		return executeTransaction(new Transaction<List<Item>>() {
@@ -1099,7 +1108,7 @@ public class DerbyDatabase implements IDatabase {
 		}
 	}
 
-	private Connection connect() throws SQLException {
+	public Connection connect() throws SQLException {
 		Connection conn = DriverManager.getConnection("jdbc:derby:database.db;create=true");
 
 		// Set autocommit to false to allow execution of
@@ -1315,6 +1324,8 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertUserInventory);
 					DBUtil.closeQuietly(insertRoomInventory);
+					DBUtil.closeQuietly(insertTask);
+					DBUtil.closeQuietly(insertObjective);
 				}
 			}
 		});

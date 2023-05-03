@@ -15,7 +15,7 @@ public class User {
 		this.userID = 0;
 		this.username = "Unnamed User";
 		this.password = "Password";
-		this.inventory = new ArrayList<Item>();
+		this.inventory = createInitialItems();
 		this.room = new Room();
 		this.inventoryLimit = 5;
 		this.time = 0;
@@ -24,7 +24,7 @@ public class User {
 		this.userID = 0;
 		this.username = username;
 		this.password = password;
-		this.inventory = new ArrayList<Item>();
+		this.inventory = createInitialItems();
 		this.room = new Room();
 		this.inventoryLimit = 5;
 		this.time = 0;

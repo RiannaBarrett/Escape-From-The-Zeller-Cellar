@@ -14,8 +14,8 @@ import edu.ycp.cs320.project.persist.IDatabase;
 import edu.ycp.cs320.project.model.*;
 
 public class FakeDatabaseTest {
-	private IDatabase db;
-	private User user;
+	public IDatabase db;
+	public User user;
 
 	@Before
 	public void setUp() {
@@ -35,14 +35,13 @@ public class FakeDatabaseTest {
 
 	@Test
 	public void testAddUser() {
-		user = db.findUserByName("Devon");
 		user = new User("Devon", "Barrack");
 		assertTrue(db.addUser(user));
 		assertTrue(user.getUsername().equals("Devon"));
 		assertTrue(user.getPassword().equals("Barrack"));
-		assertTrue(user.getUserID() == 7);
-		assertTrue(user.getInventory().size() == 0);
-		assertTrue(user.getRoom().getRoomID() == 7);
+		assertTrue(user.getUserID() == 9);
+		assertTrue(user.getInventory().size() == 1);
+		assertTrue(user.getRoom().getRoomID() == 9);
 	}
 
 	
@@ -52,6 +51,7 @@ public class FakeDatabaseTest {
 		assertTrue(db.transferItemFromRoomToUser(user, item));
 		boolean itemMoved = false;
 		boolean itemRemoved = true;
+		//TODO: Needs a function here to update inventories, they dont automatically update.
 		for(int i = 0; i < user.getInventory().size(); i++) {
 			if(user.getInventory().get(i).getName().equals(item.getName())) {
 				itemMoved = true;
@@ -90,6 +90,7 @@ public class FakeDatabaseTest {
 	public void testMoveUser() {
 		assertFalse(user.getRoom().getUserPosition() == 3);
 		assertTrue(db.moveUser(user, 3));
+		// TODO: Needs a function here to re-get position from db, it doesn't automatically update.
 		assertTrue(user.getRoom().getUserPosition() == 3);
 	}
 
@@ -105,8 +106,9 @@ public class FakeDatabaseTest {
 		Item item = new Item();
 		int userID = user.getUserID();
 		db.addItemToInventory(item, userID);
-		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(user.getInventory().get(i).getName().equals(item.getName())) {
+		List<Item> inv = db.findItemsInInventory(userID);
+		for(int i = 0; i < inv.size(); i++) {
+			if(inv.get(i).getName().equals(item.getName())) {
 				isInInventory = true;
 			}
 		}
@@ -166,6 +168,7 @@ public class FakeDatabaseTest {
 		System.out.println(itemToRemove.getName());
 		Item itemToAdd = new Item("box");
 		db.swapItemInInventory(itemToRemove, itemToAdd, user);
+		// TODO: Function needs to re-get both inventories from db, doesn't automatically update.
 		for(int i = 0; i < user.getInventory().size(); i++) {
 			if(user.getInventory().get(i).getName().equals(itemToAdd.getName())) {
 			
@@ -189,6 +192,8 @@ public class FakeDatabaseTest {
 		Item itemToRemove = user.getRoom().getItems().get(0);
 		Item itemToAdd = new Item("box");
 		db.swapItemInRoom(itemToRemove, itemToAdd, user);
+		// TODO: Needs a function here to re-get the room inventory. Doesn't automatically update.
+		
 		for(int i = 0; i < user.getRoom().getItems().size(); i++) {
 			if(user.getRoom().getItems().get(i).getName().equals(itemToAdd.getName())) {
 				itemAddSuccess = true;

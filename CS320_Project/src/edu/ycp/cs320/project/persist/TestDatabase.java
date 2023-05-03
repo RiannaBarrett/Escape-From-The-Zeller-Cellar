@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 import edu.ycp.cs320.project.model.*;
 import edu.ycp.cs320.project.persist.DBUtil;
+import edu.ycp.cs320.project.persist.DerbyDatabase.Transaction;
 
 public class TestDatabase extends DerbyDatabase {
 	static {
@@ -23,10 +24,9 @@ public class TestDatabase extends DerbyDatabase {
 			throw new IllegalStateException("Could not load Derby driver");
 		}
 	}
-	private static final int MAX_ATTEMPTS = 10;
 
-	
-	private Connection connect() throws SQLException {
+	@Override
+	public Connection connect() throws SQLException {
 		Connection conn = DriverManager.getConnection("jdbc:derby:test.db;create=true");
 
 		// Set autocommit to false to allow execution of
@@ -34,6 +34,49 @@ public class TestDatabase extends DerbyDatabase {
 		conn.setAutoCommit(false);
 
 		return conn;
+	}
+	
+	public Boolean resetTestDB() {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
+				PreparedStatement stmt5 = null;
+				PreparedStatement stmt6 = null;
+				ResultSet resultSet = null;
+
+				try {
+					stmt6 = conn.prepareStatement("drop table tasks ");
+					stmt6.execute();
+					stmt5 = conn.prepareStatement("drop table objectives ");
+					stmt5.execute();
+					stmt4 = conn.prepareStatement("drop table roomInventories ");
+					stmt4.execute();
+					stmt3 = conn.prepareStatement("drop table userInventories ");
+					stmt3.execute();
+					stmt2 = conn.prepareStatement("drop table rooms ");
+					stmt2.execute();
+					stmt = conn.prepareStatement("drop table users ");
+					stmt.execute();
+					
+					//createTables();
+					//loadInitialData();
+					System.out.println("Test Tables Reset.");
+					return true;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
+					DBUtil.closeQuietly(stmt5);
+					DBUtil.closeQuietly(stmt6);
+				}
+			}
+		});
 	}
 	
 	public static void main(String[] args) throws IOException {
