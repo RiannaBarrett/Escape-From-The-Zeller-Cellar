@@ -234,12 +234,13 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					//inserts user based on username, password and inventory limit of 5
 					stmt = conn.prepareStatement(
-							"insert into users (username, password, inventoryLimit)" +
-									"values (?,?,?) "
+							"insert into users (username, password, inventoryLimit, time)" +
+									"values (?,?,?,?) "
 							);
 					stmt.setString(1, user.getUsername());
 					stmt.setString(2, user.getPassword());
 					stmt.setInt(3, user.getInventoryLimit());
+					stmt.setInt(4, user.getTime());
 					stmt.execute();
 					
 					Boolean result = false;
@@ -266,6 +267,10 @@ public class DerbyDatabase implements IDatabase {
 						return success;
 					}
 					
+					for(Item item : user.getInventory()) {
+						addItemToInventory(item, user.getUserID());
+					}
+					
 					//adds new room to to user_id
 					stmt3 = conn.prepareStatement(
 							"insert into rooms(user_id, userPosition) " +
@@ -283,12 +288,16 @@ public class DerbyDatabase implements IDatabase {
 					stmt4.setInt(1, user.getUserID());
 					resultSet = stmt4.executeQuery();				
 					
+					for(Item item : user.getRoom().getItems()) {
+						addItemToRoom(item, user.getRoom().getRoomID());
+					}
+					
 					// check if the user was found
 					while (resultSet.next()) {
 						Room room = new Room();
 						loadRoom(room, resultSet, 1);
 						user.setRoom(room);
-					
+						
 						result = true;
 					}					
 					if (!result) {
@@ -305,6 +314,133 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	@Override
+	public boolean addObjectiveToRoom(Objective obj, int roomID) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;		
+				
+				try {
+					//inserts item into roomInventory
+					stmt = conn.prepareStatement(
+							"insert into objectives (room_id, isStarted, isComplete)" +
+									"values (?,?,?) "
+							);
+					stmt.setInt(1, roomID);
+					stmt.setString(2, obj.getIsStarted().toString());
+					stmt.setString(3, obj.getIsComplete().toString());
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects all details of the new item
+					stmt2 = conn.prepareStatement(
+							"select objectives.* " +
+									"  from objectives " +
+									" where objectives.room_id = ? "
+							);
+					stmt2.setInt(1, roomID);
+						
+					resultSet = stmt2.executeQuery();
+					
+					Objective resultObj = new Objective();
+					while (resultSet.next()) {
+						success = true;
+						// create new item object
+						// retrieve attributes from resultSet starting with index 1
+						loadObjective(resultObj, resultSet, 1);
+						System.out.println(resultObj.getObjectiveID());
+					}
+					
+					for(Task task : obj.getTasks()) {
+						result = addTaskToObjective(task, resultObj.getObjectiveID());
+					}
+					
+					// check if the item was found
+					if (!success) {
+						System.out.println("<Objective> was not inserted in the objectives table");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public boolean addTaskToObjective(Task task, int objID) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;		
+				
+				try {
+					//inserts item into roomInventory
+					String idList = "";
+					for(int itemID : task.getCorrectItems()) {
+						idList += Integer.toString(itemID);
+					}
+					stmt = conn.prepareStatement(
+							"insert into tasks (objective_id, item_ids, isStarted, isComplete)" +
+									"values (?,?,?) "
+							);
+					stmt.setInt(1, objID);
+					stmt.setString(2, idList);
+					stmt.setString(3, task.getIsStarted().toString());
+					stmt.setString(4, task.getIsComplete().toString());
+					stmt.execute();
+					
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects all details of the new item
+					stmt2 = conn.prepareStatement(
+							"select tasks.* " +
+									"  from tasks " +
+									" where tasks.objective_id = ? "
+							);
+					stmt2.setInt(1, objID);
+						
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						success = true;
+						// create new item object
+						// retrieve attributes from resultSet starting with index 1
+						Task resultTask = new Task();
+						loadTask(resultTask, resultSet, 1);
+						System.out.println(resultTask.getTaskID());
+					}
+					
+					// check if the item was found
+					if (!success) {
+						System.out.println("<Task> was not inserted in the objectives table");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+	
+	
 	@Override
 	public boolean addItemToRoom(Item item, int roomID) {
 		return executeTransaction(new Transaction<Boolean>() {
@@ -320,8 +456,6 @@ public class DerbyDatabase implements IDatabase {
 						return false;
 					}
 				}
-				
-						
 				
 				try {
 					//inserts item into roomInventory
@@ -883,6 +1017,7 @@ public class DerbyDatabase implements IDatabase {
 		user.setUsername(result.getString(index++));
 		user.setPassword(result.getString(index++));
 		user.setInventoryLimit(result.getInt(index++));
+		user.setTime(result.getInt(index++));
 	}
 	
 	private void loadRoom(Room room, ResultSet result, int index) throws SQLException {
@@ -893,13 +1028,32 @@ public class DerbyDatabase implements IDatabase {
 	
 	private void loadItem(Item item, ResultSet result, int index) throws SQLException {
 		item.setItemID(result.getInt(index++));
-		// Skip User ID
-		index++;
+		item.setUserOrRoomID(result.getInt(index++));
 		item.setName(result.getString(index++));
 		item.setCanBePickedUp(Boolean.parseBoolean(result.getString(index++)));
 		item.setXPosition(result.getInt(index++));
 		item.setYPosition(result.getInt(index++));
 		item.setRoomPosition(result.getInt(index++));
+	}
+	
+	private void loadTask(Task task, ResultSet result, int index) throws SQLException {
+		task.setTaskID(result.getInt(index++));
+		task.setObjectiveID(result.getInt(index++));
+		String itemIDs = result.getString(index++);
+		List<Integer> itemIDList= new ArrayList<Integer>();
+		for(int i=0; i < itemIDs.length(); i++) {
+			itemIDList.add(Integer.parseInt(itemIDs.substring(i, i+1)));
+		}
+		task.setCorrectItems(itemIDList);
+		task.setIsStarted(Boolean.parseBoolean(result.getString(index++)));
+		task.setIsComplete(Boolean.parseBoolean(result.getString(index++)));
+	}
+	
+	private void loadObjective(Objective objective, ResultSet result, int index) throws SQLException {
+		objective.setObjectiveID(result.getInt(index++));
+		objective.setRoomID(result.getInt(index++));
+		objective.setIsStarted(Boolean.parseBoolean(result.getString(index++)));
+		objective.setIsComplete(Boolean.parseBoolean(result.getString(index++)));
 	}
 
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
@@ -963,6 +1117,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				PreparedStatement stmt4 = null;
+				PreparedStatement stmt5 = null;
+				PreparedStatement stmt6 = null;
 
 				try {
 					stmt1 = conn.prepareStatement(
@@ -971,7 +1127,8 @@ public class DerbyDatabase implements IDatabase {
 									"		generated always as identity (start with 1, increment by 1), " +									
 									"	username varchar(32)," +
 									"	password varchar(32)," +
-									"	inventoryLimit integer " +
+									"	inventoryLimit integer, " +
+									"	time integer " +
 									")"
 							);	
 					stmt1.executeUpdate();
@@ -992,7 +1149,7 @@ public class DerbyDatabase implements IDatabase {
 									"		generated always as identity (start with 1, increment by 1), " +
 									"	user_id integer constraint fk_inv_userid references users(user_id), " +
 									"	name varchar(40)," +
-									"	canBePickedUp varchar(10)," + // INCORRECT FIELD TYPE
+									"	canBePickedUp varchar(10)," + 
 									"	xPosition integer," +
 									"	yPosition integer," +
 									"	roomPosition integer " +
@@ -1006,13 +1163,36 @@ public class DerbyDatabase implements IDatabase {
 									"		generated always as identity (start with 1, increment by 1), " +
 									"	room_id integer constraint fk_inv_roomid references rooms(room_id), " +
 									"	name varchar(40)," +
-									"	canBePickedUp varchar(10)," + // INCORRECT FIELD TYPE
+									"	canBePickedUp varchar(10)," + 
 									"	xPosition integer," +
 									"	yPosition integer," +
 									"	roomPosition integer " +
 									")"
 							);
 					stmt4.executeUpdate();
+					
+					stmt5 = conn.prepareStatement(
+							"create table objectives (" +
+									"	objective_id integer primary key " +
+									"		generated always as identity (start with 1, increment by 1), " +
+									"	room_id integer constraint fk_obj_roomid references rooms(room_id), " +
+									"	isStarted varchar(10)," +
+									"	isComplete varchar(10) " +
+									")"
+							);
+					stmt5.executeUpdate();
+					
+					stmt6 = conn.prepareStatement(
+							"create table tasks (" +
+									"	task_id integer primary key " +
+									"		generated always as identity (start with 1, increment by 1), " +
+									"	objective_id integer constraint fk_task_objid references objectives(objective_id), " +
+									"	item_ids varchar(40)," +
+									"	isStarted varchar(10)," + 
+									"	isComplete varchar(10) " +
+									")"
+							);
+					stmt6.executeUpdate();
 
 					return true;
 				} finally {
@@ -1020,6 +1200,8 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
 					DBUtil.closeQuietly(stmt4);
+					DBUtil.closeQuietly(stmt5);
+					DBUtil.closeQuietly(stmt6);
 				}
 			}
 		});
@@ -1031,11 +1213,9 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<User> userList;
-				List<Room> roomList;
 
 				try {
 					userList = InitialData.getUsers();
-					roomList = InitialData.getRooms();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
@@ -1044,26 +1224,27 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertRoom   = null;
 				PreparedStatement insertUserInventory = null;
 				PreparedStatement insertRoomInventory = null;
+				PreparedStatement insertObjective = null;
+				PreparedStatement insertTask = null;
 
 				try {
-					// populate authors table (do authors first, since author_id is foreign key in books table)
-					insertUser = conn.prepareStatement("insert into users (username, password, inventoryLimit) values (?, ?, ?)");
+					// populate users table
+					insertUser = conn.prepareStatement("insert into users (username, password, inventoryLimit, time) values (?, ?, ?, ?)");
 					for (User user : userList) {
 						//						//insertAuthor.setInt(1, author.getAuthorId());	// auto-generated primary key, don't insert this
 						insertUser.setString(1, user.getUsername());
 						insertUser.setString(2, user.getPassword());
 						insertUser.setInt(3, user.getInventoryLimit());
+						insertUser.setInt(4, user.getTime());
 						insertUser.addBatch();
 					}
 					insertUser.executeBatch();
 
-					// populate books table (do this after authors table,
-					// since author_id must exist in authors table before inserting book)
+					// populate rooms table
 					insertRoom = conn.prepareStatement("insert into rooms (user_id, userPosition) values (?, ?)");
-					for (Room room : roomList) {
-						//						insertBook.setInt(1, book.getBookId());		// auto-generated primary key, don't insert this
-						insertRoom.setInt(1, room.getUserID());
-						insertRoom.setInt(2, room.getUserPosition());
+					for (int i=0; i < userList.size(); i++) {
+						insertRoom.setInt(1, userList.get(i).getUserID());
+						insertRoom.setInt(2, userList.get(i).getRoom().getUserPosition());
 						insertRoom.addBatch();
 					}
 					insertRoom.executeBatch();
@@ -1083,7 +1264,8 @@ public class DerbyDatabase implements IDatabase {
 					insertUserInventory.executeBatch();
 
 					insertRoomInventory = conn.prepareStatement("insert into roomInventories (room_id, name, canBePickedUp, xPosition, yPosition, roomPosition) values (?, ?, ?, ?, ?, ?)");
-					for (Room room : roomList) {
+					for (int i=0; i < userList.size(); i++) {
+						Room room = userList.get(i).getRoom();
 						for (Item item : room.getItems()) {
 							insertRoomInventory.setInt(1, room.getRoomID());
 							insertRoomInventory.setString(2, item.getName());
@@ -1095,6 +1277,37 @@ public class DerbyDatabase implements IDatabase {
 						}
 					}
 					insertRoomInventory.executeBatch();
+					
+					insertObjective = conn.prepareStatement("insert into objectives (room_id, isStarted, isComplete) values (?, ?, ?)");
+					for (int i=0; i < userList.size(); i++) {
+						Room room = userList.get(i).getRoom();
+						for (Objective obj : room.getObjectives()) {
+							insertObjective.setInt(1, room.getRoomID());
+							insertObjective.setString(2, obj.getIsStarted().toString());
+							insertObjective.setString(3, obj.getIsComplete().toString());
+							insertObjective.addBatch();
+						}
+					}
+					insertObjective.executeBatch();
+					
+					insertTask = conn.prepareStatement("insert into tasks (objective_id, item_ids, isStarted, isComplete) values (?, ?, ?, ?)");
+					for (int i=0; i < userList.size(); i++) {
+						Room room = userList.get(i).getRoom();
+						for (Objective obj : room.getObjectives()) {
+							for(Task task : obj.getTasks()) {
+								insertTask.setInt(1, obj.getObjectiveID());
+								String itemString = "";
+								for(Integer k : task.getCorrectItems()) {
+									itemString += k.toString();
+								}
+								insertTask.setString(2, itemString);
+								insertTask.setString(3, task.getIsStarted().toString());
+								insertTask.setString(4, task.getIsComplete().toString());
+								insertTask.addBatch();
+							}
+						}
+					}
+					insertTask.executeBatch();
 
 					return true;
 				} finally {

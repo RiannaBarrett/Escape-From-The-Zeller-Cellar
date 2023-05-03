@@ -29,14 +29,8 @@ public class FakeDatabase implements IDatabase {
 		try {
 			// Gets all users and rooms
 			userList.addAll(InitialData.getUsers());
-			roomList.addAll(InitialData.getRooms());
-			// Links users/rooms together (adds the rooms to the related user)
-			for (User user : userList) {
-				for (Room room : roomList) {
-					if(room.getUserID() == user.getUserID()) {
-						user.setRoom(room);
-					}
-				}
+			for(User user : userList) {
+				roomList.add(user.getRoom());
 			}
 		} catch (IOException e) {
 			throw new IllegalStateException("Couldn't read initial data", e);
@@ -120,9 +114,9 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	public Room findRoomByUserID(int userID) {
-		for (Room room : roomList) {
-			if (room.getUserID() == userID) {
-				return room;
+		for (User user : userList) {
+			if (user.getUserID() == userID) {
+				return user.getRoom();
 			}
 		}
 		return null;
@@ -362,6 +356,18 @@ public class FakeDatabase implements IDatabase {
 				}
 			}
 		}
+		return false;
+	}
+
+	@Override
+	public boolean addObjectiveToRoom(Objective obj, int roomID) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addTaskToObjective(Task task, int objectiveID) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 }

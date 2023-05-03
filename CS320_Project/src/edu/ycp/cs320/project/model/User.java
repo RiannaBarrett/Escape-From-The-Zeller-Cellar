@@ -9,6 +9,7 @@ public class User {
 	private List<Item> inventory;
 	private Room room;
 	private int inventoryLimit;
+	private int time;
 
 	public User() {
 		this.userID = 0;
@@ -17,6 +18,7 @@ public class User {
 		this.inventory = new ArrayList<Item>();
 		this.room = new Room();
 		this.inventoryLimit = 5;
+		this.time = 0;
 	}
 	public User(String username, String password) {
 		this.userID = 0;
@@ -25,6 +27,7 @@ public class User {
 		this.inventory = new ArrayList<Item>();
 		this.room = new Room();
 		this.inventoryLimit = 5;
+		this.time = 0;
 	}
 	
 	public User(int userID, String username, String password, List<Item> inventory, Room room) {
@@ -60,6 +63,10 @@ public class User {
 		return inventoryLimit;
 	}
 	
+	public int getTime() {
+		return time;
+	}
+	
 	public void setUserID(int id) {
 		this.userID = id;
 	}
@@ -82,5 +89,16 @@ public class User {
 	
 	public void setInventoryLimit(int limit) {
 		this.inventoryLimit = limit;
+	}
+	
+	public void setTime(int time) {
+		this.time = time;
+	}
+	
+	private List<Item> createInitialItems() {
+		List<Item> iList = new ArrayList<Item>();
+		iList.add(new Item("Matches", true,23,544,0));
+		
+		return iList;
 	}
 }

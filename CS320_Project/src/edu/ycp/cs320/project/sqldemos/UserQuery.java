@@ -22,14 +22,15 @@ public class UserQuery {
 		IDatabase db = DatabaseProvider.getInstance();
 		User user = db.findUserByName(username);
 		
-		int id = user.getUserID();
-		System.out.println("Room ID by username: " + db.findRoomIDByUsername(username));
-		System.out.println(id);
+		
 		// check if anything was returned and output the list
 		if (user == null) {
 			System.out.println("No users found with name: <" + username + ">");
 		}
 		else {
+			int id = user.getUserID();
+			System.out.println("Room ID by username: " + db.findRoomIDByUsername(username));
+			System.out.println(id);
 			System.out.println("User found!");
 			System.out.println("ID: \t \t \t" + user.getUserID());
 			System.out.println("Username: \t \t" + user.getUsername());
@@ -41,7 +42,7 @@ public class UserQuery {
 				System.out.println("\t Can be picked up?: \t" + item.getCanBePickedUp());
 				System.out.println("\t X Position: \t \t" + item.getXPosition());
 				System.out.println("\t Y Position: \t \t" + item.getYPosition());
-				System.out.println("\t Room Position: \t \t" + item.getRoomPosition());
+				System.out.println("\t Room Position: \t" + item.getRoomPosition());
 				System.out.println("");
 			}
 			
@@ -55,13 +56,29 @@ public class UserQuery {
 				System.out.println("\t Can be picked up?: \t" + item.getCanBePickedUp());
 				System.out.println("\t X Position: \t \t" + item.getXPosition());
 				System.out.println("\t Y Position: \t \t" + item.getYPosition());
-				System.out.println("\t Room Position: \t \t" + item.getRoomPosition());
+				System.out.println("\t Room Position: \t" + item.getRoomPosition());
+				System.out.println("");
+			}
+			
+			System.out.println("\nObjectives:");
+			for(Objective obj : user.getRoom().getObjectives()) {
+				System.out.println("\t Obj ID: \t \t" + obj.getObjectiveID());
+				System.out.println("\t Is Started: \t \t" + obj.getIsStarted().toString());
+				System.out.println("\t Is Complete: \t \t" + obj.getIsComplete().toString());
+				System.out.println("\t Tasks:");
+				for(Task task : obj.getTasks()) {
+					System.out.println("\t \t Task ID: \t \t" + task.getTaskID());
+					System.out.println("\t \t Item IDs: \t \t" + task.getCorrectItems().toString());
+					System.out.println("\t \t Is Started: \t \t" + task.getIsStarted().toString());
+					System.out.println("\t \t Is Complete: \t \t" + task.getIsStarted().toString());
+					System.out.println("");
+				}
 				System.out.println("");
 			}
 		}
 		
 		int roomID = user.getRoom().getRoomID();
-		System.out.println("Get items in position 0 test");
+		System.out.println("\n\n\nGet items in position 0 test");
 		List<Item> items = db.findItemsInPositionByID(roomID, 0);
 		
 		for (Item item : items) {

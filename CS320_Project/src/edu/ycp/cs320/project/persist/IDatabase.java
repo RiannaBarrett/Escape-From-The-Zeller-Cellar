@@ -22,6 +22,10 @@ public interface IDatabase {
 	public boolean addItemToRoom(Item item, int roomID);
 
 	public boolean addItemToInventory(Item item, int userID);
+	
+	public boolean addObjectiveToRoom(Objective obj, int roomID);
+	
+	public boolean addTaskToObjective(Task task, int objectiveID);
 
 	public boolean removeItemFromRoom(Item item, int roomID);
 

@@ -3,20 +3,26 @@ import java.util.*;
 
 public class Task {
 	
-	private List<Item> correctItems;
+	private int taskID;
+	private int objectiveID;
+	private List<Integer> itemIDs;
 	private Boolean isStarted;
 	private Boolean isComplete;
 	
 	public Task() {
+		this.taskID = 0;
+		this.objectiveID = 0;
 		this.isStarted = true;
 		this.isComplete = false;
-		this.correctItems = new ArrayList<Item>();
+		this.itemIDs = new ArrayList<Integer>();
 	}
 	
-	public Task(Boolean isStarted, Boolean isComplete, List<Item> correctItems) {
+	public Task(int id, int objID, Boolean isStarted, Boolean isComplete, List<Integer> correctItems) {
+		this.taskID = id;
+		this.objectiveID = objID;
 		this.isStarted = isStarted;
 		this.isComplete = isComplete;
-		this.correctItems = correctItems;
+		this.itemIDs = correctItems;
 	}
 	
 	public Boolean getIsStarted() {
@@ -27,8 +33,16 @@ public class Task {
 		return isComplete;
 	}
 	
-	public List<Item> getCorrectItems() {
-		return correctItems;
+	public List<Integer> getCorrectItems() {
+		return itemIDs;
+	}
+	
+	public int getTaskID() {
+		return taskID;
+	}
+	
+	public int getObjectiveID() {
+		return objectiveID;
 	}
 	
 	public void setIsStarted(Boolean isStarted) {
@@ -37,5 +51,17 @@ public class Task {
 	
 	public void setIsComplete(Boolean isComplete) {
 		this.isComplete = isComplete;
+	}
+	
+	public void setCorrectItems(List<Integer> items) {
+		this.itemIDs = items;
+	}
+	
+	public void setTaskID(int id) {
+		this.taskID = id;
+	}
+	
+	public void setObjectiveID(int id) {
+		this.objectiveID = id;
 	}
 }

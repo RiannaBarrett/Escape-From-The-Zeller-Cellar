@@ -1,8 +1,8 @@
-tester1|1234|Matches^true^23^245^0;Empty Potion Bottle^false^59^94^0
-lorgo|fitz_32|Matches^true^23^544^0;Lit Candle^true^238^23^2
-York College|ycp123|Unlit Candle^true^585^234^0
-Sampleusername|sameplepassword| 
-Screamer|letsGoYCP!|Matches^true^23^544^0
-YCP _Sucks|Nah_23|Empty Potion Bottle^true^245^223^20
-potionTester|1234|Jar of Cat Hairs^true^0^0^0;Clover^true^0^0^0;Wishbone^true^0^0^0;Lime Juice^true^0^0^0
-potionTester2|1234|Jar of Cat Hairs^true^0^0^0
+tester1|1234|0
+lorgo|fitz_32|0
+York College|ycp123|0
+Sampleusername|sameplepassword| 0
+Screamer|letsGoYCP!|0
+YCP _Sucks|Nah_23|0
+potionTester|1234|0
+potionTester2|1234|0
