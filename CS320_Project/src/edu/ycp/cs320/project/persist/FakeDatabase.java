@@ -174,7 +174,7 @@ public class FakeDatabase implements IDatabase {
 		System.out.println(selected.getName() + " is selected");
 		if(selected.getName().equals("Unlit Candle")) {
 			message = "You lit the candle";
-			Item litCandle = new Item("Lit Candle", false, 150, 205, user.getRoom().getUserPosition());
+			Item litCandle = new Item("Lit Candle", true,8,556, user.getRoom().getUserPosition());
 			swapItemInRoom(selected, litCandle, user);
 			removeItemFromInventory(matches, user.getUserID());
 		}

@@ -17,7 +17,7 @@ public class User {
 		this.password = "Password";
 		this.inventory = createInitialItems();
 		this.room = new Room();
-		this.inventoryLimit = 5;
+		this.inventoryLimit = 10;
 		this.time = 0;
 	}
 	public User(String username, String password) {
@@ -26,7 +26,7 @@ public class User {
 		this.password = password;
 		this.inventory = createInitialItems();
 		this.room = new Room();
-		this.inventoryLimit = 5;
+		this.inventoryLimit = 10;
 		this.time = 0;
 	}
 	

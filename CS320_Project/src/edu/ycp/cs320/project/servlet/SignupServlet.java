@@ -41,7 +41,10 @@ public class SignupServlet extends HttpServlet {
 	        req.getRequestDispatcher("/_view/signup.jsp").forward(req, resp);
 	    } else if (validSignup) {
 	        //redirect to login page
-	    	resp.sendRedirect(req.getContextPath() + "/login");
+	    	req.getSession().setAttribute("user", username);
+
+			//go to start game page
+			resp.sendRedirect(req.getContextPath() + "/start_game");
 	    } else {
 	        //display error message
 	        req.setAttribute("error", "Invalid sign-up information.");

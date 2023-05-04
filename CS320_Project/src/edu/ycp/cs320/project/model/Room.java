@@ -89,8 +89,13 @@ public class Room {
 		iList.add(new Item("Clover",false,61,588,0));
 		iList.add(new Item("Wishbone",false,7,598,0));
 		iList.add(new Item("Carton of Lime Juice",false,60,525,0));
-		iList.add(new Item("Empty Cauldron",false,-1191,-1000,2));
-		iList.add(new Item("Lit Candle",true,8,556,0));
+		iList.add(new Item("Empty Cauldron",false,-405,-400,2));
+		iList.add(new Item("Cat Tree",false, -1457, -460, 1));
+		iList.add(new Item("Messy", false, -83, 181, 1));
+		iList.add(new Item("Zeller Poster", false, -1000,-400,3));
+		iList.add(new Item("Fire Alarm", false, -176, 408, 2));
+		iList.add(new Item("Locked Comic Stand",false, -1018,-309, 1));
+		iList.add(new Item("Meow Mix",true, -108,225, 0));
 
 		return iList;
 	}

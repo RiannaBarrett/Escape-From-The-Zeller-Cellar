@@ -48,6 +48,7 @@ public class MainPageController {
 		// MOVE TO CONTROLLER
 		User user = model.getUser();
 		System.out.println("Inventory size:" + user.getInventory().size());
+		System.out.println("Inventory limit: " + user.getInventoryLimit());
 		if(user.getInventory().size() >= user.getInventoryLimit()) {
 			return false;
 		}
