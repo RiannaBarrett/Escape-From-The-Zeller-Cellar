@@ -146,7 +146,7 @@ public class MainPageController {
 			message = db.useEmptyPotion(item, selected, model.getUser());
 		}else if(item.getName().equals("Matches")) {
 			message = db.useMatches(item, selected, model.getUser());
-		}else if(item.getName().equals("Meow Mix")) {
+		}else if(item.getName().equals("Bag of Meow Mix")) {
 			message = useMeowMix(selected.getName(), userID);
 		}else if(item.getName().equals("Full Potion Bottle")) {
 			message = useFullPotionBottle(selected.getName(), userID);
@@ -156,6 +156,8 @@ public class MainPageController {
 			//TODO: call function to check if it is correct
 		}else if(item.getName().equals("Hammer")) {
 			//TODO: call function to use hammer. If used on fire alarm drop a key
+		}else if(item.getName().equals("Lit Candle") && selected.getName().equals("Fire Alarm")) {
+			message = "Weird. The fire alarm doesn't go off";
 		}
 		return message;
 	}
@@ -317,5 +319,15 @@ public class MainPageController {
 			message = "You found a Comic Stand that displays Zeller's favorite comics";
 		}
 		return message;
+	}
+	
+	public Objective getCurrentObjective(List<Objective> objectives) {
+		for(Objective i : objectives) {
+			if(i.getIsStarted() && !i.getIsComplete()) {
+				return i;
+			}
+		}
+		return null;
+		
 	}
 }

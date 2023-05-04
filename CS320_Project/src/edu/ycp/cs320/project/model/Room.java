@@ -95,7 +95,7 @@ public class Room {
 		iList.add(new Item("Zeller Poster", false, -1000,-400,3));
 		iList.add(new Item("Fire Alarm", false, -176, 408, 2));
 		iList.add(new Item("Locked Comic Stand",false, -1018,-309, 1));
-		iList.add(new Item("Meow Mix",true, -108,225, 0));
+		iList.add(new Item("Bag of Meow Mix",true, -108,225, 0));
 
 		return iList;
 	}

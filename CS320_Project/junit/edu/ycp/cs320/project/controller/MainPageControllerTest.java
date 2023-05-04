@@ -267,4 +267,17 @@ public class MainPageControllerTest {
 	
 	//TODO: add tests for useFullPotionBottle and useMeowMix
 	
+	@Test
+	public void getCurrentObjective() {
+		//TODO: implement
+		List<Objective> objectives = new ArrayList<Objective>();
+		objectives.add(new Objective(0,0,true, true, new ArrayList<Task>()));
+		objectives.add(new Objective(1,1,true, true, new ArrayList<Task>()));
+		objectives.add(new Objective(2,2,false, true, new ArrayList<Task>()));
+		objectives.add(new Objective(3,3,false, false, new ArrayList<Task>()));
+		objectives.add(new Objective(4,4,true, false, new ArrayList<Task>()));
+		objectives.add(new Objective(5,5,false, false, new ArrayList<Task>()));
+		assertTrue(controller.getCurrentObjective(objectives).getObjectiveID()==4);
+	}
+	
 }

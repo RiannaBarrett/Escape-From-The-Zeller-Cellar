@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.ycp.cs320.project.model.Item;
 import edu.ycp.cs320.project.model.MainPage;
+import edu.ycp.cs320.project.model.Objective;
 import edu.ycp.cs320.project.controller.MainPageController;
 
 public class MainpageServlet extends HttpServlet {
@@ -93,6 +94,7 @@ public class MainpageServlet extends HttpServlet {
 		
 		
 		
+		
 		// Attempt to pass the model back and forth for testing?
 		MainPage model = new MainPage();
 		try {
@@ -112,6 +114,11 @@ public class MainpageServlet extends HttpServlet {
 		//get items in room
 		items = controller.findItemsInPosition(model.getUser().getRoom().getUserPosition(), user);
 
+		//TODO: make database methods to get these so we dont pass unneeded info
+		List<Objective> objectives = model.getUser().getRoom().getObjectives();
+		//Get the objective the user is currently on
+		Objective objective = controller.getCurrentObjective(objectives);
+		
 		//display inventory on jsp
 		List<Item> inventory = controller.findInventoryByName(user);
 		System.out.println("inventory size " + inventory.size());
@@ -217,6 +224,12 @@ public class MainpageServlet extends HttpServlet {
 				//get the items in the user's current position
 				items = controller.findItemsInPosition(position, user);
 				req.setAttribute("items", items);
+				
+			
+				//verifies is all the tasks are marked as complete
+				if(objective!=null) {
+					objective.verifyComplete();
+				}
 				
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}

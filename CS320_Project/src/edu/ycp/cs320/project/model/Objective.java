@@ -64,4 +64,20 @@ public class Objective {
 	public void setRoomID(int id) {
 		this.roomID = id;
 	}
+	
+	public Boolean verifyComplete() {
+		Boolean result = true;
+		if(tasks!=null) {
+			for(Task task : tasks) {
+				//TODO: call verifyComplete for each task here
+				if(!task.getIsComplete()) {
+					result = false;
+				}
+			}
+		}
+		
+		//TODO: if the tasks are all complete, change the objective to complete in the db and start the next one
+		//Some objectives will need to unlock other things in the room, so we should figure out how we're doing that
+		return result;
+	}
 }
