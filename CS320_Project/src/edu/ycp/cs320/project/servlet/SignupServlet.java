@@ -28,6 +28,7 @@ public class SignupServlet extends HttpServlet {
 	    System.out.println("Signup Servlet: doPost");
 
 	    //get input parameters
+	    String errorMessage = "";
 	    String username = req.getParameter("username");
 	    String password = req.getParameter("password");
 
@@ -37,7 +38,7 @@ public class SignupServlet extends HttpServlet {
 	    boolean validSignup = controller.validateSignup(username, password);
 	    if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
 	        // display error message
-	        req.setAttribute("error", "Username or password cannot be empty.");
+	        //req.setAttribute("errorMessage", "Username or password cannot be empty.");
 	        req.getRequestDispatcher("/_view/signup.jsp").forward(req, resp);
 	    } else if (validSignup) {
 	        //redirect to login page
@@ -47,7 +48,8 @@ public class SignupServlet extends HttpServlet {
 			resp.sendRedirect(req.getContextPath() + "/start_game");
 	    } else {
 	        //display error message
-	        req.setAttribute("error", "Invalid sign-up information.");
+	    	errorMessage = "Username/Password cannot contain a symbol";
+	    	req.setAttribute("errorMessage", errorMessage);
 	        req.getRequestDispatcher("/_view/signup.jsp").forward(req, resp);
 	    }
 

@@ -10,12 +10,7 @@
 
     <link href='https://fonts.googleapis.com/css?family=Playfair Display' rel='stylesheet'>
     
-    <script type="text/javascript">
-    	function restrict(input){
-    	var regex = /[|^;]/g;
-		input.value = input.value.replace (regex,"");
-    	}
-    </script>
+    
   </head>
   <body>
     <div class="background-image"></div>
@@ -32,13 +27,16 @@
         <button type="submit" value="Sign Up">Sign Up</button> 
         
         <br>
+        <h3 class="error">${errorMessage}</h3> 
         <div class="social-media">
             <a href="https://www.facebook.com" target=""><i class="fab fa-facebook fa-2x"></i></a>
             <a href="https://www.twitter.com" target=""><i class="fab fa-twitter fa-2x"></i></a>
             <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube fa-2x"></i></a>
             <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
           </div>   
+         
       </form>
+      
       <h3>Already have an account? <a href="login">Login</a></h3>
     </div>
     <script src="https://kit.fontawesome.com/a839866b20.js" crossorigin="anonymous"></script>

@@ -104,7 +104,7 @@ public class DerbyDatabase implements IDatabase {
 		
 	}
 
-	//TODO: implement and maybe move to controller
+	//TODO: implement and maybe move to constroller
 	@Override
 	public boolean transferItemFromUserToRoom(User user, String itemName) {
 		throw new UnsupportedOperationException();

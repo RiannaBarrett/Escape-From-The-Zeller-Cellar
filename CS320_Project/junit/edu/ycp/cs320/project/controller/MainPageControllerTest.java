@@ -266,7 +266,7 @@ public class MainPageControllerTest {
 	
 	
 	//TODO: add tests for useFullPotionBottle and useMeowMix
-	
+
 	@Test
 	public void getCurrentObjective() {
 		//TODO: implement

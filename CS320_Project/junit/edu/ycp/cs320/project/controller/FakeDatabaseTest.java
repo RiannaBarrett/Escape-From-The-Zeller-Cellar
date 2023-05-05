@@ -30,7 +30,7 @@ public class FakeDatabaseTest {
 		assertTrue(user.getUsername().equals("Screamer"));
 		assertTrue(user.getPassword().equals("letsGoYCP!"));
 		assertTrue(user.getInventory().size() == 1);
-		System.out.println("fdsafdsa"+user.getInventory().size());
+		System.out.println(user.getInventory().size());
 	}
 
 	@Test
@@ -42,6 +42,7 @@ public class FakeDatabaseTest {
 		assertTrue(user.getUserID() == 9);
 		assertTrue(user.getInventory().size() == 1);
 		assertTrue(user.getRoom().getRoomID() == 9);
+
 	}
 
 	
@@ -50,18 +51,15 @@ public class FakeDatabaseTest {
 		Item item = user.getRoom().getItems().get(3);
 		assertTrue(db.transferItemFromRoomToUser(user, item));
 		boolean itemMoved = false;
-		boolean itemRemoved = true;
-		//TODO: Needs a function here to update inventories, they dont automatically update.
-		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(user.getInventory().get(i).getName().equals(item.getName())) {
-				itemMoved = true;
-			}
+		boolean itemRemoved = false;
+		
+		if(db.findItemByNameAndIDInRoom(item.getName(),user.getRoom().getRoomID()) == null) {
+			itemRemoved = true;
 		}
-		for(int i = 0; i < user.getRoom().getItems().size(); i++) {
-			if(user.getRoom().getItems().get(i).getName().equals(item.getName())) {
-				itemRemoved = false;
-			}
+		if(db.findItemByNameAndIDInInv(item.getName(),user.getUserID()) == item) {
+			itemMoved = true;
 		}
+		
 		assertTrue(itemRemoved);
 		assertTrue(itemMoved);
 	}
@@ -91,6 +89,9 @@ public class FakeDatabaseTest {
 		assertFalse(user.getRoom().getUserPosition() == 3);
 		assertTrue(db.moveUser(user, 3));
 		// TODO: Needs a function here to re-get position from db, it doesn't automatically update.
+		assertTrue(db.findUserByName(user.getUsername()).getRoom().getUserPosition() == 3);
+			
+		
 		assertTrue(user.getRoom().getUserPosition() == 3);
 	}
 
@@ -168,18 +169,13 @@ public class FakeDatabaseTest {
 		System.out.println(itemToRemove.getName());
 		Item itemToAdd = new Item("box");
 		db.swapItemInInventory(itemToRemove, itemToAdd, user);
-		// TODO: Function needs to re-get both inventories from db, doesn't automatically update.
-		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(user.getInventory().get(i).getName().equals(itemToAdd.getName())) {
-			
-				itemAddSuccess = true;
-			}
+		
+		if(db.findItemByNameAndIDInInv("Matches",user.getUserID()) == null) {
+			itemRemoveSuccess = true;
 		}
-		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(!user.getInventory().get(i).getName().equals(itemToRemove.getName())) {
-				itemRemoveSuccess = true;
-			}
-		}
+		if(db.findItemByNameAndIDInInv("box",user.getUserID()) == itemToAdd) {
+			itemAddSuccess = true;
+		}	
 		assertTrue(itemAddSuccess);
 		assertTrue(itemRemoveSuccess);
 
@@ -190,23 +186,18 @@ public class FakeDatabaseTest {
 		Boolean itemAddSuccess = false;
 		Boolean itemRemoveSuccess = false;
 		Item itemToRemove = user.getRoom().getItems().get(0);
+		System.out.println(itemToRemove);
 		Item itemToAdd = new Item("box");
 		db.swapItemInRoom(itemToRemove, itemToAdd, user);
-		// TODO: Needs a function here to re-get the room inventory. Doesn't automatically update.
-		
-		for(int i = 0; i < user.getRoom().getItems().size(); i++) {
-			if(user.getRoom().getItems().get(i).getName().equals(itemToAdd.getName())) {
-				itemAddSuccess = true;
-			}
+
+		if(db.findItemByNameAndIDInRoom(itemToRemove.getName(), user.getRoom().getRoomID()) == null){
+			itemRemoveSuccess = true;
 		}
-		for(int i = 0; i < user.getRoom().getItems().size(); i++) {
-			if(!user.getRoom().getItems().get(i).getName().equals(itemToRemove)) {
-				itemRemoveSuccess = true;
-			}
+		if(db.findItemByNameAndIDInRoom(itemToAdd.getName(), user.getRoom().getRoomID()) == itemToAdd) {
+			itemAddSuccess = true;
 		}
 		assertTrue(itemAddSuccess);
 		assertTrue(itemRemoveSuccess);
-
 	}
 
 	@Test

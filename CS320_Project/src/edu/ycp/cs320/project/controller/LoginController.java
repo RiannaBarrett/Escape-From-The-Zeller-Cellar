@@ -5,6 +5,9 @@ import edu.ycp.cs320.project.persist.DatabaseProvider;
 import edu.ycp.cs320.project.persist.DerbyDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
 import edu.ycp.cs320.project.persist.FakeDatabase;
+
+import java.util.regex.Pattern;
+
 import edu.ycp.cs320.project.model.User;
 
 public class LoginController {
@@ -16,10 +19,9 @@ public class LoginController {
 	}
 	
 	public Boolean validateLogin(String username, String password) {
-		if(username.contains("|") || username.contains(";") || username.contains("^") || 
-				username.contains("\"") || username.contains("'") || password.contains("|") ||
-				password.contains(";") || password.contains("^") || password.contains("\"") || 
-				password.contains("'")) {
+		// return false if user name or password contains symbols
+		Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+		if(!pattern.matcher(username).matches() || !pattern.matcher(password).matches()) {
 			return false;
 		}else {
 			IDatabase db = DatabaseProvider.getInstance();
