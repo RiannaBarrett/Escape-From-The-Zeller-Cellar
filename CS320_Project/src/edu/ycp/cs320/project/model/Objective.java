@@ -12,7 +12,7 @@ public class Objective {
 	public Objective() {
 		this.objectiveID = 0;
 		this.roomID = 0;
-		this.isStarted = true;
+		this.isStarted = false;
 		this.isComplete = false;
 		this.tasks = new ArrayList<Task>();
 	}

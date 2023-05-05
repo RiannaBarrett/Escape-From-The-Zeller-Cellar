@@ -30,7 +30,7 @@ public class MainPageControllerTest {
 		controller.PopulateModel(username);
 		assertTrue(controller.getModel() != null);
 		assertTrue(controller.getModel().getUser().getUsername().equals("Screamer"));
-		assertTrue(controller.getModel().getUser().getPassword().equals("letsGoYCP!"));
+		assertTrue(controller.getModel().getUser().getPassword().equals("letsGoYCP"));
 		assertTrue(controller.getModel().getUser().getInventory().get(0).getName().equals("Matches"));
 	}
 	
@@ -268,8 +268,8 @@ public class MainPageControllerTest {
 	//TODO: add tests for useFullPotionBottle and useMeowMix
 
 	@Test
-	public void getCurrentObjective() {
-		//TODO: implement
+	public void testGetCurrentObjective() {
+
 		List<Objective> objectives = new ArrayList<Objective>();
 		objectives.add(new Objective(0,0,true, true, new ArrayList<Task>()));
 		objectives.add(new Objective(1,1,true, true, new ArrayList<Task>()));
@@ -279,5 +279,18 @@ public class MainPageControllerTest {
 		objectives.add(new Objective(5,5,false, false, new ArrayList<Task>()));
 		assertTrue(controller.getCurrentObjective(objectives).getObjectiveID()==4);
 	}
+	
+	@Test
+	public void testStartNextObjective() {
+		controller.PopulateModel("Screamer");
+		List<Objective> objectives = controller.getModel().getUser().getRoom().getObjectives();
+		controller.startNextObjective(objectives);
+		Objective currentObj = controller.getCurrentObjective(objectives);
+		assertTrue(currentObj.getObjectiveID() == 2);
+		for(Task task : objectives.get(1).getTasks()) {
+			assertTrue(task.getIsStarted()==true);
+		}
+		
+;	}
 	
 }

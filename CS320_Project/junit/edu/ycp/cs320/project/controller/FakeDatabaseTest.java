@@ -263,23 +263,20 @@ public class FakeDatabaseTest {
 		assertTrue(db.getCanBePickedUp(5, "Jar of Cat Hairs") == false);
 	}
 	
+	
 	@Test public void testChangeObjectiveIsStarted() {
-		//TODO: add an objective to a user to test this
-		//assertTrue(db.changeObjectiveIsStarted(objectiveID, desiredResult))
+		assertTrue(db.changeObjectiveIsStarted(2, true));
 	}
 	
 	@Test public void testChangeObjectiveIsComplete() {
-		//TODO: add an objective to a user to test this
-		//assertTrue(db.changeObjectiveIsComplete(objectiveID, desiredResult))
+		assertTrue(db.changeObjectiveIsComplete(2, true));
 	}
 	
 	@Test public void testChangeTaskIsStarted() {
-		//TODO: add an objective and task to a user to test this
-		//assertTrue(db.changeTaskIsStarted(taskID, desiredResult))
+		assertTrue(db.changeTaskIsStarted(3, true));
 	}
 	
 	@Test public void testChangeTaskIsComplete() {
-		//TODO: add an objective and task to a user to test this
-		//assertTrue(db.changeObjectiveIsComplete(taskID, desiredResult))
+		assertTrue(db.changeObjectiveIsComplete(3, true));
 	}
 }

@@ -118,6 +118,40 @@ public class Room {
 	private List<Objective> createInitialObjectives() {
 		List<Objective> oList = new ArrayList<Objective>();
 		// TODO: Add Objectives (WITH TASKS) here for New Account Creation.
+		//The first objective should be the only one that is started, change isStarted before adding it
+		Objective objective = new Objective();
+		objective.setIsStarted(true);
+		//create list of tasks that will be added to objective
+		List<Task> tasksToAdd = new ArrayList<Task>();
+		//Add the tasks to first objective
+		tasksToAdd.add(new Task("PotionMachine", true, false));
+		tasksToAdd.add(new Task("Cat", true, false));
+		//add the tasks
+		objective.setTasks(tasksToAdd);
+		//add the objective to the list
+		oList.add(objective);
+		
+		//create a new list of tasks for the second objective
+		Objective objective2 = new Objective();
+
+		tasksToAdd = new ArrayList<Task>();
+		tasksToAdd.add(new Task("Passcode", false, false));
+		//add the task
+		objective2.setTasks(tasksToAdd);
+		//add the objective to the list
+		oList.add(objective2);
+		
+		//create a new list of tasks for the third objective
+		Objective objective3 = new Objective();
+
+		tasksToAdd = new ArrayList<Task>();
+		tasksToAdd.add(new Task("Bookshelf", false, false));
+		tasksToAdd.add(new Task("Puzzle", false, false));
+		
+		
+		objective3.setTasks(tasksToAdd);
+		//add the objective to the list
+		oList.add(objective3);
 		return oList;
 	}
 

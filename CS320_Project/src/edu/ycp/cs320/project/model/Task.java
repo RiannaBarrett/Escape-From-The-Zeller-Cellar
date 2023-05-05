@@ -28,6 +28,15 @@ public class Task {
 		this.name = name;
 	}
 	
+	public Task(String name, Boolean isStarted, Boolean isComplete) {
+		this.taskID = 0;
+		this.objectiveID = 0;
+		this.isStarted = isStarted;
+		this.isComplete = isComplete;
+		this.name = name;
+		this.items = new ArrayList<Item>();
+	}
+	
 	public String getName() {
 		return name;
 	}

@@ -345,7 +345,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setString(2, obj.getIsStarted().toString());
 					stmt.setString(3, obj.getIsComplete().toString());
 					stmt.execute();
-					
+					conn.commit();
 					Boolean result = false;
 					Boolean success = false;
 
