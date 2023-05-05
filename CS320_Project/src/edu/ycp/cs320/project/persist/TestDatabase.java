@@ -46,9 +46,12 @@ public class TestDatabase extends DerbyDatabase {
 				PreparedStatement stmt4 = null;
 				PreparedStatement stmt5 = null;
 				PreparedStatement stmt6 = null;
+				PreparedStatement stmt7 = null;
 				ResultSet resultSet = null;
 
 				try {
+					stmt7 = conn.prepareStatement("drop table usedItems ");
+					stmt7.execute();
 					stmt6 = conn.prepareStatement("drop table tasks ");
 					stmt6.execute();
 					stmt5 = conn.prepareStatement("drop table objectives ");
@@ -74,6 +77,7 @@ public class TestDatabase extends DerbyDatabase {
 					DBUtil.closeQuietly(stmt4);
 					DBUtil.closeQuietly(stmt5);
 					DBUtil.closeQuietly(stmt6);
+					DBUtil.closeQuietly(stmt7);
 				}
 			}
 		});

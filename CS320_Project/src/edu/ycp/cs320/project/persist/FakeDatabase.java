@@ -370,4 +370,129 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
+	@Override
+	public boolean addItemToTask(Item item, int taskID) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
+	@Override
+	public Boolean changeObjectiveIsStarted(int objectiveID, Boolean desiredResult) {
+		Boolean result = false;
+		int roomListID = -1;
+		int objectiveListID = -1;
+		for(int i = 0; i < roomList.size();i++) {
+			for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
+				if(roomList.get(i).getObjectives().get(j).getObjectiveID() == objectiveID) {
+					roomListID = i;
+					objectiveListID = j;
+					Objective currentObj = roomList.get(i).getObjectives().get(j);
+					//change isStarted
+					currentObj.setIsStarted(desiredResult);
+					//set result in roomList
+					roomList.get(i).getObjectives().set(j, currentObj);
+				}
+			}
+		}
+		//check if correct
+		if(roomListID != -1 && objectiveListID != -1) {
+			if(roomList.get(roomListID).getObjectives().get(objectiveListID).getIsStarted() == desiredResult);
+				result = true;
+		}		
+		
+		return result;
+	}
+	
+	@Override
+	public Boolean changeObjectiveIsComplete(int objectiveID, Boolean desiredResult) {
+		Boolean result = false;
+		int roomListID = -1;
+		int objectiveListID = -1;
+		//find the objective based on ID and make change in roomList
+		for(int i = 0; i < roomList.size();i++) {
+			for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
+				if(roomList.get(i).getObjectives().get(j).getObjectiveID() == objectiveID) {
+					roomListID = i;
+					objectiveListID = j;
+					Objective currentObj = roomList.get(i).getObjectives().get(j);
+					//change isComplete
+					currentObj.setIsComplete(desiredResult);
+					//set the result in roomlist
+					roomList.get(i).getObjectives().set(j, currentObj);
+				}
+			}
+		}
+		
+		if(roomListID != -1 && objectiveListID != -1) {
+			if(roomList.get(roomListID).getObjectives().get(objectiveListID).getIsComplete() == desiredResult);
+				result = true;
+		}		
+		
+		return result;
+	}
+	
+	@Override
+	public Boolean changeTaskIsComplete(int taskID, Boolean desiredResult) {
+		Boolean result = false;
+		int roomListID = -1;
+		int objectiveListID = -1;
+		int taskListID = -1;
+		for(int i = 0; i < roomList.size();i++) {
+			for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
+				for(int r = 0; r < roomList.get(i).getObjectives().get(j).getTasks().size();r++) {
+					if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getTaskID() == taskID) {
+						roomListID = i;
+						objectiveListID = j;
+						taskListID = r;
+						Task currentTask = roomList.get(i).getObjectives().get(j).getTasks().get(r);
+						//change isComplete
+						currentTask.setIsComplete(desiredResult);
+						//set the result in roomlist
+						roomList.get(i).getObjectives().get(j).getTasks().set(r, currentTask);
+					}
+				}
+			}
+		}
+		//check if it is correct
+		if(roomListID != -1 && objectiveListID != -1 && taskListID != -1) {
+			if(roomList.get(roomListID).getObjectives().get(objectiveListID).getTasks().get(taskListID).getIsComplete() == desiredResult);
+				result = true;
+		}		
+		
+		return result;
+	}
+	
+	@Override
+		public Boolean changeTaskIsStarted(int taskID, Boolean desiredResult) {
+			Boolean result = false;
+			int roomListID = -1;
+			int objectiveListID = -1;
+			int taskListID = -1;
+			for(int i = 0; i < roomList.size();i++) {
+				for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
+					for(int r = 0; r < roomList.get(i).getObjectives().get(j).getTasks().size();r++) {
+						if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getTaskID() == taskID) {
+							roomListID = i;
+							objectiveListID = j;
+							taskListID = r;
+							Task currentTask = roomList.get(i).getObjectives().get(j).getTasks().get(r);
+							//change isComplete
+							currentTask.setIsStarted(desiredResult);
+							//set the result in roomlist
+							roomList.get(i).getObjectives().get(j).getTasks().set(r, currentTask);
+						}
+					}
+				}
+			}
+			//check if it is correct
+			if(roomListID != -1 && objectiveListID != -1 && taskListID != -1) {
+				if(roomList.get(roomListID).getObjectives().get(objectiveListID).getTasks().get(taskListID).getIsStarted() == desiredResult);
+					result = true;
+			}		
+			
+			return result;
+		}
 }

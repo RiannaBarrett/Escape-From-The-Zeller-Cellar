@@ -399,16 +399,12 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					System.out.println("Adding tasks...");
-					String idList = "";
-					for(int itemID : task.getCorrectItems()) {
-						idList += Integer.toString(itemID);
-					}
 					stmt = conn.prepareStatement(
-							"insert into tasks (objective_id, item_ids, isStarted, isComplete)" +
+							"insert into tasks (objective_id, name, isStarted, isComplete)" +
 									"values (?,?,?,?) "
 							);
 					stmt.setInt(1, objID);
-					stmt.setString(2, idList);
+					stmt.setString(2, task.getName());
 					stmt.setString(3, task.getIsStarted().toString());
 					stmt.setString(4, task.getIsComplete().toString());
 					stmt.execute();
@@ -451,7 +447,67 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	
+	@Override
+	public boolean addItemToTask(Item item, int taskID) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"insert into usedItems (task_id, name, canBePickedUp, xPosition, yPosition, roomPosition)" +
+									" values (?,?,?,?,?,?) "
+							);
+					stmt.setInt(1, taskID);
+					stmt.setString(2, item.getName());
+					stmt.setString(3,  item.getCanBePickedUp().toString());
+					stmt.setInt(4, item.getXPosition());
+					stmt.setInt(5, item.getYPosition());
+					stmt.setInt(6, item.getRoomPosition());
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects all details of the new user
+					stmt2 = conn.prepareStatement(
+							"select usedItems.* " +
+									"  from usedItems " +
+									" where usedItems.name = ? and usedItems.room_id = ?"
+							);
+					stmt2.setString(1, item.getName());
+					stmt2.setInt(2, taskID);
+						
+					
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						success = true;
+						// create new item object
+						// retrieve attributes from resultSet starting with index 1
+						Item resultItem = new Item();
+						loadItem(resultItem, resultSet, 1);
+						System.out.println(resultItem.getName());
+						result = true;
+					}
+					// check if the item was found
+					if (!success) {
+						System.out.println("<" + item.getName() + "> was not inserted in the roomInventories table");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+		
 	@Override
 	public boolean addItemToRoom(Item item, int roomID) {
 		return executeTransaction(new Transaction<Boolean>() {
@@ -469,7 +525,6 @@ public class DerbyDatabase implements IDatabase {
 				}
 				
 				try {
-					System.out.println("Pre-statement");
 					stmt = conn.prepareStatement(
 							"insert into roomInventories (room_id, name, canBePickedUp, xPosition, yPosition, roomPosition)" +
 									" values (?,?,?,?,?,?) "
@@ -480,9 +535,8 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(4, item.getXPosition());
 					stmt.setInt(5, item.getYPosition());
 					stmt.setInt(6, item.getRoomPosition());
-					System.out.println("Pre-execute");
 					stmt.execute();
-					System.out.println("Post-execute");
+					
 					Boolean result = false;
 					Boolean success = false;
 
@@ -1037,7 +1091,7 @@ public class DerbyDatabase implements IDatabase {
 	
 	private void loadItem(Item item, ResultSet result, int index) throws SQLException {
 		item.setItemID(result.getInt(index++));
-		item.setUserOrRoomID(result.getInt(index++));
+		item.setSecondaryID(result.getInt(index++));
 		item.setName(result.getString(index++));
 		item.setCanBePickedUp(Boolean.parseBoolean(result.getString(index++)));
 		item.setXPosition(result.getInt(index++));
@@ -1048,12 +1102,7 @@ public class DerbyDatabase implements IDatabase {
 	private void loadTask(Task task, ResultSet result, int index) throws SQLException {
 		task.setTaskID(result.getInt(index++));
 		task.setObjectiveID(result.getInt(index++));
-		String itemIDs = result.getString(index++);
-		List<Integer> itemIDList= new ArrayList<Integer>();
-		for(int i=0; i < itemIDs.length(); i++) {
-			itemIDList.add(Integer.parseInt(itemIDs.substring(i, i+1)));
-		}
-		task.setCorrectItems(itemIDList);
+		task.setName(result.getString(index++));
 		task.setIsStarted(Boolean.parseBoolean(result.getString(index++)));
 		task.setIsComplete(Boolean.parseBoolean(result.getString(index++)));
 	}
@@ -1128,6 +1177,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt4 = null;
 				PreparedStatement stmt5 = null;
 				PreparedStatement stmt6 = null;
+				PreparedStatement stmt7 = null;
 
 				try {
 					stmt1 = conn.prepareStatement(
@@ -1196,12 +1246,26 @@ public class DerbyDatabase implements IDatabase {
 									"	task_id integer primary key " +
 									"		generated always as identity (start with 1, increment by 1), " +
 									"	objective_id integer constraint fk_task_objid references objectives(objective_id), " +
-									"	item_ids varchar(40)," +
+									"	name varchar(40)," +
 									"	isStarted varchar(10)," + 
 									"	isComplete varchar(10) " +
 									")"
 							);
 					stmt6.executeUpdate();
+					
+					stmt7 = conn.prepareStatement(
+							"create table usedItems (" +
+									"	item_id integer primary key " +
+									"		generated always as identity (start with 1, increment by 1), " +
+									"	task_id integer constraint fk_inv_taskid references tasks(task_id), " +
+									"	name varchar(40)," +
+									"	canBePickedUp varchar(10)," + 
+									"	xPosition integer," +
+									"	yPosition integer," +
+									"	roomPosition integer " +
+									")"
+							);
+					stmt7.executeUpdate();
 
 					return true;
 				} finally {
@@ -1211,6 +1275,7 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt4);
 					DBUtil.closeQuietly(stmt5);
 					DBUtil.closeQuietly(stmt6);
+					DBUtil.closeQuietly(stmt7);
 				}
 			}
 		});
@@ -1235,6 +1300,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertRoomInventory = null;
 				PreparedStatement insertObjective = null;
 				PreparedStatement insertTask = null;
+				PreparedStatement insertUsedItem = null;
+
 
 				try {
 					// populate users table
@@ -1299,17 +1366,13 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertObjective.executeBatch();
 					
-					insertTask = conn.prepareStatement("insert into tasks (objective_id, item_ids, isStarted, isComplete) values (?, ?, ?, ?)");
+					insertTask = conn.prepareStatement("insert into tasks (objective_id, name, isStarted, isComplete) values (?, ?, ?, ?)");
 					for (int i=0; i < userList.size(); i++) {
 						Room room = userList.get(i).getRoom();
 						for (Objective obj : room.getObjectives()) {
 							for(Task task : obj.getTasks()) {
 								insertTask.setInt(1, obj.getObjectiveID());
-								String itemString = "";
-								for(Integer k : task.getCorrectItems()) {
-									itemString += k.toString();
-								}
-								insertTask.setString(2, itemString);
+								insertTask.setString(2, task.getName());
 								insertTask.setString(3, task.getIsStarted().toString());
 								insertTask.setString(4, task.getIsComplete().toString());
 								insertTask.addBatch();
@@ -1317,6 +1380,26 @@ public class DerbyDatabase implements IDatabase {
 						}
 					}
 					insertTask.executeBatch();
+					
+					insertUsedItem = conn.prepareStatement("insert into usedItems (task_id, name, canBePickedUp, xPosition, yPosition, roomPosition) values (?, ?, ?, ?, ?, ?)");
+					for (int i=0; i < userList.size(); i++) {
+						Room room = userList.get(i).getRoom();
+						for (Objective obj : room.getObjectives()) {
+							for(Task task : obj.getTasks()) {
+								for(Item item : task.getItems()) {
+									insertUsedItem.setInt(1, task.getTaskID());
+									insertUsedItem.setString(2, item.getName());
+									insertUsedItem.setString(3, item.getCanBePickedUp().toString());
+									insertUsedItem.setInt(4, item.getXPosition());
+									insertUsedItem.setInt(5, item.getYPosition());
+									insertUsedItem.setInt(6, item.getRoomPosition());
+									insertUsedItem.addBatch();
+								}
+							}
+						}
+					}
+					insertUsedItem.executeBatch();
+
 
 					return true;
 				} finally {
@@ -1669,7 +1752,218 @@ public class DerbyDatabase implements IDatabase {
 
 	}
 
-	
-	
-	
+	@Override
+	public Boolean changeObjectiveIsStarted(int objectiveID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update objectives " +
+									"set objectives.isStarted = ? " +
+									"where objectives.objective_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, objectiveID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select objectives.isStarted " +
+									"  from objectives " +
+									"where objectives.objective_id = ?"
+							);
+					stmt2.setInt(1, objectiveID);
+					resultSet = stmt2.executeQuery();
+					while (resultSet.next()) {
+						
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+					}
+					if (!success) {
+						System.out.println("<Objective isStarted> was not updated");
+					}
+					return result;
+					//return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Boolean changeObjectiveIsComplete(int objectiveID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update objectives " +
+									"set objectives.isComplete = ? " +
+									"where objectives.objective_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, objectiveID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select objectives.isComplete " +
+									"  from objectives " +
+									"where objectives.objective_id = ?"
+							);
+			
+					stmt2.setInt(1, objectiveID);
+					resultSet = stmt2.executeQuery();
+					while (resultSet.next()) {
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+					}
+					if (!success) {
+						System.out.println("<Objective isComplete> was not updated");
+					}
+					return result;
+					//return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Boolean changeTaskIsComplete(int taskID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update tasks " +
+									"set tasks.isComplete = ? " +
+									"where tasks.task_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, taskID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select tasks.isComplete " +
+									"  from tasks " +
+									"where tasks.task_id = ?"
+							);
+			
+					stmt2.setInt(1, taskID);
+					resultSet = stmt2.executeQuery();
+					while (resultSet.next()) {
+						
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+					}
+					if (!success) {
+						System.out.println("<Task isComplete> was not updated");
+					}
+					return result;
+					//return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Boolean changeTaskIsStarted(int taskID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update tasks " +
+									"set tasks.isStarted = ? " +
+									"where tasks.task_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, taskID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select tasks.isStarted " +
+									"  from tasks " +
+									"where tasks.task_id = ?"
+							);
+			
+					stmt2.setInt(1, taskID);
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+						
+					}
+					if (!success) {
+						System.out.println("<Task isStarted> was not updated");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
 }

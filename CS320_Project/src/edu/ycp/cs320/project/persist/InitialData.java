@@ -18,6 +18,8 @@ public class InitialData {
 		List<Item> roomInventoryList = getRoomInventories();
 		List<Objective> objectiveList = getObjectives();
 		List<Task> taskList = getTasks();
+		List<Item> usedItemList = getUsedItems();
+
 		
 		ReadCSV readUsers = new ReadCSV("users.csv");
 		try {
@@ -44,7 +46,7 @@ public class InitialData {
 				
 				List<Item> userInventory = new ArrayList<Item>();
 				for(Item item : userInventoryList) {
-					if(item.getUserOrRoomID() == user.getUserID()) {
+					if(item.getSecondaryID() == user.getUserID()) {
 						userInventory.add(item);
 					}
 				}
@@ -52,7 +54,7 @@ public class InitialData {
 				
 				List<Item> roomInventory = new ArrayList<Item>();
 				for(Item item : roomInventoryList) {
-					if(item.getUserOrRoomID() == svRoom.getRoomID()) {
+					if(item.getSecondaryID() == svRoom.getRoomID()) {
 						roomInventory.add(item);
 					}
 				}
@@ -69,6 +71,13 @@ public class InitialData {
 					List<Task> tasks = new ArrayList<Task>();
 					for(Task task : taskList) {
 						if(task.getObjectiveID() == objectives.get(j).getObjectiveID()) {
+							List<Item> taskItems = new ArrayList<Item>();
+							for(Item item : usedItemList) {
+								if(item.getSecondaryID() == task.getTaskID()) {
+									taskItems.add(item);
+								}
+							}
+							task.setItems(taskItems);
 							tasks.add(task);
 						}
 					}
@@ -122,7 +131,7 @@ public class InitialData {
 				Iterator<String> i = tuple.iterator();
 				Item item = new Item();
 				item.setItemID(itemID++);
-				item.setUserOrRoomID(Integer.parseInt(i.next()));
+				item.setSecondaryID(Integer.parseInt(i.next()));
 				item.setName(i.next());
 				item.setCanBePickedUp(Boolean.parseBoolean(i.next()));
 				item.setXPosition(Integer.parseInt(i.next()));
@@ -150,7 +159,7 @@ public class InitialData {
 				Iterator<String> i = tuple.iterator();
 				Item item = new Item();
 				item.setItemID(itemID++);
-				item.setUserOrRoomID(Integer.parseInt(i.next()));
+				item.setSecondaryID(Integer.parseInt(i.next()));
 				item.setName(i.next());
 				item.setCanBePickedUp(Boolean.parseBoolean(i.next()));
 				item.setXPosition(Integer.parseInt(i.next()));
@@ -193,7 +202,7 @@ public class InitialData {
 		List<Task> taskList = new ArrayList<Task>();
 		ReadCSV readTasks = new ReadCSV("tasks.csv");
 		try {
-			// auto-generated primary key for rooms
+			// auto-generated primary key for tasks
 			Integer taskID = 1;
 			while (true) {
 				List<String> tuple = readTasks.next();
@@ -204,14 +213,42 @@ public class InitialData {
 				Task task = new Task();
 				task.setTaskID(taskID++);
 				task.setObjectiveID(Integer.parseInt(i.next()));
+				task.setName(i.next());
 				task.setIsStarted(Boolean.parseBoolean(i.next()));
 				task.setIsComplete(Boolean.parseBoolean(i.next()));
-				task.setCorrectItems(intParser(i.next()));
 				taskList.add(task);
 			}
 			return taskList;
 		} finally {
 			readTasks.close();
+		}
+	}
+	
+	public static List<Item> getUsedItems() throws IOException {
+		List<Item> itemList = new ArrayList<Item>();
+		ReadCSV readUserInv = new ReadCSV("usedItems.csv");
+		try {
+			// auto-generated primary key for rooms
+			Integer itemID = 1;
+			while (true) {
+				List<String> tuple = readUserInv.next();
+				if (tuple == null) {
+					break;
+				}
+				Iterator<String> i = tuple.iterator();
+				Item item = new Item();
+				item.setItemID(itemID++);
+				item.setSecondaryID(Integer.parseInt(i.next()));
+				item.setName(i.next());
+				item.setCanBePickedUp(Boolean.parseBoolean(i.next()));
+				item.setXPosition(Integer.parseInt(i.next()));
+				item.setYPosition(Integer.parseInt(i.next()));
+				item.setRoomPosition(Integer.parseInt(i.next()));
+				itemList.add(item);
+			}
+			return itemList;
+		} finally {
+			readUserInv.close();
 		}
 	}
 	
