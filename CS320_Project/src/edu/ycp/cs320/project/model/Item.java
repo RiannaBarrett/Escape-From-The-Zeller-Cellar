@@ -3,7 +3,7 @@ package edu.ycp.cs320.project.model;
 public class Item {
 	
 	private int itemID;
-	private int userOrRoomID;
+	private int secondaryID;
 	private String name;
 	private Boolean canBePickedUp;
 	private int xPositionInRoom;
@@ -12,7 +12,7 @@ public class Item {
 	
 	public Item() {
 		this.itemID = 0;
-		this.userOrRoomID = 0;
+		this.secondaryID = 0;
 		this.name = "Unnamed Item";
 		this.canBePickedUp = true;
 		this.xPositionInRoom = 0;
@@ -21,7 +21,7 @@ public class Item {
 	}
 	public Item(String name) {
 		this.itemID = 0;
-		this.userOrRoomID = 0;
+		this.secondaryID = 0;
 		this.name = name;
 		this.canBePickedUp = true;
 		this.xPositionInRoom = 0;
@@ -50,8 +50,8 @@ public class Item {
 		return itemID;
 	}
 	
-	public int getUserOrRoomID() {
-		return userOrRoomID;
+	public int getSecondaryID() {
+		return secondaryID;
 	}
 	
 	public String getName() {
@@ -78,8 +78,8 @@ public class Item {
 		this.itemID = id;
 	}
 	
-	public void setUserOrRoomID(int id) {
-		this.userOrRoomID = id;
+	public void setSecondaryID(int id) {
+		this.secondaryID = id;
 	}
 	
 	public void setName(String name) {

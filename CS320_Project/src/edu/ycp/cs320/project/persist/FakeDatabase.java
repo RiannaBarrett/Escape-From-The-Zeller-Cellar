@@ -370,4 +370,11 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public boolean addItemToTask(Item item, int taskID) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

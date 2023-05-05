@@ -56,6 +56,8 @@ public interface IDatabase {
 
 	public boolean getCanBePickedUp(int userID, String itemName);
 
+	boolean addItemToTask(Item item, int taskID);
+
 
 	
 

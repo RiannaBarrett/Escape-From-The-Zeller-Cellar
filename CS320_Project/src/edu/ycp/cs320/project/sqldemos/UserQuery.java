@@ -68,7 +68,7 @@ public class UserQuery {
 				System.out.println("\t Tasks:");
 				for(Task task : obj.getTasks()) {
 					System.out.println("\t \t Task ID: \t \t" + task.getTaskID());
-					System.out.println("\t \t Item IDs: \t \t" + task.getCorrectItems().toString());
+					System.out.println("\t \t Item IDs: \t \t" + task.getItems().toString());
 					System.out.println("\t \t Is Started: \t \t" + task.getIsStarted().toString());
 					System.out.println("\t \t Is Complete: \t \t" + task.getIsStarted().toString());
 					System.out.println("");

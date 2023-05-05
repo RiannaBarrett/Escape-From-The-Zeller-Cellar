@@ -5,7 +5,8 @@ public class Task {
 	
 	private int taskID;
 	private int objectiveID;
-	private List<Integer> itemIDs;
+	private List<Item> items;
+	private String name;
 	private Boolean isStarted;
 	private Boolean isComplete;
 	
@@ -14,15 +15,21 @@ public class Task {
 		this.objectiveID = 0;
 		this.isStarted = true;
 		this.isComplete = false;
-		this.itemIDs = new ArrayList<Integer>();
+		this.items = new ArrayList<Item>();
+		this.name = "Unnamed Task";
 	}
 	
-	public Task(int id, int objID, Boolean isStarted, Boolean isComplete, List<Integer> correctItems) {
+	public Task(int id, int objID, String name, Boolean isStarted, Boolean isComplete, List<Item> correctItems) {
 		this.taskID = id;
 		this.objectiveID = objID;
 		this.isStarted = isStarted;
 		this.isComplete = isComplete;
-		this.itemIDs = correctItems;
+		this.items = correctItems;
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public Boolean getIsStarted() {
@@ -33,8 +40,8 @@ public class Task {
 		return isComplete;
 	}
 	
-	public List<Integer> getCorrectItems() {
-		return itemIDs;
+	public List<Item> getItems() {
+		return items;
 	}
 	
 	public int getTaskID() {
@@ -53,8 +60,8 @@ public class Task {
 		this.isComplete = isComplete;
 	}
 	
-	public void setCorrectItems(List<Integer> items) {
-		this.itemIDs = items;
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
 	
 	public void setTaskID(int id) {
@@ -63,5 +70,13 @@ public class Task {
 	
 	public void setObjectiveID(int id) {
 		this.objectiveID = id;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void validateComplete() {
+		throw new UnsupportedOperationException();
 	}
 }
