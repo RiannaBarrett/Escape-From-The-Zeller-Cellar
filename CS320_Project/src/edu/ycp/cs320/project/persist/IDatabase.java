@@ -56,6 +56,14 @@ public interface IDatabase {
 
 	public boolean getCanBePickedUp(int userID, String itemName);
 
+	public Boolean changeObjectiveIsStarted(int objectiveID, Boolean desiredResult);
+
+	public Boolean changeObjectiveIsComplete(int objectiveID, Boolean desiredResult);
+
+	public Boolean changeTaskIsComplete(int taskID, Boolean desiredResult);
+
+	public Boolean changeTaskIsStarted(int taskID, Boolean desiredResult);
+
 
 	
 

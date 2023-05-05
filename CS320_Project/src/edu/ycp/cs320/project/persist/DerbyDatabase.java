@@ -1669,6 +1669,221 @@ public class DerbyDatabase implements IDatabase {
 
 	}
 
+	@Override
+	public Boolean changeObjectiveIsStarted(int objectiveID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update objectives " +
+									"set objectives.isStarted = ? " +
+									"where objectives.objective_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, objectiveID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select objectives.isStarted " +
+									"  from objectives " +
+									"where objectives.objective_id = ?"
+							);
+					stmt2.setInt(1, objectiveID);
+					resultSet = stmt2.executeQuery();
+					while (resultSet.next()) {
+						
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+					}
+					if (!success) {
+						System.out.println("<Objective isStarted> was not updated");
+					}
+					return result;
+					//return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Boolean changeObjectiveIsComplete(int objectiveID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update objectives " +
+									"set objectives.isComplete = ? " +
+									"where objectives.objective_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, objectiveID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select objectives.isComplete " +
+									"  from objectives " +
+									"where objectives.objective_id = ?"
+							);
+			
+					stmt2.setInt(1, objectiveID);
+					resultSet = stmt2.executeQuery();
+					while (resultSet.next()) {
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+					}
+					if (!success) {
+						System.out.println("<Objective isComplete> was not updated");
+					}
+					return result;
+					//return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Boolean changeTaskIsComplete(int taskID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update tasks " +
+									"set tasks.isComplete = ? " +
+									"where tasks.task_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, taskID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select tasks.isComplete " +
+									"  from tasks " +
+									"where tasks.task_id = ?"
+							);
+			
+					stmt2.setInt(1, taskID);
+					resultSet = stmt2.executeQuery();
+					while (resultSet.next()) {
+						
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+					}
+					if (!success) {
+						System.out.println("<Task isComplete> was not updated");
+					}
+					return result;
+					//return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Boolean changeTaskIsStarted(int taskID, Boolean desiredResult) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;	
+				try {
+					//changes canBePickedUp for the requested item
+					stmt = conn.prepareStatement(
+							"update tasks " +
+									"set tasks.isStarted = ? " +
+									"where tasks.task_id = ?" 
+							);
+					stmt.setString(1, desiredResult.toString());
+					stmt.setInt(2, taskID);
+					stmt.execute();
+					Boolean result = false;
+					Boolean success = false;
+					//selects to see if it was changed
+					stmt2 = conn.prepareStatement(
+							"select tasks.isStarted " +
+									"  from tasks " +
+									"where tasks.task_id = ?"
+							);
+			
+					stmt2.setInt(1, taskID);
+					resultSet = stmt2.executeQuery();
+					
+					while (resultSet.next()) {
+						
+						result = true;
+						// see if result matches desired result
+						
+						String queryResult = resultSet.getString(1);
+						if(queryResult.equals(desiredResult.toString())) {
+							success = true;
+						}
+						
+					}
+					if (!success) {
+						System.out.println("<Task isStarted> was not updated");
+					}
+					return result;
+					//return result;
+
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
+
 	
 	
 	
