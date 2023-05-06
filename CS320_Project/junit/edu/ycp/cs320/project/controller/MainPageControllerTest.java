@@ -218,14 +218,15 @@ public class MainPageControllerTest {
 		assertTrue(controller.usePotionIngredient("Wishbone", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
 		assertTrue(controller.usePotionIngredient("Jar of Cat Hairs", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
 		assertTrue(controller.usePotionIngredient("Clover", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
-		//should tell the user it didnt work since the ingredients were not in the right order
-		assertTrue(controller.usePotionIngredient("Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("The ingredients added did not seem to do anything"));
+		//should tell the user it didnt work since the ingredients were not in the right order 
+		assertTrue(controller.usePotionIngredient("Carton of Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("The ingredients added did not seem to do anything"));
 		
+
 		assertTrue(controller.usePotionIngredient("Jar of Cat Hairs", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
 		assertTrue(controller.usePotionIngredient("Clover", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
 		assertTrue(controller.usePotionIngredient("Wishbone", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
 		//successful
-		assertTrue(controller.usePotionIngredient("Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("You created a potion"));
+		assertTrue(controller.usePotionIngredient("Carton of Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("You created a potion"));
 		
 		/*
 			Boolean use1 = false;

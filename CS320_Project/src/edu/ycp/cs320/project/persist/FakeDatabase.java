@@ -76,8 +76,8 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public boolean transferItemFromUserToRoom(User user, String itemName) {
-		Item itemToBeTransferred = findItemByName(itemName, user.getInventory());
+	public boolean transferItemFromUserToRoom(User user, Item item) {
+		Item itemToBeTransferred = findItemByName(item.getName(), user.getInventory());
 		// Does the item exist in the inventory?
 		// MOVE TO CONTROLLER
 		System.out.println("db: itemToBeTransferred exist: " + itemToBeTransferred!=null);
@@ -85,15 +85,25 @@ public class FakeDatabase implements IDatabase {
 			itemToBeTransferred.setRoomPosition(user.getRoom().getUserPosition());
 			user.getRoom().getItems().add(itemToBeTransferred);
 			List<Item> inv = user.getInventory();
-			for(int i = 0; i < inv.size(); i++) {
-				if(itemName.equals(inv.get(i).getName())) {
+			
+
+			for(int i = 0;i < inv.size();i++) {
+				System.out.println(inv.get(i).getName()+" " +i);
+				if(inv.get(i).getName().equals(itemToBeTransferred.getName())){
 					inv.remove(i);
 				}
+				
 			}
+			for(int i = 0;i < inv.size();i++) {
+				System.out.println(inv.get(i).getName()+" " +i);
+				
+			}
+
 			user.setInventory(inv);
 			return true;
-		}
+		}else {
 		return false;
+		}
 	}
 
 	@Override
@@ -246,10 +256,8 @@ public class FakeDatabase implements IDatabase {
 		}
 		if(findItemByNameAndIDInRoom(itemName, roomID).getCanBePickedUp() == canBePickedUp) {
 			return true;
-		}else {
-			return false;
 		}
-
+			return false;
 	}
 
 
@@ -495,4 +503,18 @@ public class FakeDatabase implements IDatabase {
 			
 			return result;
 		}
+
+	@Override
+	public List<Item> getRoomInventoryByID(int roomID) {
+		// TODO Auto-generated method stub
+		List<Item> result = new ArrayList<Item>();
+		for(Room room : roomList) {
+			if(room.getRoomID() == roomID) {
+				result = room.getItems();
+				break;
+			}
+		}
+			return result;
+	}
+
 }

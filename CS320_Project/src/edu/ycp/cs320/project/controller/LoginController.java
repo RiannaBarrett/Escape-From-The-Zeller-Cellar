@@ -20,7 +20,7 @@ public class LoginController {
 	
 	public Boolean validateLogin(String username, String password) {
 		// return false if user name or password contains symbols
-		Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+		Pattern pattern = Pattern.compile("^[a-zA-Z0-9 !@#$%^&*()_+.]+$");
 		if(!pattern.matcher(username).matches() || !pattern.matcher(password).matches()) {
 			return false;
 		}else {

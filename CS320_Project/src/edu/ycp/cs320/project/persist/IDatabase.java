@@ -11,7 +11,7 @@ public interface IDatabase {
 	
 	public boolean transferItemFromRoomToUser(User user, Item item);
 	
-	public boolean transferItemFromUserToRoom(User user, String itemName);
+	public boolean transferItemFromUserToRoom(User user, Item item);
 	
 	public boolean moveUser(User user, int moveTo);
 
@@ -37,7 +37,8 @@ public interface IDatabase {
 
 	public String useMatches(Item matches, Item selected, User user);
 
-
+	public List<Item> getRoomInventoryByID(int roomID);
+	
 	public int findUserIDByName(String name);
 
 	public List<Item> findItemsInPositionByID(int roomID, int position);

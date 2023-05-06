@@ -48,7 +48,7 @@ public class SignupServlet extends HttpServlet {
 			resp.sendRedirect(req.getContextPath() + "/start_game");
 	    } else {
 	        //display error message
-	    	errorMessage = "Username/Password cannot contain a symbol";
+	    	errorMessage = "Username/Password contains restricted symbols: |;^\' ";
 	    	req.setAttribute("errorMessage", errorMessage);
 	        req.getRequestDispatcher("/_view/signup.jsp").forward(req, resp);
 	    }

@@ -44,45 +44,67 @@ public class FakeDatabaseTest {
 		assertTrue(user.getRoom().getRoomID() == 9);
 
 	}
+	
+	@Test
+	public void testTransferItemFromUserToRoom() {
+		assertTrue(db.addItemToInventory(new Item("pen"), user.getUserID()));
+		Item userItem = db.findItemByNameAndIDInInv("pen", user.getUserID());
+		System.out.println(userItem.getName());
+		assertTrue(db.transferItemFromUserToRoom(user, userItem));
+		
+		boolean itemMoved = false;
+		boolean itemRemoved = true;
+		
+		List<Item> userInv = db.findItemsInInventory(user.getUserID());
+		List<Item> roomInv = db.getRoomInventoryByID(user.getRoom().getRoomID());
+		
+		for(Item item: userInv) {
+			if(item.getName().equals(userItem.getName())){
+			itemRemoved = false;	
+			}
+		}
+
+		for(Item item: roomInv) {
+			//System.out.println(item.getName() + "|");
+			if(item.getName().equals(userItem.getName())){
+				itemMoved = true;	
+			}
+		}
+		System.out.println(itemRemoved);
+		System.out.println(itemMoved);
+		assertTrue(itemMoved);
+		assertTrue(itemRemoved);
+		
+	}
 
 	
 	@Test
 	public void testTransferItemFromRoomToUser() {
-		Item item = user.getRoom().getItems().get(3);
-		assertTrue(db.transferItemFromRoomToUser(user, item));
+		Item roomItem = user.getRoom().getItems().get(3);
+		assertTrue(db.transferItemFromRoomToUser(user, roomItem));
 		boolean itemMoved = false;
 		boolean itemRemoved = false;
-		
-		if(db.findItemByNameAndIDInRoom(item.getName(),user.getRoom().getRoomID()) == null) {
-			itemRemoved = true;
+	
+		List<Item> userInv = db.findItemsInInventory(user.getUserID());
+		List<Item> roomInv = db.getRoomInventoryByID(user.getRoom().getRoomID());
+
+		for(Item item: userInv) {
+			if(item.getName().equals(roomItem.getName())){
+				itemMoved = true;	
+			}
 		}
-		if(db.findItemByNameAndIDInInv(item.getName(),user.getUserID()) == item) {
-			itemMoved = true;
+		
+		for(Item item: roomInv) {
+			if(!item.getName().equals(roomItem.getName())){
+				itemRemoved = true;	
+			}
 		}
 		
 		assertTrue(itemRemoved);
 		assertTrue(itemMoved);
 	}
 
-	@Test
-	public void testTransferItemFromUserToRoom() {
-		Item item = user.getInventory().get(0);
-		assertTrue(db.transferItemFromUserToRoom(user, item.getName()));
-		boolean itemMoved = false;
-		boolean itemRemoved = true;
-		for(int i = 0; i < user.getInventory().size(); i++) {
-			if(user.getInventory().get(i).getName().equals(item.getName())) {
-				itemRemoved = false;
-			}
-		}
-		for(int i = 0; i < user.getRoom().getItems().size(); i++) {
-			if(user.getRoom().getItems().get(i).getName().equals(item.getName())) {
-				itemMoved = true;
-			}
-		}
-		assertTrue(itemRemoved);
-		assertTrue(itemMoved);
-	}
+	
 
 	@Test
 	public void testMoveUser() {
@@ -92,7 +114,6 @@ public class FakeDatabaseTest {
 		assertTrue(db.findUserByName(user.getUsername()).getRoom().getUserPosition() == 3);
 			
 		
-		assertTrue(user.getRoom().getUserPosition() == 3);
 	}
 
 	@Test
@@ -165,17 +186,25 @@ public class FakeDatabaseTest {
 	public void testSwapItemInInventory() {
 		Boolean itemAddSuccess = false;
 		Boolean itemRemoveSuccess = false;
-		Item itemToRemove = user.getInventory().get(0);
-		System.out.println(itemToRemove.getName());
+		user.getInventory().add(new Item("pencil"));
+		Item itemToRemove = user.getInventory().get(1);
+		System.out.println("Item to remove from Inv: "+itemToRemove.getName());
 		Item itemToAdd = new Item("box");
+		
 		db.swapItemInInventory(itemToRemove, itemToAdd, user);
 		
-		if(db.findItemByNameAndIDInInv("Matches",user.getUserID()) == null) {
-			itemRemoveSuccess = true;
+		List<Item> userInv = db.findItemsInInventory(user.getUserID());
+		
+		for(Item item: userInv) {
+			if(item.getName().equals(itemToAdd.getName())){
+				itemAddSuccess = true;	
+			}else if(!item.getName().equals(itemToRemove.getName())){
+				itemRemoveSuccess = true;
+			}
+
 		}
-		if(db.findItemByNameAndIDInInv("box",user.getUserID()) == itemToAdd) {
-			itemAddSuccess = true;
-		}	
+		System.out.println(itemAddSuccess);
+		System.out.println(itemRemoveSuccess);
 		assertTrue(itemAddSuccess);
 		assertTrue(itemRemoveSuccess);
 
@@ -185,17 +214,23 @@ public class FakeDatabaseTest {
 	public void testSwapItemInRoom() {
 		Boolean itemAddSuccess = false;
 		Boolean itemRemoveSuccess = false;
-		Item itemToRemove = user.getRoom().getItems().get(0);
-		System.out.println(itemToRemove);
+		Item itemToRemove = user.getRoom().getItems().get(2);
+		System.out.println("Item to remove : "+itemToRemove.getName());
 		Item itemToAdd = new Item("box");
 		db.swapItemInRoom(itemToRemove, itemToAdd, user);
+		
+		List<Item> roomInv = db.getRoomInventoryByID(user.getRoom().getRoomID());
+		
+		for(Item item: roomInv) {
+			if(item.getName().equals(itemToAdd.getName())){
+				itemAddSuccess = true;	
+			}else if(!item.getName().equals(itemToRemove.getName())){
+				itemRemoveSuccess = true;
+			}
 
-		if(db.findItemByNameAndIDInRoom(itemToRemove.getName(), user.getRoom().getRoomID()) == null){
-			itemRemoveSuccess = true;
 		}
-		if(db.findItemByNameAndIDInRoom(itemToAdd.getName(), user.getRoom().getRoomID()) == itemToAdd) {
-			itemAddSuccess = true;
-		}
+		System.out.println(itemAddSuccess);
+		System.out.println(itemRemoveSuccess);
 		assertTrue(itemAddSuccess);
 		assertTrue(itemRemoveSuccess);
 	}

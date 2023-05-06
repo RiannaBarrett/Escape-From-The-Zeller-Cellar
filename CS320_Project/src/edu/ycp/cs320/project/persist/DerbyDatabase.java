@@ -106,8 +106,19 @@ public class DerbyDatabase implements IDatabase {
 
 	//TODO: implement and maybe move to constroller
 	@Override
-	public boolean transferItemFromUserToRoom(User user, String itemName) {
-		throw new UnsupportedOperationException();
+	public boolean transferItemFromUserToRoom(User user, Item item) {
+		Boolean added = false;
+		Boolean removed = false;
+		added = addItemToRoom(item, user.getRoom().getRoomID());
+		removed = removeItemFromInventory(item, user.getUserID());
+		System.out.println(added);
+		System.out.println("removed: " + removed);
+		if(!added || !removed) {
+			return false;
+		}else {
+			return true;
+		}
+
 	}
 
 	@Override
@@ -877,7 +888,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	private List<Item> getRoomInventoryByID(int roomID) {
+	@Override
+	public List<Item> getRoomInventoryByID(int roomID) {
 		return executeTransaction(new Transaction<List<Item>>() {
 			@Override
 			public List<Item> execute(Connection conn) throws SQLException {
