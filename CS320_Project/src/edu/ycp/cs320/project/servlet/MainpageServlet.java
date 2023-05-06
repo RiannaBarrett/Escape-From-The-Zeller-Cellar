@@ -115,7 +115,9 @@ public class MainpageServlet extends HttpServlet {
 		//get items in room
 		items = controller.findItemsInPosition(model.getUser().getRoom().getUserPosition(), user);
 
-		
+		List<Objective> objectives = controller.getObjectivesFromUserID(userID);
+		//Get the objective the user is currently on
+		Objective objective = controller.getCurrentObjective(objectives);
 		
 		//display inventory on jsp
 		List<Item> inventory = controller.findInventoryByName(user);
@@ -196,7 +198,7 @@ public class MainpageServlet extends HttpServlet {
 	
 					System.out.println(selected.getName() + " is the selectd item");
 					String message = "";
-					message = controller.useItem(inventory.get(i), selected, userID);
+					message = controller.useItem(inventory.get(i), selected, userID, objective.getObjectiveID());
 					req.setAttribute("textOutput", message);
 					
 				}
@@ -214,19 +216,12 @@ public class MainpageServlet extends HttpServlet {
 				//tells the jsp which image to use
 				req.setAttribute("ViewNumber", position);
 				
-		//get the inventory and add the images of the items to the jsp
-				inventory = controller.findInventoryByName(user);
-				req.setAttribute("inventory", inventory);
-				
-				
-				//get the items in the user's current position
-				items = controller.findItemsInPosition(position, user);
-				req.setAttribute("items", items);
+
 				
 				String taskMessage = "";
-				List<Objective> objectives = controller.getObjectivesFromUserID(userID);
+				objectives = controller.getObjectivesFromUserID(userID);
 				//Get the objective the user is currently on
-				Objective objective = controller.getCurrentObjective(objectives);
+				objective = controller.getCurrentObjective(objectives);
 				//verifies is all the tasks are marked as complete
 				controller.getTasksFromObjectiveID(objective.getObjectiveID());
 				for(Task task : controller.getTasksFromObjectiveID(objective.getObjectiveID())) {
@@ -257,7 +252,14 @@ public class MainpageServlet extends HttpServlet {
 				System.out.println("Obj id: " + obj.getObjectiveID());	
 				
 				}
+				//get the inventory and add the images of the items to the jsp
+				inventory = controller.findInventoryByName(user);
+				req.setAttribute("inventory", inventory);
 				
+				
+				//get the items in the user's current position
+				items = controller.findItemsInPosition(position, user);
+				req.setAttribute("items", items);
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
 

@@ -16,9 +16,9 @@ public class PotionMachine extends Task {
 	@Override	
 	public String validateComplete(int userID) {
 		System.out.println("PotionMachine Task being checked");
-		//NOTE: this is currently incomplete
-		List<Item> items = super.getItems();
+		List<Item> items = db.getUsedItemsByTaskId(super.getTaskID());
 		int roomID = db.findRoomIDByUserID(userID);
+		System.out.println("usedItems size: " + items.size());
 		if(items.size() >= 4) {
 			//check if the items are in the right order
 			if(items.get(0).getName().equals("Jar of Cat Hairs") && items.get(1).getName().equals("Clover")
@@ -27,11 +27,19 @@ public class PotionMachine extends Task {
 				//create a full cauldron to swap into room
 				cauldron.setName("Cauldron with Potion");
 				db.addItemToRoom(cauldron, roomID);
-				
+				db.changeTaskIsComplete(super.getTaskID(), true);
+				db.changeCanBePickedUp(userID, "Empty Potion Bottle", true);
 				return "You created a potion";
 			}else {
-				//TODO: remove the items from the usedItems and move them to the inventory
+
+				for(Item item : items) {
+					System.out.println("Adding item back to inv");
+					db.addItemToInventory(item, userID);
+				}
+				db.removeItemFromUsedItems(super.getTaskID());
+				
 				return "The ingredients added did not seem to do anything";
+				
 			}
 		}else {
 			//The task is still in progress. return nothing

@@ -140,7 +140,7 @@ public class MainPageController {
 	}
 	
 	//TODO: make it so the functions only need item name and not the entire item!!!
-	public String useItem(Item item, Item selected,int userID) {
+	public String useItem(Item item, Item selected,int userID, int objectiveID) {
 		String message = "Nothing Happened";
 		if(item.getName().equals("Empty Potion Bottle")) {
 			message = db.useEmptyPotion(item, selected, model.getUser());
@@ -151,7 +151,7 @@ public class MainPageController {
 		}else if(item.getName().equals("Full Potion Bottle")) {
 			message = useFullPotionBottle(selected.getName(), userID);
 		}else if(selected.getName().equals("Empty Cauldron")){
-			message = usePotionIngredient(item.getName(), selected.getName(), userID);
+			message = usePotionIngredient(item.getName(), userID, objectiveID);
 		}else if(selected.getName().equals("Puzzle board")) {
 			//TODO: call function to check if it is correct
 		}else if(item.getName().equals("Hammer")) {
@@ -200,91 +200,14 @@ public class MainPageController {
 	}
 	
 	
-	public String usePotionIngredient(String itemName, String selectedName, int userID) {
-		//message telling the user they successfully added an item
-				String message = "You put the item in the cauldron";
-				List<Item> ingredients = new ArrayList<Item>();
-				//get the room and user ids
-				
-				
-				int roomID = db.findRoomIDByUserID(userID);
-				
-				//items with position 4 are items that were used on the empty cauldron. get these items
-				ingredients = db.findItemsInPositionByID(roomID, 4);
-				
-				//get the item that is going to be added from the inventory
-				Item item = db.findItemByNameAndIDInInv(itemName, userID);
-				//create a new version of the item that is in the cauldron position
-				Item itemToAdd = item;
-				itemToAdd.setRoomPosition(4);
-				
-				//See if the max number of ingredients were already added
-				if(ingredients.size() < 4) {
-					//add it to the room
-					db.addItemToRoom(itemToAdd, roomID);
-					//remove the item that is used from inventory
-					db.removeItemFromInventory(item, userID);	
-					//get back the items after adding the new item
-					ingredients = db.findItemsInPositionByID(roomID, 4);
-				}
-				
-				System.out.println("Number of ingredients after adding: " + ingredients.size());
-				//check if correct number of ingredients were added
-				if(ingredients.size() >= 4) {
-					//check if the ingredients are correct and in the right order
-					if(ingredients.get(0).getName().equals("Jar of Cat Hairs") &&
-							ingredients.get(1).getName().equals("Clover") &&
-							ingredients.get(2).getName().equals("Wishbone") &&
-							ingredients.get(3).getName().equals("Carton of Lime Juice")) {
-							//make a full cauldron item by changing the name 
-						Item emptyCauldron = db.findItemByNameAndIDInRoom(selectedName, roomID);
-						//Create full cauldron
-						Item fullCauldron = emptyCauldron;
-						fullCauldron.setName("Cauldron with Potion");
-						//if the potion was made swap the empty cauldron with the full cauldron into the room
-						db.addItemToRoom(fullCauldron, roomID);
-						db.removeItemFromRoom(emptyCauldron, roomID);
-						//message telling the user they were successful
-						message = "You created a potion";
-						Item firstItem = ingredients.get(0);
-						Item secondItem = ingredients.get(1);
-						Item thirdItem = ingredients.get(2);
-						Item fourthItem = ingredients.get(3);
-						//remove the items (they do not need to be used anymore)
-						//NOTE: if we are switching back to the empty cauldron keep
-						//the items here so that the user cannot attempt to make another and lose their items
-						db.removeItemFromRoom(fourthItem, roomID);
-						db.removeItemFromRoom(thirdItem, roomID);
-						db.removeItemFromRoom(secondItem, roomID);
-						db.removeItemFromRoom(firstItem, roomID);
-						
-						
-						db.changeCanBePickedUp(roomID, "Empty Potion Bottle", true);
-						
-						
-					}else {
-						//if they are incorrect return the items to inventory and remove them from ingredient list
-						Item firstItem = ingredients.get(0);
-						Item secondItem = ingredients.get(1);
-						Item thirdItem = ingredients.get(2);
-						Item fourthItem = ingredients.get(3);
-						
-						//return the incorrect items so the user can try again
-						db.addItemToInventory(firstItem, userID);
-						db.addItemToInventory(secondItem, userID);
-						db.addItemToInventory(thirdItem, userID);
-						db.addItemToInventory(fourthItem, userID);
-						
-						//remove items from cauldron
-						db.removeItemFromRoom(firstItem, roomID);
-						db.removeItemFromRoom(secondItem, roomID);
-						db.removeItemFromRoom(thirdItem, roomID);
-						db.removeItemFromRoom(fourthItem, roomID);
-						//message telling the user they were not successful
-						message = "The ingredients added did not seem to do anything";
-					}
-				}
-				
+	public String usePotionIngredient(String itemName, int userID, int objectiveID) {
+		String message = "Item could not be added";
+		Item itemToAdd = db.findItemByNameAndIDInInv(itemName, userID);
+		db.removeItemFromInventory(itemToAdd, userID);
+		int taskID = db.getTaskIDByNameAndObjectiveID("PotionMachine", objectiveID);
+		if(db.addItemToTask(itemToAdd, taskID)) {
+			message = "Item was placed in cauldron";
+		}
 		return message;
 	}
 

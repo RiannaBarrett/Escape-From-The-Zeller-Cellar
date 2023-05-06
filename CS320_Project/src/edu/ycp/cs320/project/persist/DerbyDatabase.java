@@ -486,7 +486,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt2 = conn.prepareStatement(
 							"select usedItems.* " +
 									"  from usedItems " +
-									" where usedItems.name = ? and usedItems.room_id = ?"
+									" where usedItems.name = ? and usedItems.task_id = ?"
 							);
 					stmt2.setString(1, item.getName());
 					stmt2.setInt(2, taskID);
@@ -719,7 +719,7 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	@Override
-	public boolean removeItemFromUsedItems(int itemId) {
+	public boolean removeItemFromUsedItems(int taskId) {
 	    return executeTransaction(new Transaction<Boolean>() {
 	        @Override
 	        public Boolean execute(Connection conn) throws SQLException {
@@ -727,23 +727,22 @@ public class DerbyDatabase implements IDatabase {
 	            PreparedStatement stmt2 = null;
 	            ResultSet resultSet = null;
 	            try {
-	                // Check if the item is used by any task
 	                stmt = conn.prepareStatement(
-	                        "delete from taskItems "
-	                		+ "where taskItems.item_id = ?");
-	                stmt.setInt(1, itemId);
+	                        "delete from usedItems " +
+	                			"where usedItems.task_id = ? ");
+	                stmt.setInt(1, taskId);
 	                stmt.execute();
 
 	                // Check if the item was actually removed
 	                stmt2 = conn.prepareStatement(
-	                        "select taskItems."+
-	                        		"from taskItems"
-	                		+ "where taskItems.item_id = ?");
-	                stmt2.setInt(1, itemId);
+	                        "select usedItems.* "+
+	                        		"from usedItems "
+	                        		+ "where usedItems.task_id = ?");
+	                stmt2.setInt(1, taskId);
 	                resultSet = stmt2.executeQuery();
 
 	                if (resultSet.next()) {
-	                    System.out.println("Item" + itemId + " was not removed");
+	                    System.out.println("Item" + taskId + " was not removed");
 	                    return false;
 	                }
 
@@ -1038,8 +1037,9 @@ public class DerbyDatabase implements IDatabase {
 
 	            try {
 	                stmt = conn.prepareStatement(
-	                		"select usedItems.fromusedItems"+
-	                        " where tasks.task_id = ?"
+	                		"select usedItems.* " +
+	                				"from usedItems " +
+	                				" where usedItems.task_id = ? "
 	                );
 	                stmt.setInt(1, taskId);
 
@@ -2173,6 +2173,51 @@ public class DerbyDatabase implements IDatabase {
 					// check if the user was found
 					if (!found) {
 						System.out.println("<No objectives found for roomID: " + roomID + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
+	}
+
+	@Override
+	public int getTaskIDByNameAndObjectiveID(String taskName, int objectiveID) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select tasks.task_id " +
+							"  from tasks " +
+							" where tasks.name = ? " +
+							"and tasks.objective_id = ?"
+					);
+					stmt.setString(1, taskName);
+					stmt.setInt(2, objectiveID);
+
+					
+					int result = -1;
+					
+					resultSet = stmt.executeQuery();
+					
+
+					
+					while (resultSet.next()) {
+						result = resultSet.getInt(1);
+					}
+					
+					// check if the user was found
+					if (result == -1) {
+						System.out.println("<No tasks id was found for name: " + taskName+ ">");
 					}
 					
 					return result;

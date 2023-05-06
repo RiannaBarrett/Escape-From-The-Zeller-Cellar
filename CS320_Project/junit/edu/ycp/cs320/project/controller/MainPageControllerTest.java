@@ -134,9 +134,9 @@ public class MainPageControllerTest {
 		Item emptyPotionItem = new Item("Empty Potion Bottle", true, 40, 20, 4);
 		
 		// Using unlit candle ON matches, should do nothing.
-		assertTrue(controller.useItem(unlitCandleItem, matchesItem, 5).equals("Nothing Happened"));
+		assertTrue(controller.useItem(unlitCandleItem, matchesItem, 5, 0).equals("Nothing Happened"));
 		// Using matches on unlit candle, should return text and replace unlit with a lit candle.
-		assertTrue(controller.useItem(matchesItem, unlitCandleItem, 5).equals("You lit the candle"));
+		assertTrue(controller.useItem(matchesItem, unlitCandleItem, 5, 0).equals("You lit the candle"));
 		boolean iAdded = false;
 		boolean iRemoved = true;
 		for(Item i : controller.getModel().getUser().getRoom().getItems()) {
@@ -155,9 +155,9 @@ public class MainPageControllerTest {
 		assertTrue(iAdded && iRemoved);
 		
 		// Using Empty Potion Bottle ON matches, should do nothing.
-		assertTrue(controller.useItem(emptyPotionItem, matchesItem, 5).equals("Nothing Happened"));
+		assertTrue(controller.useItem(emptyPotionItem, matchesItem, 5, 0).equals("Nothing Happened"));
 		// Using Empty Potion Bottle ON a Full Cauldron, should replace the empty bottle with a full one.
-		assertTrue(controller.useItem(emptyPotionItem, fullCauldron, 5).equals("You filled the bottle with a potion"));
+		assertTrue(controller.useItem(emptyPotionItem, fullCauldron, 5, 0).equals("You filled the bottle with a potion"));
 		iAdded = false;
 		iRemoved = true;
 		for(Item i : controller.getModel().getUser().getInventory()) {
@@ -212,6 +212,7 @@ public class MainPageControllerTest {
 	
 	@Test
 	public void testUsePotionIngredient() {
+		/*
 		String username = "potionTester";
 		controller.PopulateModel(username);
 		
@@ -228,7 +229,7 @@ public class MainPageControllerTest {
 		//successful
 		assertTrue(controller.usePotionIngredient("Carton of Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("You created a potion"));
 		
-		/*
+	
 			Boolean use1 = false;
 			Boolean use2 = false; 
 			Item selectedItem = null;

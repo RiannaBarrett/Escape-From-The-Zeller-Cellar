@@ -334,4 +334,15 @@ public class FakeDatabaseTest {
 		assertTrue(db.getObjectivesByRoomID(5).size()==2);
 	}
 	
+	@Test
+	public void getTaskIDByNameAndObjectiveID() {
+		assertTrue(db.getTaskIDByNameAndObjectiveID("Cat", 1) == 2);
+	}
+	
+	@Test
+	public void addItemToTask() {
+		Item itemToAdd = new Item("testItem", false, 0, 0, 0);
+		assertTrue(db.addItemToTask(itemToAdd, 1));
+	}
+	
 }

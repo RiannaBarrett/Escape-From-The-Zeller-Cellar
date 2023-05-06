@@ -415,7 +415,21 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public boolean addItemToTask(Item item, int taskID) {
-		// TODO Auto-generated method stub
+		for(int i = 0; i < roomList.size();i++) {
+			for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
+				for(int r = 0; r<roomList.get(i).getObjectives().get(j).getTasks().size();r++) {
+					if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getTaskID() == taskID){
+						roomList.get(i).getObjectives().get(j).getTasks().get(r).getItems().add(item);
+						List<Item> finalList = roomList.get(i).getObjectives().get(j).getTasks().get(r).getItems();
+						for(Item currentItem : finalList) {
+							if(currentItem.getName().equals(item.getName())) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
 		return false;
 	}
 
@@ -584,4 +598,22 @@ public class FakeDatabase implements IDatabase {
 		
 		return result;
 	}
+	
+	@Override
+	public int getTaskIDByNameAndObjectiveID(String taskName, int objectiveID){
+		for(Room room : roomList) {
+			for(Objective objective: room.getObjectives()) {
+				if(objective.getObjectiveID()==objectiveID) {
+					for(Task task : objective.getTasks()) {
+						if(task.getName().equals(taskName)) {
+							return task.getTaskID();
+						}
+					}
+				}
+			}
+		}
+		return -1;
+	}
+	
+
 }
