@@ -147,6 +147,16 @@ input[type="submit"] {
   float: right;
   margin-right: 10px;
 }
+button[type="button"] {
+  background-color: #7a7a7a;
+  color: #fff;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
+  margin-right: 10px;
+}
 .button{
 	
 	font-size: 20px;
@@ -175,4 +185,15 @@ input[type="submit"] {
 	transform: rotate(270deg);
 	top: 14%;
   	left: 88%;
+}
+
+  padding: 5px;
+  background-color: #ccc;
+  border: none;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.menu select:hover {
+  background-color: #ddd;
 }

@@ -16,12 +16,11 @@
             Escape from the Zeller Cellar
         </h3>
          </div>
-        <div class = "loginBtn">
-        <input type="submit" name="logout" value="logout">
-         <input class="pickUp"type="submit" name="pickUp" value="Pick Up">
+    <div class = "loginBtn">
+     <input type="submit" name="logout" value="logout">
+      <button type="button" id="sound-toggle" onclick="toggleSound()">Sound</button>
         </div>
     </div>
-
     <div class="mainContent">
         <table>
             <td class="gameGraphics">
@@ -31,8 +30,17 @@
                 <button class="button right" name = "right"><</button>
                 <button class="button up" name = "up"><</button>
               	<button class="button down" name = "down"><</button>
+                <audio id="game-audio" src="audio/sound1.mp3" autoplay loop></audio>
+                <input class="pickUp" type="submit" name="pickUp" value="Pick Up">
+    	
+
               	<p name = "textOutput">${textOutput}</p>
               	</div>
+              	<c:if test="${selected == 'Locked Comic Stand'}">
+  					<input type="text" name="comicBookCode" placeholder="Enter code here" pattern="[0-9]+" required>
+
+				</c:if>
+              	
                 <c:forEach items="${items}" var="item">
               		<div class = "clickableHover">
               		<button type="submit" name = "${item.getName()}" style = "transform: scale(0.1); top:${item.getXPosition()}px; 
@@ -61,6 +69,16 @@
     </tr>
   		</table>
 			</div>
+			 <script>
+				function toggleSound(event) {
+    			var audio = document.getElementById("game-audio");
+    				if (audio.paused) {
+       				 audio.play();
+    				} else {
+     				   audio.pause();
+   					 }
+					}
+					</script>
     </form>
 </body>
 </html>
