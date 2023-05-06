@@ -147,9 +147,9 @@ public class MainPageController {
 		}else if(item.getName().equals("Matches")) {
 			message = db.useMatches(item, selected, model.getUser());
 		}else if(item.getName().equals("Bag of Meow Mix")) {
-			message = useMeowMix(selected.getName(), userID);
+			message = useMeowMix(selected.getName(), userID, objectiveID);
 		}else if(item.getName().equals("Full Potion Bottle")) {
-			message = useFullPotionBottle(selected.getName(), userID);
+			message = useFullPotionBottle(selected.getName(), userID, objectiveID);
 		}else if(selected.getName().equals("Empty Cauldron")){
 			message = usePotionIngredient(item.getName(), userID, objectiveID);
 		}else if(selected.getName().equals("Puzzle board")) {
@@ -180,21 +180,29 @@ public class MainPageController {
 		
 	}
 	
-	public String useFullPotionBottle(String selectedName, int userID) {
+	public String useFullPotionBottle(String selectedName, int userID, int objectiveID) {
 		String message = "Nothing happened";
 		if(selectedName.equals("Messy")) {
-			message = "You gave Messy the potion. Messy can now talk <br> Messy: [says something]";
-			//TODO: indicate that messy can now talk in the database
+			int taskID = db.getTaskIDByNameAndObjectiveID("Cat", objectiveID);
+			db.addItemToTask(db.findItemByNameAndIDInInv("Full Potion Bottle", userID), taskID);
 			db.removeItemFromInventory(db.findItemByNameAndIDInInv("Full Potion Bottle", userID), userID);
+			message = "You gave Messy the potion. Messy can now talk <br> Messy: What are you doing here?";
 		}
 		return message;
 	}
 	
-	public String useMeowMix(String selectedName, int userID) {
+	public String useMeowMix(String selectedName, int userID, int objectiveID) {
 		String message = "Nothing happened";
 		if(selectedName.equals("Messy")) {
+			//find the item in the inventory
+			Item itemToAdd = db.findItemByNameAndIDInInv("Bag of Meow Mix", userID);
+			//get the task id for the cat task
+			int taskID = db.getTaskIDByNameAndObjectiveID("Cat", objectiveID);
+			//put in usedItems
+			db.addItemToTask(itemToAdd, taskID);
+			//remove the item from inv
+			db.removeItemFromInventory(itemToAdd, userID);
 			message = "You gave Messy the Meow Mix. He seems to enjoy it!";
-			//TODO: indicate that messy has been fed in database
 		}
 		return message;
 	}
@@ -211,7 +219,7 @@ public class MainPageController {
 		return message;
 	}
 
-	public String getSelectedMessage(String itemName, int userID) {
+	public String getSelectedMessage(String itemName, int userID, int objectiveID) {
 		String message = "You found a " + itemName;
 		if(itemName.equals("Untitled Book")) {
 			System.out.println("untitled book text");
@@ -228,15 +236,35 @@ public class MainPageController {
 				message = "You found a " + itemName + ". It seems to be stuck to the shelf";
 			}
 		}else if(itemName.equals("Messy")) {
-			//TODO:insert if statements to check if messy can talk and has been fed
-			//if messy cannot talk yet and he has not been fed, this is the output
-			message = "You found Zeller's cat, Messy. Messy stares at you";
-			//if messy cannot talk and has been fed, this is the output
-			message = "YOu found Zeller's cat, Messy. Messy nudges your hand";
-			//if messy can talk but has not been fed he will give bad advice
-			message = "Messy: [insert bad advice]";
-			//if messy can talk and has been fed he will give the player a hint
-			message = "Messy: [insert hint]";
+			List<Item> usedItems = db.getUsedItemsByTaskId(db.getTaskIDByNameAndObjectiveID("Cat", objectiveID));
+			Boolean isFed = false;
+			Boolean canTalk = false;
+			for(Item item : usedItems) {
+				if(item.getName().equals("Bag of Meow Mix")) {
+					isFed = true;
+				}
+				if(item.getName().equals("Full Potion Bottle")) {
+					canTalk = true;
+				}
+			}
+			
+			if(!isFed && !canTalk) {
+				//if messy cannot talk yet and he has not been fed, this is the output
+				message = "You found Zeller's cat, Messy. Messy stares at you";
+			}else if(isFed && !canTalk) {
+				//if messy cannot talk and has been fed, this is the output
+				message = "You found Zeller's cat, Messy. Messy nudges your hand";
+			}else if(!isFed && canTalk) {
+				//if messy can talk but has not been fed he will give bad advice
+				message = "Messy: The password? The password is 1234.";
+			}else {
+				//if messy can talk and has been fed he will give the player a hint
+				message = "Messy: [insert hint]";
+			}
+			
+			
+			
+			
 			
 		}else if(itemName.equals("Comic Stand")) {
 			message = "You found a Comic Stand that displays Zeller's favorite comics";
@@ -246,6 +274,7 @@ public class MainPageController {
 	
 	public Objective getCurrentObjective(List<Objective> objectives) {
 		for(Objective i : objectives) {
+			System.out.println("Objective: " + "is Started: " + i.getIsStarted() + " isComplete: " + i.getIsComplete());
 			if(i.getIsStarted() && !i.getIsComplete()) {
 				return i;
 			}
@@ -258,6 +287,7 @@ public class MainPageController {
 		for(int i = 0; i < objectives.size();i++) {
 			if(objectives.get(i).getIsStarted() && objectives.get(i).getIsComplete()) {
 				if(i+1 < objectives.size()) {
+					System.out.println("Starting next objective");
 					Objective nextObjective = objectives.get(i+1);
 					db.changeObjectiveIsStarted(nextObjective.getObjectiveID(), true);
 					for(Task task : nextObjective.getTasks()) {

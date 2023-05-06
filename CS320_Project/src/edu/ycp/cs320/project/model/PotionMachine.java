@@ -18,7 +18,6 @@ public class PotionMachine extends Task {
 		System.out.println("PotionMachine Task being checked");
 		List<Item> items = db.getUsedItemsByTaskId(super.getTaskID());
 		int roomID = db.findRoomIDByUserID(userID);
-		System.out.println("usedItems size: " + items.size());
 		if(items.size() >= 4) {
 			//check if the items are in the right order
 			if(items.get(0).getName().equals("Jar of Cat Hairs") && items.get(1).getName().equals("Clover")
@@ -32,6 +31,7 @@ public class PotionMachine extends Task {
 				return "You created a potion";
 			}else {
 
+				//remove all the items if the wrong ingredients were used
 				for(Item item : items) {
 					System.out.println("Adding item back to inv");
 					db.addItemToInventory(item, userID);

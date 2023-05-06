@@ -209,66 +209,42 @@ public class MainPageControllerTest {
 			assertTrue(item.getRoomPosition() == 0);
 		}
 	}
-	
-	@Test
-	public void testUsePotionIngredient() {
-		/*
-		String username = "potionTester";
-		controller.PopulateModel(username);
 		
-		assertTrue(controller.usePotionIngredient("Wishbone", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
-		assertTrue(controller.usePotionIngredient("Jar of Cat Hairs", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
-		assertTrue(controller.usePotionIngredient("Clover", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
-		//should tell the user it didnt work since the ingredients were not in the right order 
-		assertTrue(controller.usePotionIngredient("Carton of Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("The ingredients added did not seem to do anything"));
-		
-
-		assertTrue(controller.usePotionIngredient("Jar of Cat Hairs", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
-		assertTrue(controller.usePotionIngredient("Clover", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
-		assertTrue(controller.usePotionIngredient("Wishbone", "Empty Cauldron", controller.getUserIDByName(username)).equals("You put the item in the cauldron"));
-		//successful
-		assertTrue(controller.usePotionIngredient("Carton of Lime Juice", "Empty Cauldron", controller.getUserIDByName(username)).equals("You created a potion"));
-		
-	
-			Boolean use1 = false;
-			Boolean use2 = false; 
-			Item selectedItem = null;
-			Item useItem1 = new Item("Jar of Cat Hairs");
-			Item useItem2 = new Item("Jar with Hibiscus");
-			user.getInventory().add(useItem1);
-			user.getInventory().add(useItem2);
-			for(int i = 0; i < user.getRoom().getItems().size(); i++) {
-				if(user.getRoom().getItems().get(i).getName().equals("Empty Cauldron")){
-					selectedItem = user.getRoom().getItems().get(i);
-					System.out.println(selectedItem.getName());
-				}
-			}
-			String text = db.usePotionIngredient(useItem1, selectedItem, user);
-			if(text == "You put the item in the cauldron") {
-				use1 = true;
-			}
-			String text1 = db.usePotionIngredient(useItem2, selectedItem, user);
-			if(text1 == "You created a potion") {
-				use2 = true;
-			}
-			assertTrue(use1);
-			assertTrue(use2);
-			*/
-	}
-	
-	
-	
 	@Test
 	public void testGetSelectedMessage() {
 		String username = "potionTester2";
 		controller.PopulateModel(username);
-		assertTrue(controller.getSelectedMessage("Jar with Hibiscus", controller.getModel().getUser().getUserID()).equals("You found a Jar with Hibiscus. It seems to be stuck to the shelf"));
-		assertTrue(controller.getSelectedMessage("Jar of Cat Hairs",  controller.getModel().getUser().getUserID()).equals("You found a Jar of Cat Hairs"));
+		assertTrue(controller.getSelectedMessage("Jar with Hibiscus", controller.getModel().getUser().getUserID(),0).equals("You found a Jar with Hibiscus. It seems to be stuck to the shelf"));
+		assertTrue(controller.getSelectedMessage("Jar of Cat Hairs",  controller.getModel().getUser().getUserID(), 0).equals("You found a Jar of Cat Hairs"));
+		assertTrue(controller.getSelectedMessage("Messy", controller.getModel().getUser().getUserID(), 3).equals("You found Zeller's cat, Messy. Messy stares at you"));
+		controller.useFullPotionBottle("Messy", controller.getModel().getUser().getUserID(), 3);
+		assertTrue(controller.getSelectedMessage("Messy", controller.getModel().getUser().getUserID(), 3).equals("Messy: The password? The password is 1234."));
 	}
 	
 	
-	//TODO: add tests for useFullPotionBottle and useMeowMix
 
+	@Test
+	public void testUseFullPotionBottle() {
+		String username = "potionTester2";
+		controller.PopulateModel(username);
+		assertTrue(controller.useFullPotionBottle("Messy", controller.getModel().getUser().getUserID(), 3).equals("You gave Messy the potion. Messy can now talk <br> Messy: What are you doing here?"));
+		
+	}
+	
+	@Test
+	public void testUseMeowMix() {
+		String username = "potionTester2";
+		controller.PopulateModel(username);
+		assertTrue(controller.useMeowMix("Messy", controller.getModel().getUser().getUserID(), 3).equals("You gave Messy the Meow Mix. He seems to enjoy it!"));
+	}
+	
+	@Test
+	public void testUsePotionIngredient() {
+		String username = "potionTester2";
+		controller.PopulateModel(username);
+		assertTrue(controller.usePotionIngredient("Jar of Cat Hairs", controller.getModel().getUser().getUserID(), 3).equals("Item was placed in cauldron"));
+	}
+	
 	@Test
 	public void testGetCurrentObjective() {
 

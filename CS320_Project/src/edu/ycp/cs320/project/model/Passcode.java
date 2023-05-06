@@ -13,6 +13,7 @@ public class Passcode extends Task {
 
 	@Override	
 	public String validateComplete(int userID) {
-		throw new UnsupportedOperationException();
+		System.out.println("Passcode task being checked");
+		return "";
 	}
 }

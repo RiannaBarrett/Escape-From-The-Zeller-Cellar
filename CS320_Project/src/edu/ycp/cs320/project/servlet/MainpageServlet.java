@@ -182,7 +182,7 @@ public class MainpageServlet extends HttpServlet {
 				System.out.println(itemName + " was selected");
 				req.setAttribute("textOutput", "You found a " + itemName);
 				req.setAttribute("selected", itemName);
-				req.setAttribute("textOutput", controller.getSelectedMessage(itemName, userID));
+				req.setAttribute("textOutput", controller.getSelectedMessage(itemName, userID, objective.getObjectiveID()));
 					
 			}
 		}
@@ -243,8 +243,9 @@ public class MainpageServlet extends HttpServlet {
 					}
 					//if all the tasks are complete, mark the objective as complete and start the next one
 					if(objIsComplete) {
+						System.out.println("An objective was completed");
 						controller.markObjectiveAsComplete(objective.getObjectiveID());
-						controller.startNextObjective(objectives);
+						controller.startNextObjective(controller.getObjectivesFromUserID(userID));
 					}
 				}
 				
