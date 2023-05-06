@@ -221,6 +221,14 @@ public class MainPageControllerTest {
 		assertTrue(controller.getSelectedMessage("Messy", controller.getModel().getUser().getUserID(), 3).equals("Messy: The password? The password is 1234."));
 	}
 	
+	@Test
+	public void testUpdateSelectedComics() {
+		String username = "potionTester2";
+		controller.PopulateModel(username);
+		assertTrue(!controller.updateSelectedComics("Matches", controller.getModel().getUser().getUserID(), 1));
+		assertTrue(controller.updateSelectedComics("Jar of Cat Hairs", controller.getModel().getUser().getUserID(), 4));
+
+	}
 	
 
 	@Test

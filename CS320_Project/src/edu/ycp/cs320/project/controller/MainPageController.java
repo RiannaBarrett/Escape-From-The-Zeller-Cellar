@@ -237,6 +237,10 @@ public class MainPageController {
 			}
 		}else if(itemName.equals("Messy")) {
 			List<Item> usedItems = db.getUsedItemsByTaskId(db.getTaskIDByNameAndObjectiveID("Cat", objectiveID));
+			int taskID = db.getTaskIDByNameAndObjectiveID("Cat", objectiveID);
+			if(taskID == -1) {
+				return "Messy: [insert hint]";
+			}
 			Boolean isFed = false;
 			Boolean canTalk = false;
 			for(Item item : usedItems) {
@@ -261,15 +265,29 @@ public class MainPageController {
 				//if messy can talk and has been fed he will give the player a hint
 				message = "Messy: [insert hint]";
 			}
-			
-			
-			
-			
-			
 		}else if(itemName.equals("Comic Stand")) {
 			message = "You found a Comic Stand that displays Zeller's favorite comics";
+		}else if(itemName.equals("Amazing Spiderman 300 Comic") || itemName.equals("Avengers 1 Comic")
+				|| itemName.equals("Avengers 4 Comic") | itemName.equals("Fantastic Four 48 Comic") ||
+				itemName.equals("Fantastic Four 9 Comic") || itemName.equals("Giant Size Xmen 1 Comic") ||
+				itemName.equals("Superman 18 Comic") || itemName.equals("X-Men 1 Comic") ||
+				itemName.equals("X-Men 94 Comic")) {
+			updateSelectedComics(itemName, userID, objectiveID);
 		}
 		return message;
+	}
+	
+	public Boolean updateSelectedComics(String itemName, int userID, int objectiveID) {
+		//get the task id
+		int taskID = db.getTaskIDByNameAndObjectiveID("Bookshelf", objectiveID);
+		//check if the task is started
+		if(taskID!=-1) {
+			db.addItemToTask(db.findItemByNameAndIDInRoom(itemName, db.findRoomIDByUserID(userID)), taskID);
+			return true;
+		}else {
+			return false;
+		}
+		
 	}
 	
 	public Objective getCurrentObjective(List<Objective> objectives) {

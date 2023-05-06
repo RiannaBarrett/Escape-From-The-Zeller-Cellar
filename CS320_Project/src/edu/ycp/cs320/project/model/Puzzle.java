@@ -1,7 +1,11 @@
 package edu.ycp.cs320.project.model;
 import java.util.*;
 
+import edu.ycp.cs320.project.persist.DatabaseProvider;
+import edu.ycp.cs320.project.persist.IDatabase;
+
 public class Puzzle extends Task {
+	private IDatabase db = DatabaseProvider.getInstance();
 
 	public Puzzle(Task task) {
 		super.setTaskID(task.getTaskID());
@@ -13,6 +17,8 @@ public class Puzzle extends Task {
 
 	@Override	
 	public String validateComplete(int userID) {
-		throw new UnsupportedOperationException();
-	}
+		System.out.println("Bookshelf Task being checked");
+		
+		return "";
+		}
 }
