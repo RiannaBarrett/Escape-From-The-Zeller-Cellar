@@ -707,7 +707,48 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-	
+	@Override
+	public boolean removeItemFromUsedItems(int itemId) {
+	    return executeTransaction(new Transaction<Boolean>() {
+	        @Override
+	        public Boolean execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            PreparedStatement stmt2 = null;
+	            ResultSet resultSet = null;
+	            try {
+	                // Check if the item is used by any task
+	                stmt = conn.prepareStatement(
+	                        "delete from taskItems "
+	                		+ "where taskItems.item_id = ?");
+	                stmt.setInt(1, itemId);
+	                stmt.execute();
+
+	                // Check if the item was actually removed
+	                stmt2 = conn.prepareStatement(
+	                        "select taskItems."+
+	                        		"from taskItems"
+	                		+ "where taskItems.item_id = ?");
+	                stmt2.setInt(1, itemId);
+	                resultSet = stmt2.executeQuery();
+
+	                if (resultSet.next()) {
+	                    System.out.println("Item" + itemId + " was not removed");
+	                    return false;
+	                }
+
+	                return true;
+
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	                DBUtil.closeQuietly(stmt2);
+	            }
+	        }
+	    });
+	}
+
+
+
 	@Override
 	public boolean addItemToInventory(Item item, int userID) {
 		return executeTransaction(new Transaction<Boolean>() {
@@ -974,6 +1015,56 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	@Override
+	public List<Item> getUsedItemsByTaskId(int taskId) {
+	    List<Item> usedItems = new ArrayList<>();
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement(
+	                		"select usedItems.fromusedItems"+
+	                        " where tasks.task_id = ?"
+	                );
+	                stmt.setInt(1, taskId);
+
+	                List<Item> result = new ArrayList<Item>();
+
+	                resultSet = stmt.executeQuery();
+
+	                // for testing that a result was returned
+	                Boolean found = false;
+
+	                while (resultSet.next()) {
+	                    found = true;
+
+	                    // create new Item object
+	                    // retrieve attributes from resultSet starting with index 1
+	                    Item item = new Item();
+	                    loadItem(item, resultSet, 1);
+	                    // load inventory objects
+	                    result.add(new Item(item));
+	                }
+
+	                // check if the user was found
+	                if (!found) {
+	                    System.out.println("<No items found for taskId: " + taskId + ">");
+	                } else {
+	                    usedItems.addAll(result);
+	                }
+
+	                return usedItems;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+
 	
 	@Override
 	public Item findItemByNameAndIDInRoom(String name, int roomID) {

@@ -66,4 +66,8 @@ public interface IDatabase {
 
 	public Boolean changeTaskIsStarted(int taskID, Boolean desiredResult);
 
+	public List<Item> getUsedItemsByTaskId(int taskId);
+
+	public boolean removeItemFromUsedItems(int taskId);
+
 }
