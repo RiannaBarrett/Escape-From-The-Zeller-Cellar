@@ -73,4 +73,6 @@ public interface IDatabase {
 
 	public List<Task> getTasksByObjID(int objectiveID);
 
+	public List<Objective> getObjectivesByRoomID(int roomID);
+
 }

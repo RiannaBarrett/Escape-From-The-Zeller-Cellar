@@ -15,6 +15,7 @@ public class PotionMachine extends Task {
 	}
 	@Override	
 	public String validateComplete(int userID) {
+		System.out.println("PotionMachine Task being checked");
 		//NOTE: this is currently incomplete
 		List<Item> items = super.getItems();
 		int roomID = db.findRoomIDByUserID(userID);

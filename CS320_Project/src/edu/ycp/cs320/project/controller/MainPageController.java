@@ -353,4 +353,8 @@ public class MainPageController {
 	public List<Task> getTasksFromObjectiveID(int objectiveID) {
 		return db.getTasksByObjID(objectiveID);
 	}
+	public List<Objective> getObjectivesFromUserID(int userID) {
+		int roomID = db.findRoomIDByUserID(userID);
+		return db.getObjectivesByRoomID(roomID);
+	}
 }

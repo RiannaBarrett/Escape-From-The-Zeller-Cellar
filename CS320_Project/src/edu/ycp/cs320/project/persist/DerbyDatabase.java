@@ -2135,4 +2135,54 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	@Override
+	public List<Objective> getObjectivesByRoomID(int roomID) {
+		return executeTransaction(new Transaction<List<Objective>>() {
+			@Override
+			public List<Objective> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select objectives.* " +
+							"  from objectives " +
+							" where objectives.room_id = ? " 
+					);
+					stmt.setInt(1, roomID);
+
+					
+					List<Objective> result = new ArrayList<Objective>();
+					
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Item object
+						// retrieve attributes from resultSet starting with index 1
+						Objective objective = new Objective();
+						loadObjective(objective, resultSet, 1);
+						result.add(objective);
+					}
+					
+					// check if the user was found
+					if (!found) {
+						System.out.println("<No objectives found for roomID: " + roomID + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
+	}
 }

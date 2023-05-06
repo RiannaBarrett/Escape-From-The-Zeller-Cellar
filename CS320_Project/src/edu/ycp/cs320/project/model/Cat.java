@@ -13,6 +13,8 @@ public class Cat extends Task {
 
 	@Override	
 	public String validateComplete(int userID) {
-		throw new UnsupportedOperationException();
-	}
+		//TODO: implement
+		System.out.println("Testing cat");
+		return "";
+		}
 }

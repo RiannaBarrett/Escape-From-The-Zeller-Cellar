@@ -572,4 +572,16 @@ public class FakeDatabase implements IDatabase {
 		}
 		return result;
 	}
+	
+	@Override
+	public List<Objective> getObjectivesByRoomID(int roomID){
+		List<Objective> result = new ArrayList<Objective>();
+		for(Room room: roomList) {
+			if(room.getRoomID() == roomID) {
+				return room.getObjectives();
+			}
+		}
+		
+		return result;
+	}
 }

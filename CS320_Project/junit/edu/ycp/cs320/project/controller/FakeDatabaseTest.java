@@ -329,4 +329,9 @@ public class FakeDatabaseTest {
 		assertTrue(result.size()==1);
 	}
 	
+	@Test
+	public void getObjectivesByRoomID() {
+		assertTrue(db.getObjectivesByRoomID(5).size()==2);
+	}
+	
 }

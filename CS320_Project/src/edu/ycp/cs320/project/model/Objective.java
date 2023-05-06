@@ -73,8 +73,9 @@ public class Objective {
 		Boolean result = true;
 		if(tasks!=null) {
 			for(Task task : tasks) {
+				System.out.println("Task is complete: " + task.getIsComplete());
 				if(!task.getIsComplete()) {
-					result = false;
+					return false;
 				}
 			}
 		}

@@ -223,12 +223,12 @@ public class MainpageServlet extends HttpServlet {
 				items = controller.findItemsInPosition(position, user);
 				req.setAttribute("items", items);
 				
-				String taskMessage = ""
-;				//TODO: make database methods to get these so we dont pass unneeded info
-				List<Objective> objectives = model.getUser().getRoom().getObjectives();
+				String taskMessage = "";
+				List<Objective> objectives = controller.getObjectivesFromUserID(userID);
 				//Get the objective the user is currently on
 				Objective objective = controller.getCurrentObjective(objectives);
 				//verifies is all the tasks are marked as complete
+				controller.getTasksFromObjectiveID(objective.getObjectiveID());
 				for(Task task : controller.getTasksFromObjectiveID(objective.getObjectiveID())) {
 					if(!task.getIsComplete()) {
 						taskMessage = task.validateComplete(userID);
@@ -237,17 +237,25 @@ public class MainpageServlet extends HttpServlet {
 						}
 					}
 				}
-				//check if the current objective is complete
+				//check if the current objective is complete by checking if all tasks are complete
 				if(objective!=null) {
-					Boolean objIsComplete = objective.verifyComplete();
+					Boolean objIsComplete = true;
+					List<Task> tasksToCheck = controller.getTasksFromObjectiveID(objective.getObjectiveID());
+					for(Task task : tasksToCheck) {
+						if(task.getIsComplete() == false) {
+							objIsComplete = false;
+						}
+					}
+					//if all the tasks are complete, mark the objective as complete and start the next one
 					if(objIsComplete) {
 						controller.markObjectiveAsComplete(objective.getObjectiveID());
-					}
-					objectives = model.getUser().getRoom().getObjectives();
-					if(objIsComplete) {
-						//will make the next objectives and its task start
 						controller.startNextObjective(objectives);
 					}
+				}
+				
+				for(Objective obj : objectives) {
+				System.out.println("Obj id: " + obj.getObjectiveID());	
+				
 				}
 				
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
