@@ -1,6 +1,9 @@
 package edu.ycp.cs320.project.model;
 import java.util.*;
 
+import edu.ycp.cs320.project.persist.DatabaseProvider;
+import edu.ycp.cs320.project.persist.IDatabase;
+
 public class Objective {
 	
 	private int objectiveID;
@@ -8,6 +11,7 @@ public class Objective {
 	private List<Task> tasks;
 	private Boolean isComplete;
 	private Boolean isStarted;
+
 	
 	public Objective() {
 		this.objectiveID = 0;
@@ -69,15 +73,13 @@ public class Objective {
 		Boolean result = true;
 		if(tasks!=null) {
 			for(Task task : tasks) {
-				//TODO: call verifyComplete for each task here
 				if(!task.getIsComplete()) {
 					result = false;
 				}
 			}
 		}
 		
-		//TODO: if the tasks are all complete, change the objective to complete in the db and start the next one
-		//Some objectives will need to unlock other things in the room, so we should figure out how we're doing that
+
 		return result;
 	}
 }

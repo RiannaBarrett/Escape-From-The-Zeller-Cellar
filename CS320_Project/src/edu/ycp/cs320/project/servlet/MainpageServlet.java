@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import edu.ycp.cs320.project.model.Item;
 import edu.ycp.cs320.project.model.MainPage;
 import edu.ycp.cs320.project.model.Objective;
+import edu.ycp.cs320.project.model.Task;
 import edu.ycp.cs320.project.controller.MainPageController;
 
 public class MainpageServlet extends HttpServlet {
@@ -222,13 +223,26 @@ public class MainpageServlet extends HttpServlet {
 				items = controller.findItemsInPosition(position, user);
 				req.setAttribute("items", items);
 				
-				//TODO: make database methods to get these so we dont pass unneeded info
+				String taskMessage = ""
+;				//TODO: make database methods to get these so we dont pass unneeded info
 				List<Objective> objectives = model.getUser().getRoom().getObjectives();
 				//Get the objective the user is currently on
 				Objective objective = controller.getCurrentObjective(objectives);
 				//verifies is all the tasks are marked as complete
+				for(Task task : controller.getTasksFromObjectiveID(objective.getObjectiveID())) {
+					if(!task.getIsComplete()) {
+						taskMessage = task.validateComplete(userID);
+						if(taskMessage != "") {
+							req.setAttribute("textOutput", taskMessage);
+						}
+					}
+				}
+				//check if the current objective is complete
 				if(objective!=null) {
 					Boolean objIsComplete = objective.verifyComplete();
+					if(objIsComplete) {
+						controller.markObjectiveAsComplete(objective.getObjectiveID());
+					}
 					objectives = model.getUser().getRoom().getObjectives();
 					if(objIsComplete) {
 						//will make the next objectives and its task start

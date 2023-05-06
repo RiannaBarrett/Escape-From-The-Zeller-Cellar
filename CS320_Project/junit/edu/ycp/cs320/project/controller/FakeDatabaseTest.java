@@ -28,7 +28,7 @@ public class FakeDatabaseTest {
 	public void testFindUserByName() {
 		User user = db.findUserByName("Screamer");
 		assertTrue(user.getUsername().equals("Screamer"));
-		assertTrue(user.getPassword().equals("letsGoYCP"));
+		assertTrue(user.getPassword().equals("letsGoYCP!"));
 		assertTrue(user.getInventory().size() == 1);
 		System.out.println(user.getInventory().size());
 	}
@@ -321,5 +321,12 @@ public class FakeDatabaseTest {
 		assertTrue(db.changeTaskIsComplete(3, true));
 	}
 	
+	@Test
+	public void testGetTasksByObjID() {
+		List<Task> result = db.getTasksByObjID(1);
+		assertTrue(result.size() == 2);
+		result = db.getTasksByObjID(2);
+		assertTrue(result.size()==1);
+	}
 	
 }

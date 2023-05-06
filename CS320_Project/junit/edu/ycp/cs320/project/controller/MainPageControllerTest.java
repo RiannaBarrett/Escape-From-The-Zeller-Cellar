@@ -30,7 +30,7 @@ public class MainPageControllerTest {
 		controller.PopulateModel(username);
 		assertTrue(controller.getModel() != null);
 		assertTrue(controller.getModel().getUser().getUsername().equals("Screamer"));
-		assertTrue(controller.getModel().getUser().getPassword().equals("letsGoYCP"));
+		assertTrue(controller.getModel().getUser().getPassword().equals("letsGoYCP!"));
 		assertTrue(controller.getModel().getUser().getInventory().get(0).getName().equals("Matches"));
 	}
 	

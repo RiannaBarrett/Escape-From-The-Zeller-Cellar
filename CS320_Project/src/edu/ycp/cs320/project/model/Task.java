@@ -85,7 +85,7 @@ public class Task {
 		this.name = name;
 	}
 	
-	public void validateComplete() {
+	public String validateComplete(int userID) {
 		throw new UnsupportedOperationException();
 	}
 }
