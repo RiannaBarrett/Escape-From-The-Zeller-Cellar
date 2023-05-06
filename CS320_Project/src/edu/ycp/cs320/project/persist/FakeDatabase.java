@@ -466,66 +466,88 @@ public class FakeDatabase implements IDatabase {
 		
 		return result;
 	}
-	
 	@Override
 	public Boolean changeTaskIsComplete(int taskID, Boolean desiredResult) {
 		Boolean result = false;
-		int roomListID = -1;
-		int objectiveListID = -1;
-		int taskListID = -1;
 		for(int i = 0; i < roomList.size();i++) {
 			for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
 				for(int r = 0; r < roomList.get(i).getObjectives().get(j).getTasks().size();r++) {
 					if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getTaskID() == taskID) {
-						roomListID = i;
-						objectiveListID = j;
-						taskListID = r;
+
 						Task currentTask = roomList.get(i).getObjectives().get(j).getTasks().get(r);
 						//change isComplete
-						currentTask.setIsComplete(desiredResult);
+						currentTask.setIsStarted(desiredResult);
 						//set the result in roomlist
 						roomList.get(i).getObjectives().get(j).getTasks().set(r, currentTask);
+						//check if it is correct
+						if(i != -1 && j != -1 && r != -1) {
+							if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getIsStarted() == desiredResult);
+								result = true;
+						}	
 					}
 				}
 			}
 		}
-		//check if it is correct
-		if(roomListID != -1 && objectiveListID != -1 && taskListID != -1) {
-			if(roomList.get(roomListID).getObjectives().get(objectiveListID).getTasks().get(taskListID).getIsComplete() == desiredResult);
-				result = true;
-		}		
+			
 		
 		return result;
 	}
 	
+	
 	@Override
 		public Boolean changeTaskIsStarted(int taskID, Boolean desiredResult) {
 			Boolean result = false;
-			int roomListID = -1;
-			int objectiveListID = -1;
-			int taskListID = -1;
 			for(int i = 0; i < roomList.size();i++) {
 				for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
 					for(int r = 0; r < roomList.get(i).getObjectives().get(j).getTasks().size();r++) {
 						if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getTaskID() == taskID) {
-							roomListID = i;
-							objectiveListID = j;
-							taskListID = r;
+
 							Task currentTask = roomList.get(i).getObjectives().get(j).getTasks().get(r);
 							//change isComplete
 							currentTask.setIsStarted(desiredResult);
 							//set the result in roomlist
 							roomList.get(i).getObjectives().get(j).getTasks().set(r, currentTask);
+							//check if it is correct
+							if(i != -1 && j != -1 && r != -1) {
+								if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getIsStarted() == desiredResult);
+									result = true;
+							}	
 						}
 					}
 				}
 			}
-			//check if it is correct
-			if(roomListID != -1 && objectiveListID != -1 && taskListID != -1) {
-				if(roomList.get(roomListID).getObjectives().get(objectiveListID).getTasks().get(taskListID).getIsStarted() == desiredResult);
-					result = true;
-			}		
+				
 			
 			return result;
 		}
+	
+	@Override
+	public List<Task> getTasksByObjID(int objectiveID){
+		List<Task> result = new ArrayList<Task>();
+		for(Room room : roomList) {
+			for(Objective objective : room.getObjectives()) {
+				if(objective.getObjectiveID() ==  objectiveID) {
+					for(Task task: objective.getTasks()) {
+						if(task.getName().equals("PotionMachine")) {
+							PotionMachine newTask = new PotionMachine(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Cat")) {
+							Cat newTask = new Cat(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Passcode")) {
+							Passcode newTask = new Passcode(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Bookshelf")) {
+							Bookshelf newTask = new Bookshelf(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Puzzle")) {
+							Puzzle newTask = new Puzzle(task);
+							result.add(newTask);
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
 }

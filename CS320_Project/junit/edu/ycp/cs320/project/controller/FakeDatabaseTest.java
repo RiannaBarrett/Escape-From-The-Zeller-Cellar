@@ -286,5 +286,12 @@ public class FakeDatabaseTest {
 		assertTrue(db.changeTaskIsComplete(3, true));
 	}
 	
+	@Test
+	public void testGetTasksByObjID() {
+		List<Task> result = db.getTasksByObjID(1);
+		assertTrue(result.size() == 2);
+		result = db.getTasksByObjID(2);
+		assertTrue(result.size()==1);
+	}
 	
 }

@@ -70,4 +70,6 @@ public interface IDatabase {
 
 	public boolean removeItemFromUsedItems(int taskId);
 
+	public List<Task> getTasksByObjID(int objectiveID);
+
 }

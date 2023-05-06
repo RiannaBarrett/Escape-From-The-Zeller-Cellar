@@ -344,4 +344,13 @@ public class MainPageController {
 			}
 		}
 	}
+	
+	public void markObjectiveAsComplete(int objectiveID) {
+		//mark the objective as complete
+		db.changeObjectiveIsComplete(objectiveID, true);
+	}
+	
+	public List<Task> getTasksFromObjectiveID(int objectiveID) {
+		return db.getTasksByObjID(objectiveID);
+	}
 }

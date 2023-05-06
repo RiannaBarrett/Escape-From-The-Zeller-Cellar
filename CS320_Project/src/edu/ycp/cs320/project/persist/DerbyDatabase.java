@@ -2057,4 +2057,70 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+
+	@Override
+	public List<Task> getTasksByObjID(int objectiveID) {
+		return executeTransaction(new Transaction<List<Task>>() {
+			@Override
+			public List<Task> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select tasks.* " +
+							"  from tasks " +
+							" where tasks.objective_id = ? " 
+					);
+					stmt.setInt(1, objectiveID);
+
+					
+					List<Task> result = new ArrayList<Task>();
+					
+					resultSet = stmt.executeQuery();
+					
+					// for testing that a result was returned
+					Boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						// create new Item object
+						// retrieve attributes from resultSet starting with index 1
+						Task task = new Task();
+						loadTask(task, resultSet, 1);
+						// load inventory objects
+						if(task.getName().equals("PotionMachine")) {
+							PotionMachine newTask = new PotionMachine(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Cat")) {
+							Cat newTask = new Cat(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Passcode")) {
+							Passcode newTask = new Passcode(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Bookshelf")) {
+							Bookshelf newTask = new Bookshelf(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Puzzle")) {
+							Puzzle newTask = new Puzzle(task);
+							result.add(newTask);
+						}
+					}
+					
+					// check if the user was found
+					if (!found) {
+						System.out.println("<No tasks found for objectiveID: " + objectiveID + ">");
+					}
+					
+					return result;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
+	}
 }
