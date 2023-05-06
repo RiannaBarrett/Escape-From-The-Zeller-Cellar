@@ -330,4 +330,18 @@ public class MainPageController {
 		return null;
 		
 	}
+	
+	public void startNextObjective(List<Objective> objectives) {
+		for(int i = 0; i < objectives.size();i++) {
+			if(objectives.get(i).getIsStarted() && objectives.get(i).getIsComplete()) {
+				if(i+1 < objectives.size()) {
+					Objective nextObjective = objectives.get(i+1);
+					db.changeObjectiveIsStarted(nextObjective.getObjectiveID(), true);
+					for(Task task : nextObjective.getTasks()) {
+						db.changeTaskIsStarted(task.getTaskID(), true);
+					}
+				}
+			}
+		}
+	}
 }

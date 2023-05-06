@@ -366,6 +366,39 @@ public class FakeDatabase implements IDatabase {
 		}
 		return false;
 	}
+	@Override
+	public List<Item> getUsedItemsByTaskId(int taskId) {
+	    List<Item> usedItems = new ArrayList<>();
+	    for (User user : userList) {
+	    	for(Objective objective: user.getRoom().getObjectives()) {
+	        for (Task task : objective.getTasks()) {
+	            if (task.getTaskID() == taskId) {
+	                usedItems.addAll(task.getItems());
+	            }
+	        }
+	    }
+	    }
+	    return usedItems;
+	}
+	@Override
+	
+	public boolean removeItemFromUsedItems(int taskId) {
+//		roomList.getRoom(roomIndex).getObjectives().get(objectiveIndex).getTasks().get(taskIndex);
+		for(int i=0; i < roomList.size(); i++) {
+			for(int j=0; j< roomList.get(i).getObjectives().size(); j++) {
+				for(int k=0; k<roomList.get(i).getObjectives().get(j).getTasks().size();k++) {
+					if(roomList.get(i).getObjectives().get(j).getTasks().get(k).getTaskID()==taskId) {
+						roomList.get(i).getObjectives().get(j).getTasks().get(k).setItems(new ArrayList<Item>());
+						if(roomList.get(i).getObjectives().get(j).getTasks().get(k).getItems().size()==0) {
+							return true;
+						}
+			}
+			}
+		}
+		}
+		return false;
+	}
+
 
 	@Override
 	public boolean addObjectiveToRoom(Objective obj, int roomID) {

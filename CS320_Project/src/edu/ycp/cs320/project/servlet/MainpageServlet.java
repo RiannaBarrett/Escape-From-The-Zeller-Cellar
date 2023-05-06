@@ -114,10 +114,7 @@ public class MainpageServlet extends HttpServlet {
 		//get items in room
 		items = controller.findItemsInPosition(model.getUser().getRoom().getUserPosition(), user);
 
-		//TODO: make database methods to get these so we dont pass unneeded info
-		List<Objective> objectives = model.getUser().getRoom().getObjectives();
-		//Get the objective the user is currently on
-		Objective objective = controller.getCurrentObjective(objectives);
+		
 		
 		//display inventory on jsp
 		List<Item> inventory = controller.findInventoryByName(user);
@@ -225,10 +222,18 @@ public class MainpageServlet extends HttpServlet {
 				items = controller.findItemsInPosition(position, user);
 				req.setAttribute("items", items);
 				
-			
+				//TODO: make database methods to get these so we dont pass unneeded info
+				List<Objective> objectives = model.getUser().getRoom().getObjectives();
+				//Get the objective the user is currently on
+				Objective objective = controller.getCurrentObjective(objectives);
 				//verifies is all the tasks are marked as complete
 				if(objective!=null) {
-					objective.verifyComplete();
+					Boolean objIsComplete = objective.verifyComplete();
+					objectives = model.getUser().getRoom().getObjectives();
+					if(objIsComplete) {
+						//will make the next objectives and its task start
+						controller.startNextObjective(objectives);
+					}
 				}
 				
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
