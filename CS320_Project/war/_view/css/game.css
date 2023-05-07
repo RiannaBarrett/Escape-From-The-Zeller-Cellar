@@ -197,3 +197,44 @@ button[type="button"] {
 .menu select:hover {
   background-color: #ddd;
 }
+
+.game-over {
+  text-align: center;
+  margin: 10% auto;
+  max-width: 600px;
+}
+
+.game-over h3 {
+  font-size: 72px;
+  color: red;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.game-over p {
+  font-size: 36px;
+  color: white;
+}
+
+.button1 {
+  background-color: #FFC107;
+  border-radius: 30px;
+  color: #fff;
+  display: inline-block;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+.button1 {
+    font-size: 20px;
+    border-radius: 50%;
+    border-radius: 5px;
+}
+
+.button1:hover {
+  background-color: red;
+  cursor: pointer;
+  transform: scale(1.1);
+}
