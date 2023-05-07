@@ -249,10 +249,19 @@ public class MainpageServlet extends HttpServlet {
 					}
 				}
 				
-				for(Objective obj : objectives) {
-				System.out.println("Obj id: " + obj.getObjectiveID());	
-				
+				Boolean gameComplete = true;
+				//check if all objectives complete
+				for(Objective obj : controller.getObjectivesFromUserID(userID)) {
+					if(!obj.getIsComplete()) {
+						gameComplete = false;
+					}
 				}
+				
+				if(gameComplete) {
+					System.out.println("All objectives compelted");
+					//TODO: win condition achieved, do something
+				}
+				
 				//get the inventory and add the images of the items to the jsp
 				inventory = controller.findInventoryByName(user);
 				req.setAttribute("inventory", inventory);

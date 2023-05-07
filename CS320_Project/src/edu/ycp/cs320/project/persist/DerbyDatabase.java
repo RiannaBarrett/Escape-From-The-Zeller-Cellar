@@ -1662,7 +1662,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				PreparedStatement stmt2 = null;
 				ResultSet resultSet = null;
-					int userID = -1;
+				ResultSet resultSet2 = null;
+				int userID = -1;
 				try {
 					//changes canBePickedUp for the requested item
 					stmt = conn.prepareStatement(
@@ -1696,17 +1697,17 @@ public class DerbyDatabase implements IDatabase {
 			
 					stmt2.setInt(1, userID);
 						
-					resultSet = stmt2.executeQuery();
+					resultSet2 = stmt2.executeQuery();
 					int result = -1;
 					while (resultSet.next()) {
 						result = resultSet.getInt(1);
 					}
 					
 					return result;
-					//return result;
 
 				} finally {
 					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(resultSet2);
 					DBUtil.closeQuietly(stmt);
 					DBUtil.closeQuietly(stmt2);
 				}
@@ -2117,6 +2118,9 @@ public class DerbyDatabase implements IDatabase {
 							result.add(newTask);
 						}else if(task.getName().equals("Puzzle")) {
 							Puzzle newTask = new Puzzle(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Window")) {
+							Window newTask = new Window(task);
 							result.add(newTask);
 						}else {
 							result.add(task);

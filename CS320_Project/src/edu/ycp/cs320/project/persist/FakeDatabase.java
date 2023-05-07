@@ -554,7 +554,6 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public List<Item> findRoomInventoryByID(int roomID) {
-		// TODO Auto-generated method stub
 		List<Item> result = new ArrayList<Item>();
 		for(Room room : roomList) {
 			if(room.getRoomID() == roomID) {
@@ -587,6 +586,9 @@ public class FakeDatabase implements IDatabase {
 							result.add(newTask);
 						}else if(task.getName().equals("Puzzle")) {
 							Puzzle newTask = new Puzzle(task);
+							result.add(newTask);
+						}else if(task.getName().equals("Window")) {
+							Window newTask = new Window(task);
 							result.add(newTask);
 						}else {
 							result.add(task);

@@ -96,6 +96,7 @@ public class Room {
 		iList.add(new Item("Fire Alarm", false, -176, 408, 2));
 		iList.add(new Item("Locked Comic Stand",false, -1018,-309, 1));
 		iList.add(new Item("Bag of Meow Mix",true, -108,225, 0));
+		iList.add(new Item("Window",false,-202,292,0));
 		
 		/*these are items that will be added to the comic stand as individual items once
 		 * the comic book stand is unlocked. I am putting them here for now to test
@@ -109,7 +110,7 @@ public class Room {
 		iList.add(new Item("Fantastic Four 48 Comic", false, 63, 783, 1));
 		iList.add(new Item("Fantastic Four 9 Comic", false, 70, 866, 1));
 		iList.add(new Item("X-Men 94 Comic", false, 128, 702, 1));
-		iList.add(new Item("Giant Size X-Men 1 Comic", false, 61, 588, 1));
+		iList.add(new Item("Giant Size X-Men 1 Comic", false, 121, 788, 1));
 		iList.add(new Item("Amazing Spiderman 300 Comic", false, 131, 869, 1));
 
 		return iList;
@@ -152,6 +153,15 @@ public class Room {
 		objective3.setTasks(tasksToAdd);
 		//add the objective to the list
 		oList.add(objective3);
+		
+		Objective objective4 = new Objective();
+
+		tasksToAdd = new ArrayList<Task>();
+		tasksToAdd.add(new Task("Window", false, false));
+
+		objective4.setTasks(tasksToAdd);
+		//add the objective to the list
+		oList.add(objective4);
 		return oList;
 	}
 
