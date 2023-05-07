@@ -37,7 +37,7 @@
               	<p name = "textOutput">${textOutput}</p>
               	</div>
               	<c:if test="${selected == 'Locked Comic Stand'}">
-  					<input type="text" name="comicBookCode" placeholder="Enter code here" pattern="[0-9]+" required>
+  					<input type="text" name="comicBookCode" placeholder="Enter code here" pattern="[0-9]+">
 
 				</c:if>
               	
