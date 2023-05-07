@@ -56,7 +56,7 @@ public class FakeDatabaseTest {
 		boolean itemRemoved = true;
 		
 		List<Item> userInv = db.findItemsInInventory(user.getUserID());
-		List<Item> roomInv = db.getRoomInventoryByID(user.getRoom().getRoomID());
+		List<Item> roomInv = db.findRoomInventoryByID(user.getRoom().getRoomID());
 		
 		for(Item item: userInv) {
 			if(item.getName().equals(userItem.getName())){
@@ -86,7 +86,7 @@ public class FakeDatabaseTest {
 		boolean itemRemoved = false;
 	
 		List<Item> userInv = db.findItemsInInventory(user.getUserID());
-		List<Item> roomInv = db.getRoomInventoryByID(user.getRoom().getRoomID());
+		List<Item> roomInv = db.findRoomInventoryByID(user.getRoom().getRoomID());
 
 		for(Item item: userInv) {
 			if(item.getName().equals(roomItem.getName())){
@@ -120,6 +120,15 @@ public class FakeDatabaseTest {
 	public void testAddItemToRoom() {
 		Item item = new Item("Matches", true, 240, 235, 0);
 		assertTrue(db.addItemToRoom(item, user.getRoom().getRoomID()));
+		Boolean isInInventory = false;
+		db.addItemToRoom(item, user.getRoom().getRoomID());
+		List<Item> inv = db.findRoomInventoryByID(user.getRoom().getRoomID());
+		for(int i = 0; i < inv.size(); i++) {
+			if(inv.get(i).getName().equals(item.getName())) {
+				isInInventory = true;
+			}
+		}
+		assertTrue(isInInventory);
 	}
 
 	@Test
@@ -221,7 +230,7 @@ public class FakeDatabaseTest {
 		Item itemToAdd = new Item("box");
 		db.swapItemInRoom(itemToRemove, itemToAdd, user);
 		
-		List<Item> roomInv = db.getRoomInventoryByID(user.getRoom().getRoomID());
+		List<Item> roomInv = db.findRoomInventoryByID(user.getRoom().getRoomID());
 		
 		for(Item item: roomInv) {
 			if(item.getName().equals(itemToAdd.getName())){
@@ -248,7 +257,9 @@ public class FakeDatabaseTest {
 
 	@Test
 	public void testChangeCanBePickedUp() {
-		assertTrue(db.changeCanBePickedUp(5, "Jar of Cat Hairs", true) == true);
+		assertFalse(db.findItemByNameAndIDInRoom("Jar of Cat Hairs", user.getRoom().getRoomID()).getCanBePickedUp());
+		db.changeCanBePickedUp(5, "Jar of Cat Hairs", true);
+		assertTrue(db.findItemByNameAndIDInRoom("Jar of Cat Hairs", user.getRoom().getRoomID()).getCanBePickedUp());
 	}	
 
 
@@ -280,7 +291,7 @@ public class FakeDatabaseTest {
 	
 	
 	@Test
-	public void testFindRoomIDByName() {
+	public void testFindRoomIDByUsername() {
 		assertTrue(db.findRoomIDByUsername("Screamer") ==  5);
 		System.out.println("ID = " + db.findRoomIDByUsername("Screamer"));
 	}
@@ -298,27 +309,45 @@ public class FakeDatabaseTest {
 	
 	@Test
 	public void testGetCanBePickedUp() {
-		assertTrue(db.getCanBePickedUp(5, "Jar of Cat Hairs") == false);
+		assertFalse(db.getCanBePickedUp(5, "Jar of Cat Hairs"));
 	}
+	
 	@Test
 	public void testGetUsedItemsByTaskID() {
-		
+		List<Item> items = db.getUsedItemsByTaskId(0);
+		assertTrue(items.size() == 0);
 	}
 	
-	@Test public void testChangeObjectiveIsStarted() {
-		assertTrue(db.changeObjectiveIsStarted(2, true));
+	@Test 
+	public void testChangeObjectiveIsStarted() {
+		Objective objective = db.getObjectiveByObjectiveID(1);
+		assertTrue(objective.getIsStarted());
+		db.changeObjectiveIsStarted(1, false);
+		assertFalse(db.getObjectiveByObjectiveID(1).getIsStarted());
 	}
 	
-	@Test public void testChangeObjectiveIsComplete() {
-		assertTrue(db.changeObjectiveIsComplete(2, true));
+	@Test 
+	public void testChangeObjectiveIsComplete() {
+		Objective objective = db.getObjectiveByObjectiveID(1);
+		assertTrue(objective.getIsComplete());
+		db.changeObjectiveIsComplete(1, false);
+		assertFalse(db.getObjectiveByObjectiveID(1).getIsComplete());
 	}
 	
-	@Test public void testChangeTaskIsStarted() {
-		assertTrue(db.changeTaskIsStarted(3, true));
+	@Test 
+	public void testChangeTaskIsStarted() {
+		Task task = db.getTaskByTaskID(1);
+		assertTrue(task.getIsStarted());
+		db.changeTaskIsStarted(1, false);
+		assertFalse(db.getTaskByTaskID(1).getIsStarted());
 	}
 	
-	@Test public void testChangeTaskIsComplete() {
-		assertTrue(db.changeTaskIsComplete(3, true));
+	@Test 
+	public void testChangeTaskIsComplete() {
+		Task task = db.getTaskByTaskID(1);
+		assertTrue(task.getIsComplete());
+		db.changeTaskIsComplete(1, false);
+		assertFalse(db.getTaskByTaskID(1).getIsComplete());
 	}
 	
 	@Test
@@ -330,19 +359,67 @@ public class FakeDatabaseTest {
 	}
 	
 	@Test
-	public void getObjectivesByRoomID() {
+	public void testGetObjectivesByRoomID() {
 		assertTrue(db.getObjectivesByRoomID(5).size()==2);
 	}
 	
 	@Test
-	public void getTaskIDByNameAndObjectiveID() {
+	public void testGetTaskIDByNameAndObjectiveID() {
 		assertTrue(db.getTaskIDByNameAndObjectiveID("Cat", 1) == 2);
 	}
 	
 	@Test
-	public void addItemToTask() {
+	public void testAddItemToTask() {
 		Item itemToAdd = new Item("testItem", false, 0, 0, 0);
-		assertTrue(db.addItemToTask(itemToAdd, 1));
+		db.addItemToTask(itemToAdd, 1);
+		List<Item> addedItem = db.getUsedItemsByTaskId(1);
+		Boolean found = false;
+		for(Item i : addedItem) {
+			if(i.getName().equals("testItem")) {
+				found = true;
+			}
+		}
+		assertTrue(found);
 	}
 	
+	@Test
+	public void testGetObjectiveByObjectiveID() {
+		assertTrue(db.getObjectiveByObjectiveID(1).getIsStarted() == true);
+		assertTrue(db.getObjectiveByObjectiveID(1).getIsComplete() == true);
+	}
+	
+	@Test
+	public void testGetTaskByTaskID() {
+		assertTrue(db.getTaskByTaskID(1).getName().equals("PotionMachine"));
+		assertTrue(db.getTaskByTaskID(1).getIsStarted() == true);
+		assertTrue(db.getTaskByTaskID(1).getIsComplete() == true);
+	}
+	
+	@Test
+	public void testAddObjectiveToRoom() {
+		Objective newObj = new Objective();
+		int objs = db.getObjectivesByRoomID(user.getRoom().getRoomID()).size();
+		db.addObjectiveToRoom(newObj, user.getRoom().getRoomID());
+		assertTrue(db.getObjectivesByRoomID(user.getRoom().getRoomID()).size() == objs + 1);
+	}
+	
+	@Test
+	public void testAddTaskToObjective() {
+		Task newTask = new Task();
+		newTask.setName("testTask");
+		int tasks = db.getTasksByObjID(1).size();
+		db.addTaskToObjective(newTask, 1);
+		assertTrue(db.getTasksByObjID(1).size() == tasks + 1);
+	}
+	
+	@Test
+	public void testFindRoomInventoryByID() {
+		List<Item> items = db.findRoomInventoryByID(user.getUserID());
+		assertTrue(items.get(0).getName().equals("Shelf"));
+	}
+	
+	@Test
+	public void testRemoveItemFromUsedItems() {
+		// TODO: Add usedItems to CSV for testing.
+	}
 }

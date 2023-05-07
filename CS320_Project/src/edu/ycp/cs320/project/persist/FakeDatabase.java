@@ -402,13 +402,28 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public boolean addObjectiveToRoom(Objective obj, int roomID) {
-		// TODO Auto-generated method stub
-		return false;
+		List<Objective> objs = roomList.get(roomID - 1).getObjectives();
+		objs.add(obj);
+		roomList.get(roomID - 1).setObjectives(objs);
+		return true;
 	}
 
 	@Override
 	public boolean addTaskToObjective(Task task, int objectiveID) {
-		// TODO Auto-generated method stub
+		for(int i = 0; i < roomList.size();i++) {
+			for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
+				if(roomList.get(i).getObjectives().get(j).getObjectiveID() == objectiveID) {
+					List<Objective> objs = roomList.get(i).getObjectives();
+					Objective obj = roomList.get(i).getObjectives().get(j);
+					List<Task> tasks = obj.getTasks();
+					tasks.add(task);
+					obj.setTasks(tasks);
+					objs.set(j, obj);
+					roomList.get(i).setObjectives(objs);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
@@ -490,29 +505,23 @@ public class FakeDatabase implements IDatabase {
 	}
 	@Override
 	public Boolean changeTaskIsComplete(int taskID, Boolean desiredResult) {
-		Boolean result = false;
 		for(int i = 0; i < roomList.size();i++) {
 			for(int j = 0; j < roomList.get(i).getObjectives().size();j++) {
 				for(int r = 0; r < roomList.get(i).getObjectives().get(j).getTasks().size();r++) {
 					if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getTaskID() == taskID) {
-
 						Task currentTask = roomList.get(i).getObjectives().get(j).getTasks().get(r);
+						System.out.println("Changing task: " + currentTask.getName());
 						//change isComplete
-						currentTask.setIsStarted(desiredResult);
+						currentTask.setIsComplete(desiredResult);
 						//set the result in roomlist
 						roomList.get(i).getObjectives().get(j).getTasks().set(r, currentTask);
-						//check if it is correct
-						if(i != -1 && j != -1 && r != -1) {
-							if(roomList.get(i).getObjectives().get(j).getTasks().get(r).getIsStarted() == desiredResult);
-								result = true;
-						}	
+						return true;
 					}
 				}
 			}
 		}
-			
-		
-		return result;
+
+		return false;
 	}
 	
 	
@@ -544,7 +553,7 @@ public class FakeDatabase implements IDatabase {
 		}
 
 	@Override
-	public List<Item> getRoomInventoryByID(int roomID) {
+	public List<Item> findRoomInventoryByID(int roomID) {
 		// TODO Auto-generated method stub
 		List<Item> result = new ArrayList<Item>();
 		for(Room room : roomList) {
@@ -579,6 +588,8 @@ public class FakeDatabase implements IDatabase {
 						}else if(task.getName().equals("Puzzle")) {
 							Puzzle newTask = new Puzzle(task);
 							result.add(newTask);
+						}else {
+							result.add(task);
 						}
 					}
 				}
@@ -613,6 +624,33 @@ public class FakeDatabase implements IDatabase {
 			}
 		}
 		return -1;
+	}
+
+	@Override
+	public Objective getObjectiveByObjectiveID(int objectiveID) {
+		for(int i=0; i < roomList.size(); i++) {
+			for(int j=0; j < roomList.get(i).getObjectives().size(); j++) {
+				if(roomList.get(i).getObjectives().get(j).getObjectiveID() == objectiveID) {
+					return roomList.get(i).getObjectives().get(j);
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Task getTaskByTaskID(int taskID) {
+		for(int i=0; i < roomList.size(); i++) {
+			for(int j=0; j < roomList.get(i).getObjectives().size(); j++) {
+				for(int k=0; k < roomList.get(i).getObjectives().get(j).getTasks().size(); k++) {
+					if(roomList.get(i).getObjectives().get(j).getTasks().get(k).getTaskID() == taskID) {
+						System.out.println("Found Task: " + roomList.get(i).getObjectives().get(j).getTasks().get(k).getName());
+						return roomList.get(i).getObjectives().get(j).getTasks().get(k);
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 

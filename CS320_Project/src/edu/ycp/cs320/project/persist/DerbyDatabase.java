@@ -433,6 +433,7 @@ public class DerbyDatabase implements IDatabase {
 						
 					resultSet = stmt2.executeQuery();
 					
+					
 					while (resultSet.next()) {
 						success = true;
 						// create new item object
@@ -528,7 +529,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				ResultSet resultSet = null;
 				List<Item> currentItems = new ArrayList<Item>();
-				currentItems = getRoomInventoryByID(roomID);
+				currentItems = findRoomInventoryByID(roomID);
 				for(Item roomItem : currentItems) {
 					if(item.getName().equals(roomItem.getName())) {
 						return false;
@@ -598,7 +599,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				ResultSet resultSet = null;
 				List<Item> currentItems = new ArrayList<Item>();
-				currentItems = getRoomInventoryByID(roomID);
+				currentItems = findRoomInventoryByID(roomID);
 				Boolean itemExistsInRoom = false;
 				for(Item roomItem : currentItems) {
 					if(item.getName().equals(roomItem.getName())) {
@@ -863,7 +864,7 @@ public class DerbyDatabase implements IDatabase {
 						Room room = new Room();
 						loadRoom(room, resultSet, 1);
 						// load inventory objects
-						room.setItems(getRoomInventoryByID(room.getRoomID()));
+						room.setItems(findRoomInventoryByID(room.getRoomID()));
 						result = room;
 					}
 					
@@ -929,7 +930,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	@Override
-	public List<Item> getRoomInventoryByID(int roomID) {
+	public List<Item> findRoomInventoryByID(int roomID) {
 		return executeTransaction(new Transaction<List<Item>>() {
 			@Override
 			public List<Item> execute(Connection conn) throws SQLException {
@@ -2117,6 +2118,8 @@ public class DerbyDatabase implements IDatabase {
 						}else if(task.getName().equals("Puzzle")) {
 							Puzzle newTask = new Puzzle(task);
 							result.add(newTask);
+						}else {
+							result.add(task);
 						}
 					}
 					
@@ -2227,6 +2230,98 @@ public class DerbyDatabase implements IDatabase {
 				}
 			
 		
+			}
+		});
+	}
+
+	@Override
+	public Objective getObjectiveByObjectiveID(int objectiveID) {
+		return executeTransaction(new Transaction<Objective>() {
+			@Override
+			public Objective execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select objectives.* " +
+							"  from objectives " +
+							" where objectives.objective_id = ? "
+					);
+					stmt.setInt(1, objectiveID);
+
+					
+					Objective result = new Objective();
+					Boolean found = false;
+					
+					resultSet = stmt.executeQuery();
+					
+
+					
+					while (resultSet.next()) {
+						loadObjective(result, resultSet, 1);
+						found = true;
+					}
+					
+					// check if the user was found
+					if (found) {
+						System.out.println("<No objective id was found for id: <" + objectiveID + ">");
+						return result;
+					} else {
+						return null;
+					}
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
+	}
+
+	@Override
+	public Task getTaskByTaskID(int taskID) {
+		return executeTransaction(new Transaction<Task>() {
+			@Override
+			public Task execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select tasks.* " +
+							"  from tasks " +
+							" where tasks.task_id = ? "
+					);
+					stmt.setInt(1, taskID);
+
+					
+					Task result = new Task();
+					Boolean found = false;
+					
+					resultSet = stmt.executeQuery();
+					
+
+					
+					while (resultSet.next()) {
+						loadTask(result, resultSet, 1);
+						found = true;
+					}
+					
+					// check if the user was found
+					if (found) {
+						System.out.println("<No task id was found for id: <" + taskID + ">");
+						return result;
+					} else {
+						return null;
+					}
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
 			}
 		});
 	}

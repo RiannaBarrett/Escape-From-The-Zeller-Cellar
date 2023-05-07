@@ -37,7 +37,7 @@ public interface IDatabase {
 
 	public String useMatches(Item matches, Item selected, User user);
 
-	public List<Item> getRoomInventoryByID(int roomID);
+	public List<Item> findRoomInventoryByID(int roomID);
 	
 	public int findUserIDByName(String name);
 
@@ -76,5 +76,9 @@ public interface IDatabase {
 	public List<Objective> getObjectivesByRoomID(int roomID);
 
 	public int getTaskIDByNameAndObjectiveID(String taskName, int objectiveID);
+	
+	public Objective getObjectiveByObjectiveID(int objectiveID);
+	
+	public Task getTaskByTaskID(int taskID);
 
 }
