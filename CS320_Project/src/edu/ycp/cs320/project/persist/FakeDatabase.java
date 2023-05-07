@@ -579,6 +579,9 @@ public class FakeDatabase implements IDatabase {
 						}else if(task.getName().equals("Puzzle")) {
 							Puzzle newTask = new Puzzle(task);
 							result.add(newTask);
+						}else if(task.getName().equals("Window")) {
+							Window newTask = new Window(task);
+							result.add(newTask);
 						}
 					}
 				}

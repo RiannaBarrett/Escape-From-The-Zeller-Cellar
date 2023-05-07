@@ -254,6 +254,15 @@ public class MainPageControllerTest {
 	}
 	
 	@Test
+	public void testUseHammer() {
+		String username = "potionTester";
+		controller.PopulateModel(username);
+		assertTrue(controller.useHammer("Cat tree", controller.getModel().getUser().getUserID()).equals("Nothing happened"));
+		assertTrue(controller.useHammer("Fire Alarm", controller.getModel().getUser().getUserID()).equals("The Fire alarm broke and you found a key"));
+
+	}
+	
+	@Test
 	public void testGetCurrentObjective() {
 
 		List<Objective> objectives = new ArrayList<Objective>();

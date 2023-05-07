@@ -158,6 +158,8 @@ public class MainPageController {
 			//TODO: call function to use hammer. If used on fire alarm drop a key
 		}else if(item.getName().equals("Lit Candle") && selected.getName().equals("Fire Alarm")) {
 			message = "Weird. The fire alarm doesn't go off";
+		}else if(item.getName().equals("Hammer")) {
+			message = useHammer(selected.getName(), userID);
 		}
 		return message;
 	}
@@ -217,6 +219,32 @@ public class MainPageController {
 			message = "Item was placed in cauldron";
 		}
 		return message;
+	}
+	
+	public String useHammer(String selectedName, int userID) {
+		if(selectedName.equals("Fire Alarm")) {
+			int roomID = db.findRoomIDByUserID(userID);
+			Item itemToRemove = db.findItemByNameAndIDInRoom("Fire Alarm", roomID);
+			db.removeItemFromRoom(itemToRemove, roomID);
+			itemToRemove = db.findItemByNameAndIDInInv("Hammer", userID);
+			db.removeItemFromInventory(itemToRemove, userID);
+			db.addItemToInventory(new Item("Key", true, 0,0,0), userID);
+			return "The Fire alarm broke and you found a key";
+		}
+		return "Nothing happened";
+	}
+	
+	public String useKey(String selectedName, int userID) {
+		if(selectedName.equals("Window")) {
+			int roomID = db.findRoomIDByUserID(userID);
+			Item itemToRemove = db.findItemByNameAndIDInRoom("Window", roomID);
+			db.removeItemFromRoom(itemToRemove, roomID);
+			itemToRemove = db.findItemByNameAndIDInInv("Key", userID);
+			db.removeItemFromInventory(itemToRemove, userID);
+
+			return "You used the key to escape";
+		}
+		return "Nothing happened";
 	}
 
 	public String getSelectedMessage(String itemName, int userID, int objectiveID) {
