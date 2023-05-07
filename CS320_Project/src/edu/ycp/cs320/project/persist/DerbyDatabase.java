@@ -1699,8 +1699,8 @@ public class DerbyDatabase implements IDatabase {
 						
 					resultSet2 = stmt2.executeQuery();
 					int result = -1;
-					while (resultSet.next()) {
-						result = resultSet.getInt(1);
+					while (resultSet2.next()) {
+						result = resultSet2.getInt(1);
 					}
 					
 					return result;

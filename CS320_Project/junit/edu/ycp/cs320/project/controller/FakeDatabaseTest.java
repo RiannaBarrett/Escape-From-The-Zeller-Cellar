@@ -292,8 +292,8 @@ public class FakeDatabaseTest {
 	
 	@Test
 	public void testFindRoomIDByUsername() {
-		assertTrue(db.findRoomIDByUsername("Screamer") ==  5);
 		System.out.println("ID = " + db.findRoomIDByUsername("Screamer"));
+		assertTrue(db.findRoomIDByUsername("Screamer") ==  5);
 	}
 	@Test
 	public void testFindRoomIDByUserID() {
