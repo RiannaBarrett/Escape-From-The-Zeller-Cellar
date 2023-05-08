@@ -39,24 +39,18 @@ public class LoginServlet extends HttpServlet {
 		
 		//if submit button was clicked
 	if(req.getParameter("login") != null) {
-		
-				validLogin = controller.validateLogin(username, password);
-				if(!validLogin) {
-			
-					errorMessage = "Invalid username or Password";
-					req.setAttribute("errorMessage", errorMessage);
-					req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
-					
-				}else {
-					req.getSession().setAttribute("user", username);
+			validLogin = controller.validateLogin(username, password);
+			if(!validLogin) {
+				errorMessage = "Invalid username or Password";
+				req.setAttribute("errorMessage", errorMessage);
+				req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+				
+			}else {
+				req.getSession().setAttribute("user", username);
 
-					//go to start game page
-					resp.sendRedirect(req.getContextPath() + "/start_game");
-				}
-			
-	
-			
+				//go to start game page
+				resp.sendRedirect(req.getContextPath() + "/start_game");
+			}
 		}
-		
 	}
 }

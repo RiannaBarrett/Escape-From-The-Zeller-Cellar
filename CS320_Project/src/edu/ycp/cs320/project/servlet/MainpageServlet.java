@@ -86,8 +86,7 @@ public class MainpageServlet extends HttpServlet {
 		if(req.getParameter("logout") != null) {
 			System.out.println("Clicked logout");
 			req.getSession().setAttribute("user", null);
-			resp.sendRedirect
-			(req.getContextPath() + "/login");
+			resp.sendRedirect(req.getContextPath() + "/login");
 		}
 		
 		//create list for items in the room
@@ -175,6 +174,14 @@ public class MainpageServlet extends HttpServlet {
 			controller.moveUserDown();
 			
 		}
+		
+		String code = req.getParameter("comicBookCode");
+		if(code!=null) {
+	        System.out.println("Comic code entered");
+	        req.setAttribute("comicBookCode", code);
+	    }
+		
+
 		//check if items in room were selected
 		for(int i = 0; i <= model.getUser().getRoom().getItems().size() - 1; i++) {
 			String itemName = model.getUser().getRoom().getItems().get(i).getName();
@@ -210,66 +217,67 @@ public class MainpageServlet extends HttpServlet {
 		controller.PopulateModel(user);	
 		
 		//check what the current position is and set background image
-				position = model.getUser().getRoom().getUserPosition();
-				
-				
-				//tells the jsp which image to use
-				req.setAttribute("ViewNumber", position);
-				
+		position = model.getUser().getRoom().getUserPosition();
+		
+		
+		//tells the jsp which image to use
+		req.setAttribute("ViewNumber", position);
+		
 
-				
-				String taskMessage = "";
-				objectives = controller.getObjectivesFromUserID(userID);
-				//Get the objective the user is currently on
-				objective = controller.getCurrentObjective(objectives);
-				//verifies is all the tasks are marked as complete
-				controller.getTasksFromObjectiveID(objective.getObjectiveID());
-				for(Task task : controller.getTasksFromObjectiveID(objective.getObjectiveID())) {
-					if(!task.getIsComplete()) {
-						taskMessage = task.validateComplete(userID);
-						if(taskMessage != "") {
-							req.setAttribute("textOutput", taskMessage);
-						}
-					}
+		
+		String taskMessage = "";
+		objectives = controller.getObjectivesFromUserID(userID);
+		//Get the objective the user is currently on
+		objective = controller.getCurrentObjective(objectives);
+		//verifies is all the tasks are marked as complete
+		controller.getTasksFromObjectiveID(objective.getObjectiveID());
+		for(Task task : controller.getTasksFromObjectiveID(objective.getObjectiveID())) {
+			if(!task.getIsComplete()) {
+				taskMessage = task.validateComplete(userID);
+				if(taskMessage != "") {
+					req.setAttribute("textOutput", taskMessage);
 				}
-				//check if the current objective is complete by checking if all tasks are complete
-				if(objective!=null) {
-					Boolean objIsComplete = true;
-					List<Task> tasksToCheck = controller.getTasksFromObjectiveID(objective.getObjectiveID());
-					for(Task task : tasksToCheck) {
-						if(task.getIsComplete() == false) {
-							objIsComplete = false;
-						}
-					}
-					//if all the tasks are complete, mark the objective as complete and start the next one
-					if(objIsComplete) {
-						System.out.println("An objective was completed");
-						controller.markObjectiveAsComplete(objective.getObjectiveID());
-						controller.startNextObjective(controller.getObjectivesFromUserID(userID));
-					}
+			}
+		}
+		//check if the current objective is complete by checking if all tasks are complete
+		if(objective!=null) {
+			Boolean objIsComplete = true;
+			List<Task> tasksToCheck = controller.getTasksFromObjectiveID(objective.getObjectiveID());
+			for(Task task : tasksToCheck) {
+				if(task.getIsComplete() == false) {
+					objIsComplete = false;
 				}
-				
-				Boolean gameComplete = true;
-				//check if all objectives complete
-				for(Objective obj : controller.getObjectivesFromUserID(userID)) {
-					if(!obj.getIsComplete()) {
-						gameComplete = false;
-					}
-				}
-				
-				if(gameComplete) {
-					System.out.println("All objectives compelted");
-					//TODO: win condition achieved, do something
-				}
-				
-				//get the inventory and add the images of the items to the jsp
-				inventory = controller.findInventoryByName(user);
-				req.setAttribute("inventory", inventory);
-				
-				
-				//get the items in the user's current position
-				items = controller.findItemsInPosition(position, user);
-				req.setAttribute("items", items);
+			}
+			//if all the tasks are complete, mark the objective as complete and start the next one
+			if(objIsComplete) {
+				System.out.println("An objective was completed");
+				controller.markObjectiveAsComplete(objective.getObjectiveID());
+				controller.startNextObjective(controller.getObjectivesFromUserID(userID));
+			}
+		}
+		
+		Boolean gameComplete = true;
+		//check if all objectives complete
+		for(Objective obj : controller.getObjectivesFromUserID(userID)) {
+			if(!obj.getIsComplete()) {
+				gameComplete = false;
+			}
+		}
+		
+		if(gameComplete) {
+			System.out.println("All objectives compelted");
+			//TODO: win condition achieved, do something
+		}
+		
+		//get the inventory and add the images of the items to the jsp
+		inventory = controller.findInventoryByName(user);
+		req.setAttribute("inventory", inventory);
+		
+		
+		//get the items in the user's current position
+		items = controller.findItemsInPosition(position, user);
+		req.setAttribute("items", items);
+		
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
 
