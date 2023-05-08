@@ -144,8 +144,18 @@ input[type="submit"] {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  float: right;
   margin-right: 10px;
+}
+.pickup {
+    background-color: #7a7a7a;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    top:300px;
+    left:87%;
+    margin-right: 10px;
+    position:absolute;
 }
 button[type="button"] {
   background-color: #7a7a7a;
@@ -168,30 +178,23 @@ button[type="button"] {
 }
 .right{
 	transform: rotate(180deg);
-	top: 8%;
+	top: 38%;
   	left: 90%;
 	}
 .left{
 	transform: rotate(0deg);
-	top: 8%;
+	top: 38%;
   	left: 86%;
 }
 .up{
 	transform: rotate(90deg);
-	top: 2%;
+	top: 33%;
   	left: 88%;
 }
 .down{
 	transform: rotate(270deg);
-	top: 14%;
+	top: 43%;
   	left: 88%;
-}
-
-  padding: 5px;
-  background-color: #ccc;
-  border: none;
-  font-size: 1em;
-  cursor: pointer;
 }
 
 .menu select:hover {
