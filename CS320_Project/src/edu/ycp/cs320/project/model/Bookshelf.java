@@ -25,6 +25,7 @@ public class Bookshelf extends Task {
 					items.get(3).getName().equals("Amazing Spiderman 300 Comic")) {
 				db.changeTaskIsComplete(super.getTaskID(), true);
 				//TODO: maybe drop a puzzle piece. Just do something to change the room to show that they are correct
+				db.addItemToRoom(new Item("Puzzle Piece 4", true, 123,550, 0), db.findRoomIDByUserID(userID));
 				return "You heard a strange sounds. It seems like something appeared in the room";
 			}else {
 				//let the player know they did the task incorrectly and remove the items so they can try again
