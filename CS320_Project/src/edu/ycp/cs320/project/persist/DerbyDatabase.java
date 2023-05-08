@@ -2465,8 +2465,6 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
 				}
-			
-		
 			}
 		});
 	}

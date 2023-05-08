@@ -76,6 +76,7 @@
 		var countdownInterval;
 		
 		function startCountdown() {
+			updateDisplay();
 			countdownInterval = setInterval(updateCountdown, 1000);
 		}
 	
@@ -88,13 +89,19 @@
 	    	document.getElementById("duration").value = timeLeft;
 	    	if (timeLeft < 0) {
 	      		clearInterval(countdownInterval);
-	      		alert("Game over!"); // show game over message
 	      		console.log("Redirecting to game over page...");
 	      		document.forms[0].action = "${pageContext.servletContext.contextPath}/game_over";
 	      		document.forms[0].submit();
 	    	} else if (timeLeft == 60) {
 	      		alert("Hurry up! You only have 60 seconds left!");
 	    	}
+	  	}
+	  	
+	  	function updateDisplay() {
+	  		var minutes = Math.floor(timeLeft / 60);
+	    	var seconds = timeLeft % 60;
+	    	var secondsDisplay = seconds < 10 ? "0" + seconds : seconds;
+	    	countdownElement.innerHTML = "Time left: " + minutes + ":" + secondsDisplay;
 	  	}
 
 		startCountdown();
