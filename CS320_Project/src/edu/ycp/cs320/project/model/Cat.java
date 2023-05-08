@@ -34,6 +34,8 @@ public class Cat extends Task {
 				
 			if(isFed && canTalk) {
 				db.changeTaskIsComplete(super.getTaskID(), true);
+				db.addItemToRoom(new Item("Puzzle Piece 2", true, 114,449, 0), roomID);
+
 			}
 			
 		}

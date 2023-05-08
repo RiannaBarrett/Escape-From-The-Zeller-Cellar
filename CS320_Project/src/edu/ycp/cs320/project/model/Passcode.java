@@ -20,6 +20,8 @@ public class Passcode extends Task {
 		Item comicStand = db.findItemByNameAndIDInRoom("Comic Stand", db.findRoomIDByUserID(userID));
 		if(comicStand!=null) {
 			db.changeTaskIsComplete(super.getTaskID(),true);
+			db.addItemToRoom(new Item("Puzzle Piece 3", true, 114,500, 0), db.findRoomIDByUserID(userID));
+
 		}
 		return "";
 	}

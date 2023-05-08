@@ -28,6 +28,7 @@ public class PotionMachine extends Task {
 				db.addItemToRoom(cauldron, roomID);
 				db.changeTaskIsComplete(super.getTaskID(), true);
 				db.changeCanBePickedUp(userID, "Empty Potion Bottle", true);
+				db.addItemToRoom(new Item("Puzzle Piece 1", true, 162,408, 0), roomID);
 				return "You created a potion";
 			}else {
 
