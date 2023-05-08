@@ -654,6 +654,19 @@ public class FakeDatabase implements IDatabase {
 		}
 		return null;
 	}
+
+	@Override
+	public boolean resetUser(User user) {
+		user.setRoom(new Room());
+		roomList.set(user.getRoom().getRoomID(), new Room());
+		return true;
+	}
+
+	@Override
+	public boolean updateTime(int userID, int time) {
+		userList.get(userID - 1).setTime(time);
+		return true;
+	}
 	
 
 }

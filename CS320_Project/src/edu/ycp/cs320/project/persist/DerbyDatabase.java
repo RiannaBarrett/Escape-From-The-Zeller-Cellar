@@ -2342,6 +2342,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement deleteObjectives = null;
 				PreparedStatement deleteRoomInv = null;
 				PreparedStatement deleteUserInv = null;
+				PreparedStatement updateTime = null;
 				ResultSet resultSet = null;
 				try {
 					System.out.println("Resetting user: " + user.getUsername());
@@ -2397,7 +2398,15 @@ public class DerbyDatabase implements IDatabase {
 					System.out.println("Deleting user inventory...");
 					deleteUserInv.execute();
 			
-					
+					updateTime = conn.prepareStatement(
+							"update users " +
+							"  set users.time = ? " +
+							" where users.user_id = ? "
+							);
+					updateTime.setInt(1, 300);
+					updateTime.setInt(2, user.getUserID());
+					System.out.println("Resetting Time...");
+					updateTime.execute();
 					return true;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
@@ -2431,5 +2440,33 @@ public class DerbyDatabase implements IDatabase {
 			addObjectiveToRoom(objective, user.getRoom().getRoomID());
 		}
 		return result;
+	}
+
+	@Override
+	public boolean updateTime(int userID, int time) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"update users " +
+							"  set users.time = ? " +
+							" where users.user_id = ? "
+					);
+					stmt.setInt(1, time);
+					stmt.setInt(2, userID);
+					stmt.execute();
+					return true;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+		
+			}
+		});
 	}
 }

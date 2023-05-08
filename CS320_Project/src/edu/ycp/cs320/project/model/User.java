@@ -18,7 +18,7 @@ public class User {
 		this.inventory = createInitialItems();
 		this.room = new Room();
 		this.inventoryLimit = 10;
-		this.time = 0;
+		this.time = 300;
 	}
 	public User(String username, String password) {
 		this.userID = 0;
@@ -27,7 +27,7 @@ public class User {
 		this.inventory = createInitialItems();
 		this.room = new Room();
 		this.inventoryLimit = 10;
-		this.time = 0;
+		this.time = 300;
 	}
 	
 	public User(int userID, String username, String password, List<Item> inventory, Room room) {
@@ -36,7 +36,8 @@ public class User {
 		this.password = password;
 		this.inventory = inventory;
 		this.room = room;
-		this.inventoryLimit = 5;
+		this.inventoryLimit = 10;
+		this.time = 300;
 	}
 	
 	public int getUserID() {

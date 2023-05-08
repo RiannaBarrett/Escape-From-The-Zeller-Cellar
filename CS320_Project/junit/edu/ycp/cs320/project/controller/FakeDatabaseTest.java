@@ -422,4 +422,21 @@ public class FakeDatabaseTest {
 	public void testRemoveItemFromUsedItems() {
 		// TODO: Add usedItems to CSV for testing.
 	}
+	
+	@Test
+	public void testResetUser() {
+		User user = db.findUserByName("tester1");
+		int itemsInRoom = db.findRoomInventoryByID(user.getRoom().getRoomID()).size();
+		int objectiveCount = db.getObjectivesByRoomID(user.getRoom().getRoomID()).size();
+		db.resetUser(user);
+		assertTrue(db.findRoomInventoryByID(user.getRoom().getRoomID()).size() != itemsInRoom);
+		assertTrue(db.getObjectivesByRoomID(user.getRoom().getRoomID()).size() != objectiveCount);
+	}
+	
+	@Test
+	public void testUpdateTime() {
+		User user = db.findUserByName("tester1");
+		db.updateTime(user.getUserID(), 150);
+		assertTrue(db.findUserByName("tester1").getTime() == 150);
+	}
 }

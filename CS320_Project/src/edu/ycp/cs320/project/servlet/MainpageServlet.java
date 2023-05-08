@@ -61,7 +61,7 @@ public class MainpageServlet extends HttpServlet {
 		
 		//tells the jsp which image to use
 		req.setAttribute("ViewNumber", position);
-		
+		req.setAttribute("duration", model.getUser().getTime());
 		req.getRequestDispatcher("/_view/main_page.jsp").forward(req, resp);
 	}
 	
@@ -92,9 +92,6 @@ public class MainpageServlet extends HttpServlet {
 		
 		//create list for items in the room
 		List<Item> items = new ArrayList<Item>();
-		
-		
-		
 		
 		// Attempt to pass the model back and forth for testing?
 		MainPage model = new MainPage();
@@ -129,6 +126,10 @@ public class MainpageServlet extends HttpServlet {
 		req.setAttribute("items", items);
 		int position = 0;
 		
+		// Time stuff
+		int time = Integer.parseInt(req.getParameter("duration"));
+		controller.updateTime(model.getUser().getUserID(), time);
+		req.setAttribute("duration", time);
 		
 		//if pickup button was pressed
 		if(req.getParameter("pickUp")!=null) {

@@ -289,11 +289,11 @@ public class MainPageControllerTest {
 	}
 	@Test
 	public void testVerifyPasscode() {
+		// Tester1 doesn't have the item stand lol
 		controller.PopulateModel("tester1");
 		System.out.println(controller.getModel().getUser().getUsername() + " verify pass");
 		String code = "6651";
 		controller.verifyPasscode(code, controller.getModel().getUser());
-		
 	}
 	
 }

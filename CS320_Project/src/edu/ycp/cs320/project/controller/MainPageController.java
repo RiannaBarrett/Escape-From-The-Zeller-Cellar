@@ -403,4 +403,8 @@ public class MainPageController {
 		int roomID = db.findRoomIDByUserID(userID);
 		return db.getObjectivesByRoomID(roomID);
 	}
+	
+	public void updateTime(int userID, int time) {
+		db.updateTime(userID, time);
+	}
 }
