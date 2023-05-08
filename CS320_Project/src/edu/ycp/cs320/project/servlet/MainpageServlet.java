@@ -282,7 +282,8 @@ public class MainpageServlet extends HttpServlet {
 		
 		if(gameComplete) {
 			System.out.println("All objectives compelted");
-			//TODO: win condition achieved, do something
+			req.getRequestDispatcher("/_view/win_game.jsp").forward(req, resp);
+
 		}
 		
 		//get the inventory and add the images of the items to the jsp

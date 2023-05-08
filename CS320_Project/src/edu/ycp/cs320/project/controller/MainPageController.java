@@ -153,14 +153,28 @@ public class MainPageController {
 			message = useFullPotionBottle(selected.getName(), userID, objectiveID);
 		}else if(selected.getName().equals("Empty Cauldron")){
 			message = usePotionIngredient(item.getName(), userID, objectiveID);
-		}else if(selected.getName().equals("Puzzle board")) {
-			//TODO: call function to check if it is correct
 		}else if(item.getName().equals("Hammer")) {
-			//TODO: call function to use hammer. If used on fire alarm drop a key
+			message = useHammer(selected.getName(), userID);
 		}else if(item.getName().equals("Lit Candle") && selected.getName().equals("Fire Alarm")) {
 			message = "Weird. The fire alarm doesn't go off";
 		}else if(item.getName().equals("Hammer")) {
 			message = useHammer(selected.getName(), userID);
+		}else if(item.getName().equals("Puzzle Piece 1") || item.getName().equals("Puzzle Piece 2") ||
+				item.getName().equals("Puzzle Piece 3") || item.getName().equals("Puzzle Piece 4") && selected.getName().equals("Puzzle Board")) {
+			message = usePuzzlePiece(item.getName(), userID, objectiveID);
+		}else if(item.getName().equals("Key")) {
+			message = useKey(selected.getName(), userID);
+		}
+		return message;
+	}
+	
+	public String usePuzzlePiece(String itemName, int userID, int objectiveID) {
+		String message = "You do not have all of the pieces yet. It's best to come back later";
+		Item itemToAdd = db.findItemByNameAndIDInInv(itemName, userID);
+		db.removeItemFromInventory(itemToAdd, userID);
+		int taskID = db.getTaskIDByNameAndObjectiveID("Puzzle", objectiveID);
+		if(db.addItemToTask(itemToAdd, taskID)) {
+			message = "Piece was added to the board";
 		}
 		return message;
 	}
@@ -223,7 +237,9 @@ public class MainPageController {
 	}
 	
 	public String useHammer(String selectedName, int userID) {
+		System.out.println("Using hammer");
 		if(selectedName.equals("Fire Alarm")) {
+			System.out.println("Using hammer...");
 			int roomID = db.findRoomIDByUserID(userID);
 			Item itemToRemove = db.findItemByNameAndIDInRoom("Fire Alarm", roomID);
 			db.removeItemFromRoom(itemToRemove, roomID);
@@ -268,7 +284,7 @@ public class MainPageController {
 			List<Item> usedItems = db.getUsedItemsByTaskId(db.getTaskIDByNameAndObjectiveID("Cat", objectiveID));
 			int taskID = db.getTaskIDByNameAndObjectiveID("Cat", objectiveID);
 			if(taskID == -1) {
-				return "Messy: [insert hint]";
+				return "Messy: The password? I think it was the last four digits of some phone number";
 			}
 			Boolean isFed = false;
 			Boolean canTalk = false;
@@ -292,7 +308,7 @@ public class MainPageController {
 				message = "Messy: The password? The password is 1234.";
 			}else {
 				//if messy can talk and has been fed he will give the player a hint
-				message = "Messy: [insert hint]";
+				message = "Messy: The password? I think it was the last four digits of some phone number";
 			}
 		}else if(itemName.equals("Comic Stand")) {
 			message = "You found a Comic Stand that displays Zeller's favorite comics";

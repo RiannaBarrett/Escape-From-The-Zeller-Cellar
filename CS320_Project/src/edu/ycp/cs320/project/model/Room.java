@@ -97,6 +97,7 @@ public class Room {
 		iList.add(new Item("Locked Comic Stand",false, -1018,-309, 1));
 		iList.add(new Item("Bag of Meow Mix",true, -108,225, 0));
 		iList.add(new Item("Window",false,-202,292,0));
+		iList.add(new Item("Puzzle Board", false, -124, 530, 2));
 		
 		/*these are items that will be added to the comic stand as individual items once
 		 * the comic book stand is unlocked. I am putting them here for now to test

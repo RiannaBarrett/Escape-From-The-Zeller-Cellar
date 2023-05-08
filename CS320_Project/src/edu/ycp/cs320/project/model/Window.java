@@ -17,10 +17,11 @@ public class Window extends Task {
 
 	@Override	
 	public String validateComplete(int userID) {
-		System.out.println("Hammer Task being checked");
+		System.out.println("Window Task being checked");
 		//if the fire alarm is not in the room, the task is complete
 		Item window = db.findItemByNameAndIDInRoom("Window", db.findRoomIDByUserID(userID));
-		if(window==null) {
+		if(!window.getName().equals("Window")) {
+			System.out.println("window is null");
 			db.changeTaskIsComplete(super.getTaskID(),true);
 		}
 		return "";
