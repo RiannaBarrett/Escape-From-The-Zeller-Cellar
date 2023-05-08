@@ -286,6 +286,11 @@ public class MainPageController {
 			if(taskID == -1) {
 				return "Messy: The password? I think it was the last four digits of some phone number";
 			}
+			//TODO: figure out why this is not firing
+			taskID = db.getTaskIDByNameAndObjectiveID("Bookshelf", objectiveID);
+			if(taskID != -1) {
+				return "Messy: I think the first comic had the X-Men. The seconds two are the same series, and the last one is Spiderman";
+			}
 			Boolean isFed = false;
 			Boolean canTalk = false;
 			for(Item item : usedItems) {

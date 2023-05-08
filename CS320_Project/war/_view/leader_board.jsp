@@ -15,8 +15,8 @@
 <h1 class="leaderBoard">Leader Board</h1>
 <table>
 <tr>
-<td>Username</td>
-<td>Time Remaining</td>
+<td class="tableTitle">Username</td>
+<td class="tableTitle">Time Remaining (seconds)</td>
 </tr>
 
 <c:forEach items="${pairs}" var="pair">

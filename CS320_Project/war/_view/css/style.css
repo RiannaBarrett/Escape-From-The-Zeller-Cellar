@@ -329,15 +329,13 @@ table{
 border-style: solid;
 	border-color:white;
 		   border-size: 2px;
-}
-td{
-
-	 margin-left: auto;
+		   	 margin-left: auto;
 
   margin-right: auto;
-
+}
+td{
   color:white;
-
+    padding: 10px;
 }
 
 tr{
@@ -345,8 +343,12 @@ tr{
 		   border-style: solid;
 	 margin-left: auto;
   margin-right: auto;
-  padding: 5px;
+  padding: 10px;
 
+}
+
+.tableTitle {
+	font-size: 20px;
 }
 
 
