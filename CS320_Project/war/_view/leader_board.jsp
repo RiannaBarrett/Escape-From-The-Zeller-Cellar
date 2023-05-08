@@ -24,7 +24,7 @@
         <td>
          ${pair.getLeft()}
         </td>
-         <td>
+         <td style="text-align: center;">
          ${pair.getRight()}
         </td>
         </tr>
