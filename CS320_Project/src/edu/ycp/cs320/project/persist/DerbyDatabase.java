@@ -2505,11 +2505,12 @@ public class DerbyDatabase implements IDatabase {
 					resultSet = stmt.executeQuery();
 					
 					while (resultSet.next()) {
-						
+
 						// create new Item object
 						// retrieve attributes from resultSet starting with index 1
 						Pair<String, Integer> pair = new Pair<String, Integer>("", 0);
 						loadLeaderboard(pair, resultSet, 1);
+						System.out.println(pair.getLeft());
 						// load inventory objects
 						leaderboard.add(pair);
 					}
@@ -2530,6 +2531,7 @@ public class DerbyDatabase implements IDatabase {
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
+				System.out.println("Adding leaderboard for: " + user.getUsername());
 				try {
 					stmt = conn.prepareStatement(
 							"insert into leaderboard (user_id, username, time)" +

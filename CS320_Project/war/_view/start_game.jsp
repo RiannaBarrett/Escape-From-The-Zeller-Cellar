@@ -20,6 +20,7 @@
         </div>
         <nav>
           <ul>
+          	<li class="btn"><a href = "leader_board">Leader Board</a></li>
             <li class="btn"><a href ="main_page">Play</a></li>
           </ul>
         </nav>

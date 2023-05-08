@@ -38,6 +38,10 @@
     <servlet-name>StartGameServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.project.servlet.StartGameServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>LeaderboardServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.project.servlet.LeaderboardServlet</servlet-class>
+  </servlet>
   
   <!-- AJAX servlets. 
   <servlet>
@@ -81,6 +85,10 @@
   <servlet-mapping>
     <servlet-name>StartGameServlet</servlet-name>
     <url-pattern>/start_game</url-pattern>
+  </servlet-mapping>
+<servlet-mapping>
+    <servlet-name>LeaderboardServlet</servlet-name>
+    <url-pattern>/leader_board</url-pattern>
   </servlet-mapping>
   
   <!--  AJAX servlet mappings.

@@ -17,7 +17,14 @@ public class GameOverServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		System.out.println("Game Over Servlet: doGet");
-		
+		String user = (String) req.getSession().getAttribute("user");
+		if (user == null) {
+			System.out.println("   User: <" + user + "> not logged in or session timed out");
+			
+			// user is not logged in, or the session expired
+			resp.sendRedirect(req.getContextPath() + "/login");
+			return;
+		}
 		req.getRequestDispatcher("/_view/game_over.jsp").forward(req, resp);
 	}
 	

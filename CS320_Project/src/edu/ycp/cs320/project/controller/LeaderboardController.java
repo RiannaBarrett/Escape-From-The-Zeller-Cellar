@@ -5,30 +5,23 @@ import edu.ycp.cs320.project.persist.DatabaseProvider;
 import edu.ycp.cs320.project.persist.DerbyDatabase;
 import edu.ycp.cs320.project.persist.IDatabase;
 import edu.ycp.cs320.project.persist.FakeDatabase;
+import edu.ycp.cs320.project.model.Pair;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import edu.ycp.cs320.project.model.Objective;
 import edu.ycp.cs320.project.model.User;
 
-public class WinGameController {
+public class LeaderboardController {
 	private IDatabase db = null;
 	
-	public WinGameController() {
+	public LeaderboardController() {
 		DatabaseProvider.setInstance(new DerbyDatabase());
 		this.db = DatabaseProvider.getInstance();
 	}
 	
-	public void addLeaderboard(String username) {
-		User user = db.findUserByName(username);
-		db.addLeaderboard(user, user.getTime());
-	}
-	
-	public void resetUser(String username) {
-		User user = db.findUserByName(username);
-		for(Objective obj : user.getRoom().getObjectives()) {
-			obj.setTasks(db.getTasksByObjID(obj.getObjectiveID()));
-		}
-		db.resetUser(user);
+	public List<Pair<String, Integer>> getLeaderboard() {
+		return db.getLeaderboard();
 	}
 }

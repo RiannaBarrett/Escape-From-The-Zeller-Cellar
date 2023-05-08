@@ -133,6 +133,9 @@ public class MainpageServlet extends HttpServlet {
 		// Time Stuff
         int time = Integer.parseInt(req.getParameter("duration"));
         controller.updateTime(model.getUser().getUserID(), time);
+        if(time<=0) {
+        	resp.sendRedirect(req.getContextPath() + "/game_over");
+        }
         req.setAttribute("duration", time);
 		
 		
@@ -288,7 +291,8 @@ public class MainpageServlet extends HttpServlet {
 		
 		if(gameComplete) {
 			System.out.println("All objectives compelted");
-			req.getRequestDispatcher("/_view/win_game.jsp").forward(req, resp);
+        	resp.sendRedirect(req.getContextPath() + "/win_game");
+
 
 		}
 		

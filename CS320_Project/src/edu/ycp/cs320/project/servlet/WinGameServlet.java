@@ -18,7 +18,17 @@ public class WinGameServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		System.out.println("Win Game Servlet: doGet");
-		
+		String user = (String) req.getSession().getAttribute("user");
+		if (user == null) {
+			System.out.println("   User: <" + user + "> not logged in or session timed out");
+			
+			// user is not logged in, or the session expired
+			resp.sendRedirect(req.getContextPath() + "/login");
+			return;
+		}
+
+	    WinGameController controller = new WinGameController();
+	    controller.addLeaderboard(user);
 		req.getRequestDispatcher("/_view/win_game.jsp").forward(req, resp);
 	}
 	

@@ -201,6 +201,7 @@ body{
 nav ul li{
   list-style:none;
   display: inline-block;
+  margin-right: 20px;
 }
 nav ul li a{
 text-decoration: none;
@@ -316,4 +317,36 @@ nav ul li.btn:hover a{
   right:40px;
   text-align:right;
 }
+
+.leaderBoard{
+	color:white;
+	text-align: center;
+	}
+	
+table{
+
+  border-radius: 5px;
+border-style: solid;
+	border-color:white;
+		   border-size: 2px;
+}
+td{
+
+	 margin-left: auto;
+
+  margin-right: auto;
+
+  color:white;
+
+}
+
+tr{
+		   border-size: 2px;
+		   border-style: solid;
+	 margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
+
+}
+
 
