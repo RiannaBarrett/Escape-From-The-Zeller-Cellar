@@ -865,6 +865,7 @@ public class DerbyDatabase implements IDatabase {
 						loadRoom(room, resultSet, 1);
 						// load inventory objects
 						room.setItems(findRoomInventoryByID(room.getRoomID()));
+						room.setObjectives(getObjectivesByRoomID(room.getRoomID()));
 						result = room;
 					}
 					

@@ -18,7 +18,7 @@
         <div class="game-over">
         <h3>GAME OVER</h3>
           <p>YOU DID NOT ESCAPE ZELLER'S CELLAR</p>
-           <button class="button1"><a href="./main_page">START OVER</a></button>
+           <button name = "reset" class="button1"><a href="./main_page">START OVER</a></button>
         </div>
       </div>
       
