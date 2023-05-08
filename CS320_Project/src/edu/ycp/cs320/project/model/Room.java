@@ -102,16 +102,16 @@ public class Room {
 		 * the comic book stand is unlocked. I am putting them here for now to test
 		 * x and y values
 		 */
-		
-		iList.add(new Item("X-Men 1 Comic", false, 18, 698, 1));
-		iList.add(new Item("Avengers 1 Comic", false, 6, 782, 1));
-		iList.add(new Item("Avengers 4 Comic", false, 7, 867, 1));
-		iList.add(new Item("Superman 18 Comic", false, 90, 698, 1));
-		iList.add(new Item("Fantastic Four 48 Comic", false, 63, 783, 1));
-		iList.add(new Item("Fantastic Four 9 Comic", false, 70, 866, 1));
-		iList.add(new Item("X-Men 94 Comic", false, 128, 702, 1));
-		iList.add(new Item("Giant Size X-Men 1 Comic", false, 121, 788, 1));
-		iList.add(new Item("Amazing Spiderman 300 Comic", false, 131, 869, 1));
+//		
+//		iList.add(new Item("X-Men 1 Comic", false, 18, 698, 1));
+//		iList.add(new Item("Avengers 1 Comic", false, 6, 782, 1));
+//		iList.add(new Item("Avengers 4 Comic", false, 7, 867, 1));
+//		iList.add(new Item("Superman 18 Comic", false, 90, 698, 1));
+//		iList.add(new Item("Fantastic Four 48 Comic", false, 63, 783, 1));
+//		iList.add(new Item("Fantastic Four 9 Comic", false, 70, 866, 1));
+//		iList.add(new Item("X-Men 94 Comic", false, 128, 702, 1));
+//		iList.add(new Item("Giant Size X-Men 1 Comic", false, 121, 788, 1));
+//		iList.add(new Item("Amazing Spiderman 300 Comic", false, 131, 869, 1));
 
 		return iList;
 	}

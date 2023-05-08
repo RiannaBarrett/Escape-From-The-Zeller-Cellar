@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<form action="${pageContext.servletContext.contextPath}/main_page" method="post">
+<form action="${pageContext.servletContext.contextPath}/main_page" method="post" onkeydown="return event.key != 'Enter';">
     <div class="header">
          <div id="countdown"></div>
         <div class="title">
@@ -37,8 +37,8 @@
               	<p name = "textOutput">${textOutput}</p>
               	</div>
               	<c:if test="${selected == 'Locked Comic Stand'}">
-  					<input type="text" name="comicBookCode" placeholder="Enter code here" pattern="[0-9]">
-
+  					<input type="text" style="vertical-align: middle;" name="comicBookCode" placeholder="Enter code here" pattern="[0-9]+">
+					<input type="submit" style="vertical-align: middle;" name="Enter" value="Enter">
 				</c:if>
               	
                 <c:forEach items="${items}" var="item">

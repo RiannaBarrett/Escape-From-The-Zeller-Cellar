@@ -13,6 +13,7 @@ import edu.ycp.cs320.project.model.Item;
 import edu.ycp.cs320.project.model.MainPage;
 import edu.ycp.cs320.project.model.Objective;
 import edu.ycp.cs320.project.model.Task;
+import edu.ycp.cs320.project.controller.LoginController;
 import edu.ycp.cs320.project.controller.MainPageController;
 
 public class MainpageServlet extends HttpServlet {
@@ -210,6 +211,21 @@ public class MainpageServlet extends HttpServlet {
 					
 				}
 				
+			}
+		}
+		
+		String passcode = req.getParameter("comicBookCode");
+		System.out.println("Code input by User "+ passcode);
+		boolean validCode = false;
+		if(req.getParameter("Enter") != null) {
+			validCode = controller.verifyPasscode(passcode,controller.getModel().getUser());
+
+
+			System.out.println(validCode);
+			if(validCode) {
+				System.out.println("Correct Passcode");
+			}else {
+				System.out.println("Incorrect Passcode");
 			}
 		}
 		
