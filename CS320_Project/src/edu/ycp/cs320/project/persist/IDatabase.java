@@ -83,6 +83,10 @@ public interface IDatabase {
 	
 	public Task getTaskByTaskID(int taskID);
 	
-	public boolean updateTime(int userID, int time); 
+	public boolean updateTime(int userID, int time);
+
+	public List<Pair<String, Integer>> getLeaderboard();
+
+	Boolean addLeaderboard(User user, int time); 
 
 }

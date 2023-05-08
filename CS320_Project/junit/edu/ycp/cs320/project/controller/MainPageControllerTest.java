@@ -289,7 +289,7 @@ public class MainPageControllerTest {
 	}
 	@Test
 	public void testVerifyPasscode() {
-		controller.PopulateModel("tester1");
+		controller.PopulateModel("Screamer");
 		System.out.println(controller.getModel().getUser().getUsername() + " verify pass");
 		String code = "6651";
 		controller.verifyPasscode(code, controller.getModel().getUser());

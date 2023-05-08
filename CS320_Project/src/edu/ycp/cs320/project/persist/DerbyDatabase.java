@@ -1218,6 +1218,11 @@ public class DerbyDatabase implements IDatabase {
 		objective.setIsStarted(Boolean.parseBoolean(result.getString(index++)));
 		objective.setIsComplete(Boolean.parseBoolean(result.getString(index++)));
 	}
+	
+	private void loadLeaderboard(Pair<String, Integer> pair, ResultSet result, int index) throws SQLException {
+		pair.setLeft(result.getString(index++));
+		pair.setRight(result.getInt(index++));
+	}
 
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -1283,7 +1288,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt5 = null;
 				PreparedStatement stmt6 = null;
 				PreparedStatement stmt7 = null;
-
+				PreparedStatement stmt8 = null;
+				
 				try {
 					stmt1 = conn.prepareStatement(
 							"create table users (" +
@@ -1371,6 +1377,17 @@ public class DerbyDatabase implements IDatabase {
 									")"
 							);
 					stmt7.executeUpdate();
+					
+					stmt8 = conn.prepareStatement(
+							"create table leaderboard (" +
+									"	leader_id integer primary key " +
+									"		generated always as identity (start with 1, increment by 1), " +
+									"	user_id integer constraint fk_lead_userid references users(user_id), " +
+									"	username varchar(40)," +
+									"	time integer " +
+									")"
+							);
+					stmt8.executeUpdate();
 
 					return true;
 				} finally {
@@ -1381,6 +1398,8 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt5);
 					DBUtil.closeQuietly(stmt6);
 					DBUtil.closeQuietly(stmt7);
+					DBUtil.closeQuietly(stmt8);
+
 				}
 			}
 		});
@@ -2460,6 +2479,68 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(1, time);
 					stmt.setInt(2, userID);
 					stmt.execute();
+					return true;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public List<Pair<String, Integer>> getLeaderboard() {
+		return executeTransaction(new Transaction<List<Pair<String, Integer>>>() {
+			@Override
+			public List<Pair<String, Integer>> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				List<Pair<String, Integer>> leaderboard = new ArrayList<Pair<String, Integer>>();
+				try {
+					stmt = conn.prepareStatement(
+							"select leaderboard.username, leaderboard.time " +
+							" from leaderboard " +
+							"  order by leaderboard.time DESC "
+					);
+					resultSet = stmt.executeQuery();
+					
+					while (resultSet.next()) {
+						
+						// create new Item object
+						// retrieve attributes from resultSet starting with index 1
+						Pair<String, Integer> pair = new Pair<String, Integer>("", 0);
+						loadLeaderboard(pair, resultSet, 1);
+						// load inventory objects
+						leaderboard.add(pair);
+					}
+					
+					return leaderboard;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public Boolean addLeaderboard(User user, int time) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"insert into leaderboard (user_id, username, time)" +
+									" values (?,?,?) "
+					);
+					stmt.setInt(1, user.getUserID());
+					stmt.setString(2, user.getUsername());
+					stmt.setInt(3, time);
+					stmt.execute();
+					
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(resultSet);

@@ -13,10 +13,12 @@ public class FakeDatabase implements IDatabase {
 
 	private List<User> userList;
 	private List<Room> roomList;
+	private List<Pair<String, Integer>> leaderboard;
 
 	public FakeDatabase() {
 		userList = new ArrayList<User>();
 		roomList = new ArrayList<Room>();
+		leaderboard = new ArrayList<Pair<String, Integer>>();
 
 		// Add initial data
 		loadInitialData();
@@ -665,6 +667,18 @@ public class FakeDatabase implements IDatabase {
 	@Override
 	public boolean updateTime(int userID, int time) {
 		userList.get(userID - 1).setTime(time);
+		return true;
+	}
+
+	@Override
+	public List<Pair<String, Integer>> getLeaderboard() {
+		return leaderboard;
+	}
+
+	@Override
+	public Boolean addLeaderboard(User user, int time) {
+		Pair<String, Integer> pair = new Pair<String, Integer>(user.getUsername(), time);
+		leaderboard.add(pair);
 		return true;
 	}
 	

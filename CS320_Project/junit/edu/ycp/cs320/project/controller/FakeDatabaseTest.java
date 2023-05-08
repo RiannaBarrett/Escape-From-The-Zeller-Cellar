@@ -439,4 +439,15 @@ public class FakeDatabaseTest {
 		db.updateTime(user.getUserID(), 150);
 		assertTrue(db.findUserByName("tester1").getTime() == 150);
 	}
+	
+	@Test
+	public void testLeaderboard() {
+		System.out.println(user.getUsername());
+		System.out.println(user.getTime());
+		db.addLeaderboard(user, user.getTime());
+		List<Pair<String, Integer>> pair = db.getLeaderboard();
+
+		assertTrue(pair.get(0).getLeft().equals(user.getUsername()));
+		assertTrue(pair.get(0).getRight() == user.getTime());
+	}
 }
