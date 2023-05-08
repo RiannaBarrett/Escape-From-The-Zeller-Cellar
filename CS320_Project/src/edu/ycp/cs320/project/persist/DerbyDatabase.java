@@ -2503,9 +2503,9 @@ public class DerbyDatabase implements IDatabase {
 							"  order by leaderboard.time DESC "
 					);
 					resultSet = stmt.executeQuery();
-					
-					while (resultSet.next()) {
-
+					int iter = 0;
+					while (resultSet.next() && iter < 20) {
+						iter++;
 						// create new Item object
 						// retrieve attributes from resultSet starting with index 1
 						Pair<String, Integer> pair = new Pair<String, Integer>("", 0);
