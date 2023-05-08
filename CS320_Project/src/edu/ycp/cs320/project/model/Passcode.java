@@ -18,7 +18,7 @@ public class Passcode extends Task {
 	public String validateComplete(int userID) {
 		System.out.println("Passcode task being checked");
 		Item comicStand = db.findItemByNameAndIDInRoom("Comic Stand", db.findRoomIDByUserID(userID));
-		if(comicStand==null) {
+		if(comicStand!=null) {
 			db.changeTaskIsComplete(super.getTaskID(),true);
 		}
 		return "";

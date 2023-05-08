@@ -5,6 +5,7 @@ import edu.ycp.cs320.project.persist.IDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import edu.ycp.cs320.project.model.*;
 
@@ -349,6 +350,36 @@ public class MainPageController {
 		db.changeObjectiveIsComplete(objectiveID, true);
 	}
 	
+	public Boolean verifyPasscode(String passcode, User user) {
+		// return false if passcode contains anything other than numbers
+		Pattern pattern = Pattern.compile("^[0-9]+$");
+		if(!pattern.matcher(passcode).matches()) {
+			return false;
+		}else if(pattern.matcher(passcode).matches() && passcode.equals("6651")) {
+			Item lockedComicCase = db.findItemByNameAndIDInRoom("Locked Comic Stand", user.getRoom().getRoomID());
+			Item ComicCase = new Item("Comic Stand", false, lockedComicCase.getXPosition(),lockedComicCase.getYPosition(),
+					user.getRoom().getUserPosition());
+			
+			db.addItemToRoom(ComicCase, user.getRoom().getRoomID());
+			db.swapItemInRoom(lockedComicCase, ComicCase, user);
+		
+			db.addItemToRoom(new Item("X-Men 1 Comic", false, 18, 698, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("Avengers 1 Comic", false, 6, 782, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("Avengers 4 Comic", false, 7, 867, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("Superman 18 Comic", false, 90, 698, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("Fantastic Four 48 Comic", false, 63, 783, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("Fantastic Four 9 Comic", false, 70, 866, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("X-Men 94 Comic", false, 128, 702, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("Amazing Spiderman 300 Comic", false, 131, 869, 1), user.getRoom().getRoomID());
+			db.addItemToRoom(new Item("Giant Size X-Men 1 Comic", false, 121, 788, 1), user.getRoom().getRoomID());
+			
+			return true;
+		}else {
+			return false;
+		}
+			
+	}
+
 	public List<Task> getTasksFromObjectiveID(int objectiveID) {
 		return db.getTasksByObjID(objectiveID);
 	}
