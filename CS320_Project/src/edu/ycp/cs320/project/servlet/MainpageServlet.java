@@ -49,6 +49,7 @@ public class MainpageServlet extends HttpServlet {
 		
 		//add the items to the jsp
 		req.setAttribute("items", items);
+        req.setAttribute("duration", model.getUser().getTime());
 
 		//get the inventory and add the images of the items to the jsp
 		List<Item> inventory = controller.findInventoryByName(user);
@@ -128,6 +129,11 @@ public class MainpageServlet extends HttpServlet {
 		//determine position and set image in jsp
 		req.setAttribute("items", items);
 		int position = 0;
+		
+		// Time Stuff
+        int time = Integer.parseInt(req.getParameter("duration"));
+        controller.updateTime(model.getUser().getUserID(), time);
+        req.setAttribute("duration", time);
 		
 		
 		//if pickup button was pressed

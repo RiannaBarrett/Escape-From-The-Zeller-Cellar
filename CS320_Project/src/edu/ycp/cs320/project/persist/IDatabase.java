@@ -82,5 +82,7 @@ public interface IDatabase {
 	public Objective getObjectiveByObjectiveID(int objectiveID);
 	
 	public Task getTaskByTaskID(int taskID);
+	
+	public boolean updateTime(int userID, int time); 
 
 }

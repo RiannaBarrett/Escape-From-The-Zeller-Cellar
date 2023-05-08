@@ -14,7 +14,7 @@
         <div class="title">
         <h3>
             Escape from the Zeller Cellar
-            <input type="hidden" name="duration" value="" id="duration">
+            <input type="hidden" name="duration" value="${duration}" id="duration">
         </h3>
          </div>
          
@@ -69,35 +69,36 @@
       </c:forEach>
     </tr>
   		</table>
-			</div>
-			 <script>
-				  var timeLeft = 300; // 300 seconds
-				  var countdownElement = document.getElementById("countdown");
-				  var countdownInterval;
-				
-				  function startCountdown() {
-				    countdownInterval = setInterval(updateCountdown, 1000);
-				  }
-			
-			  function updateCountdown() {
-			    var minutes = Math.floor(timeLeft / 60);
-			    var seconds = timeLeft % 60;
-			    var secondsDisplay = seconds < 10 ? "0" + seconds : seconds;
-			    countdownElement.innerHTML = "Time left: " + minutes + ":" + secondsDisplay;
-			    timeLeft--;
-			    if (timeLeft < 0) {
-			      clearInterval(countdownInterval);
-			      alert("Game over!"); // show game over message
-			      console.log("Redirecting to game over page...");
-			      document.forms[0].action = "${pageContext.servletContext.contextPath}/game_over";
-			      document.forms[0].submit();
-			    } else if (timeLeft == 60) {
-			      alert("Hurry up! You only have 60 seconds left!");
-			    }
-			  }
+	</div>
+	<script>
+		var timeLeft = document.getElementById("duration").value;
+		var countdownElement = document.getElementById("countdown");
+		var countdownInterval;
+		
+		function startCountdown() {
+			countdownInterval = setInterval(updateCountdown, 1000);
+		}
+	
+	  	function updateCountdown() {
+	    	var minutes = Math.floor(timeLeft / 60);
+	    	var seconds = timeLeft % 60;
+	    	var secondsDisplay = seconds < 10 ? "0" + seconds : seconds;
+	    	countdownElement.innerHTML = "Time left: " + minutes + ":" + secondsDisplay;
+	    	timeLeft--;
+	    	document.getElementById("duration").value = timeLeft;
+	    	if (timeLeft < 0) {
+	      		clearInterval(countdownInterval);
+	      		alert("Game over!"); // show game over message
+	      		console.log("Redirecting to game over page...");
+	      		document.forms[0].action = "${pageContext.servletContext.contextPath}/game_over";
+	      		document.forms[0].submit();
+	    	} else if (timeLeft == 60) {
+	      		alert("Hurry up! You only have 60 seconds left!");
+	    	}
+	  	}
 
-  				startCountdown();
-		</script>
+		startCountdown();
+	</script>
 
     </form>
 </body>
