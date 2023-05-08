@@ -12,7 +12,7 @@
   		<link rel="stylesheet" href="https://kit.fontawesome.com/a839866b20.css" crossorigin="anonymous">
     </head>
 <body>
-<h1 class="leaderBoard">Leader Board</h1>
+<h1 class="leaderBoard">Leaderboard</h1>
 <table>
 <tr>
 <td class="tableTitle">Username</td>

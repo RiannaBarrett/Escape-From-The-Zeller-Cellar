@@ -283,14 +283,15 @@ public class MainPageController {
 		}else if(itemName.equals("Messy")) {
 			List<Item> usedItems = db.getUsedItemsByTaskId(db.getTaskIDByNameAndObjectiveID("Cat", objectiveID));
 			int taskID = db.getTaskIDByNameAndObjectiveID("Cat", objectiveID);
-			if(taskID == -1) {
-				return "Messy: The password? I think it was the last four digits of some phone number";
-			}
 			//TODO: figure out why this is not firing
 			taskID = db.getTaskIDByNameAndObjectiveID("Bookshelf", objectiveID);
 			if(taskID != -1) {
 				return "Messy: I think the first comic had the X-Men. The seconds two are the same series, and the last one is Spiderman";
 			}
+			if(taskID == -1) {
+				return "Messy: The password? I think it was the last four digits of some phone number";
+			}
+			
 			Boolean isFed = false;
 			Boolean canTalk = false;
 			for(Item item : usedItems) {
