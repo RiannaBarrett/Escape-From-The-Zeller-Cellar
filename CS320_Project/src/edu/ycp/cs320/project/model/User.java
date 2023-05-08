@@ -95,7 +95,7 @@ public class User {
 		this.time = time;
 	}
 	
-	private List<Item> createInitialItems() {
+	public List<Item> createInitialItems() {
 		List<Item> iList = new ArrayList<Item>();
 		iList.add(new Item("Matches", true,23,544,0));
 		

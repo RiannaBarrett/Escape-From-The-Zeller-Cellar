@@ -16,6 +16,8 @@ public interface IDatabase {
 	public boolean moveUser(User user, int moveTo);
 
 	public boolean addUser(User user);
+	
+	public boolean resetUser(User user);
 
 	public String useEmptyPotion(Item bottle, Item selected, User user);
 

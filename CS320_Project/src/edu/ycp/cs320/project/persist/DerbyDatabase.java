@@ -2329,4 +2329,107 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+
+	@Override
+	public boolean resetUser(User user) {
+		// REQUIRES A FULLY FLESHED OUT USER, ALL TASK/OBJ/ROOM IDS NEEDED.
+		Boolean result = false;
+		result = executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement deleteUsedItems = null;
+				PreparedStatement deleteTasks = null;
+				PreparedStatement deleteObjectives = null;
+				PreparedStatement deleteRoomInv = null;
+				PreparedStatement deleteUserInv = null;
+				ResultSet resultSet = null;
+				try {
+					System.out.println("Resetting user: " + user.getUsername());
+					List<Objective> objectives = user.getRoom().getObjectives();
+					deleteUsedItems = conn.prepareStatement(
+							"delete from usedItems " +
+							" where usedItems.task_id = ? "
+							);
+					deleteTasks = conn.prepareStatement(
+							"delete from tasks " +
+							" where tasks.objective_id = ? "
+							);
+					deleteObjectives = conn.prepareStatement(
+							"delete from objectives " +
+							" where objectives.room_id = ? "
+							);
+					for(Objective obj : objectives) {
+						System.out.println("Setting up task removal");
+						deleteTasks.setInt(1, obj.getObjectiveID());
+						deleteTasks.addBatch();
+						for(Task task : obj.getTasks()) {
+							System.out.println("\tSetting up usedItem removal");
+							deleteUsedItems.setInt(1, task.getTaskID());
+							deleteUsedItems.addBatch();
+						}
+					}
+					deleteObjectives.setInt(1, user.getRoom().getRoomID());
+					
+					System.out.println("Deleting usedItems...");
+					deleteUsedItems.executeBatch();
+					System.out.println("Deleting tasks...");
+					deleteTasks.executeBatch();
+					System.out.println("Deleting objectives...");
+					deleteObjectives.execute();
+					
+					
+					//selects all details of the new user
+					deleteRoomInv = conn.prepareStatement(
+							"delete from roomInventories " +
+							" where roomInventories.room_id = ? "
+							);
+					deleteRoomInv.setInt(1, user.getRoom().getRoomID());
+					System.out.println("Deleting room inventory...");
+					deleteRoomInv.execute();
+
+					
+					//adds new room to to user_id
+					deleteUserInv = conn.prepareStatement(
+							"delete from userInventories " +
+							" where userInventories.user_id = ? "
+							);
+					deleteUserInv.setInt(1, user.getUserID());
+					System.out.println("Deleting user inventory...");
+					deleteUserInv.execute();
+			
+					
+					return true;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(deleteUsedItems);
+					DBUtil.closeQuietly(deleteTasks);
+					DBUtil.closeQuietly(deleteObjectives);
+					DBUtil.closeQuietly(deleteRoomInv);
+					DBUtil.closeQuietly(deleteUserInv);
+
+				}
+			}
+		});
+		int roomID = user.getRoom().getRoomID();
+		user.setRoom(new Room());
+		user.getRoom().setRoomID(roomID);
+		
+		System.out.println("Adding items to user...");
+		for(Item item : user.getInventory()) {
+			System.out.println("Item: " + item.getName());
+			addItemToInventory(item, user.getUserID());
+		}
+		System.out.println("Adding items to room...");
+		for(Item item : user.getRoom().getItems()) {
+			System.out.println("Item: " + item.getName());
+			addItemToRoom(item, user.getRoom().getRoomID());
+		}
+		
+		System.out.println("Adding objectives to room...");
+		for(Objective objective : user.getRoom().getObjectives()) {
+			System.out.println("Objective ");
+			addObjectiveToRoom(objective, user.getRoom().getRoomID());
+		}
+		return result;
+	}
 }
