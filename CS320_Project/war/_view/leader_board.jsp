@@ -13,6 +13,8 @@
     </head>
 <body>
 <h1 class="leaderBoard">Leaderboard</h1>
+<button class="btn"><a href ="start_game">Back</a></button>
+
 <table>
 <tr>
 <td class="tableTitle">Username</td>
@@ -32,5 +34,7 @@
 
 
 </table>
+
+
 </body>
 </html>
