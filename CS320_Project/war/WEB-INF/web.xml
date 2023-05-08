@@ -27,6 +27,10 @@
     <servlet-class>edu.ycp.cs320.project.servlet.MainpageServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>GameOverServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.project.servlet.GameOverServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>StartGameServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.project.servlet.StartGameServlet</servlet-class>
   </servlet>
@@ -61,6 +65,10 @@
   <servlet-mapping>
     <servlet-name>MainpageServlet</servlet-name>
     <url-pattern>/main_page</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GameOverServlet</servlet-name>
+    <url-pattern>/game_over</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>StartGameServlet</servlet-name>

@@ -20,8 +20,6 @@
         </div>
         <nav>
           <ul>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Account</a></li>
             <li class="btn"><a href ="main_page">Play</a></li>
           </ul>
         </nav>
@@ -29,15 +27,8 @@
       <div class="content">
         <div class="main-text">
           <h3>ESCAPE <br> FROM THE <br> ZELLER CELLAR</h3>
-          <p>Welcome to the Zeller Cellar, a place filled with mysteries and danger. Your goal is to escape from this place by solving puzzles and finding hidden objects. Are you ready?</p>
+          <p>Welcome to the Zeller Cellar, a place filled with mysteries and danger. Can you escape?</p>
           <a href="main_page">Play Now</a>
-          <a href="" class="cta"><i class="fa-solid fa-play"></i>Watch Demo</a>
-        </div>
-        <div class="social">
-          <a href="https://www.facebook.com" target=""><i class="fab fa-facebook fa-2x"></i></a>
-            <a href="https://www.twitter.com" target=""><i class="fab fa-twitter fa-2x"></i></a>
-            <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube fa-2x"></i></a>
-            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
         </div>
         <div class="image">
         	<img src ="./Images/wizardnobg.png" alt = "Evil Wizard">
