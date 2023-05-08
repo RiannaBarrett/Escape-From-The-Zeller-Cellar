@@ -2423,7 +2423,7 @@ public class DerbyDatabase implements IDatabase {
 		int roomID = user.getRoom().getRoomID();
 		user.setRoom(new Room());
 		user.getRoom().setRoomID(roomID);
-		
+		user.setInventory(user.createInitialItems());
 		System.out.println("Adding items to user...");
 		for(Item item : user.getInventory()) {
 			System.out.println("Item: " + item.getName());

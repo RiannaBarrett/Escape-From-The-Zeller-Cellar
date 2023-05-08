@@ -29,8 +29,11 @@ public class GameOverServlet extends HttpServlet {
 		String user = (String) req.getSession().getAttribute("user");
 	    if(req.getParameter("reset") != null) {
 	    	controller.resetUser(user);
+			resp.sendRedirect(req.getContextPath() + "/start_game");
+	    }else {
+		    req.getRequestDispatcher("/_view/game_over.jsp").forward(req, resp);
+
 	    }
-	    req.getRequestDispatcher("/_view/game_over.jsp").forward(req, resp);
 
 	}
 

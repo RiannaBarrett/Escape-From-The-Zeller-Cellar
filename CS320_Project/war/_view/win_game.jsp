@@ -17,8 +17,8 @@
       <div class="content">
         <div class="win-game">
         <h3>GAME OVER</h3>
-          <p>YOU ESCAPE ZELLER'S CELLAR</p>
-           <button name="reset" class="button2"><a href="./start_game">Play Again</a></button>
+          <p>YOU ESCAPED ZELLER'S CELLAR</p>
+           <input type="submit" name="reset" class="button2" value = "PLAY AGAIN">
         </div>
       </div>
       

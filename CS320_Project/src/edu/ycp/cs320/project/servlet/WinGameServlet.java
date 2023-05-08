@@ -30,8 +30,12 @@ public class WinGameServlet extends HttpServlet {
 		String user = (String) req.getSession().getAttribute("user");
 	    if(req.getParameter("reset") != null) {
 	    	controller.resetUser(user);
+			resp.sendRedirect(req.getContextPath() + "/start_game");
+
+	    }else {
+		    req.getRequestDispatcher("/_view/win_game.jsp").forward(req, resp);
+
 	    }
-	    req.getRequestDispatcher("/_view/win_game.jsp").forward(req, resp);
 
 	}
 
