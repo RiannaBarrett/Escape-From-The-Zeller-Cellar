@@ -18,7 +18,7 @@
         <div class="win-game">
         <h3>GAME OVER</h3>
           <p>YOU ESCAPE ZELLER'S CELLAR</p>
-           <button class="button2"><a href="./main_page">Play Again</a></button>
+           <button class="button2"><a href="./start_game">Play Again</a></button>
         </div>
       </div>
       
