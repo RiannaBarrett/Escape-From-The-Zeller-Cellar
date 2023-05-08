@@ -218,6 +218,22 @@ button[type="button"] {
   font-size: 36px;
   color: white;
 }
+.win-game{
+text-align: center;
+  margin: 10% auto;
+  max-width: 600px;
+}
+.win-game h3 {
+  font-size: 72px;
+  color: wheat;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.win-game p {
+  font-size: 36px;
+  color: wheat;
+}
 
 .button1 {
   background-color: #FFC107;
@@ -238,6 +254,28 @@ button[type="button"] {
 
 .button1:hover {
   background-color: red;
+  cursor: pointer;
+  transform: scale(1.1);
+}
+.button2 {
+  background-color: grey;
+  border-radius: 30px;
+  color: #fff;
+  display: inline-block;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+.button2 {
+    font-size: 20px;
+    border-radius: 50%;
+    border-radius: 5px;
+}
+
+.button2:hover {
+  background-color: blue;
   cursor: pointer;
   transform: scale(1.1);
 }
