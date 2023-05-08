@@ -31,8 +31,9 @@
                 <button class="button right" name = "right"><</button>
                 <button class="button up" name = "up"><</button>
               	<button class="button down" name = "down"><</button>
+              	<div class="pickup">
                 <input class="pickUp" type="submit" name="pickUp" value="Pick Up">
-    	
+    			</div>
 
               	<p name = "textOutput">${textOutput}</p>
               	</div>
